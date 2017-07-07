@@ -1,8 +1,9 @@
 angular.module('app', ['ngRoute','ngResource'])
-.config(function ($routeProvider,$locationProvider) {
+.config(function ($routeProvider,$locationProvider,$locationProvider) {
 	$routeProvider.caseInsensitiveMatch=true;
+	$locationProvider.hashPrefix('');
     $routeProvider
-    .when('/home', {
+    .when('/', {
         templateUrl: 'partials/home.html',
         controller: 'HomeController',
         controllerAs: 'homCtrl'
@@ -13,65 +14,68 @@ angular.module('app', ['ngRoute','ngResource'])
         controllerAs: 'addCtrl'
     })
     .when('/login', {
-        templateUrl: 'login.html',
+        templateUrl: 'partials/login.html',
         controller: 'LoginController',
         controllerAs: 'logCtrl'
     })
    
-    //.when('/*', {
-     //  controller: 'IndexController',
-      //  controllerAs: 'indCtrl'
-    //})
     .otherwise({
-        redirectTo: '/home'
+        redirectTo: '/'
     });
 })
-.controller('HomeController', function($resource) {
-	var vm=this;
 
-	var Discoveries=$resource('api/home/:namedisc');
+.service('DiscoveryEndPoint', function($resource) {
+        var vm=this;
+        vm.getEndPoint=function($resource){
+            return Discovery=$resource('api/discovery/:namedisc');
+        }
+    })
+.controller('HomeController', function($resource,DiscoveryEndPoint) {
+	var vm=this;
+	var Discoveries=DiscoveryEndPoint.getEndPoint();
+	
 	function ReadAllDiscovery() {
 	vm.discoveries=Discoveries.query(
 	function success(data, headers) {
         console.log('Pobrano dane: ' + data);
-        console.log(headers('Content-Type'));
-       
+        console.log(headers('Content-Type'));  
     },
     function error(response) {
         console.log(response.status); //np. 404
     });
 	}
-
 	ReadAllDiscovery();
+	
+	
 	vm.SearchDiscovery=function(){
 		vm.name=vm.textInput;
 		
 	vm.discoveries=Discoveries.query({namedisc:vm.name});
 	}
+	
 	vm.SortByTime=function(){
-		var Sort=$resource('api/home?orderBy=:sort');
+		var Sort=$resource('api/discovery?orderBy=:sort');
 	vm.discoveries=Sort.query({sort:'time'});
 	}
 	vm.SortByPopular=function(){
-		var Sort=$resource('api/home?orderBy=:sort');
+		var Sort=$resource('api/discovery?orderBy=:sort');
 	vm.discoveries=Sort.query({sort:'popular'});
 	}
 })
-.controller('AddController', function($resource) {
+
+
+.controller('AddController', function($resource,DiscoveryEndPoint) {
 	var vm = this;
-	   var Discovery = $resource('api/add');
+	   var Discovery = DiscoveryEndPoint.getEndPoint();
 	    vm.discovery = new Discovery();
+	    
 	    vm.addDiscovery = function(discovery) {
-	        vm.discovery.$save(function(data) {
-	           vm.discovery = new Discovery();
-	        });
-	    }
-	    var Discoveries=$resource('api/home');
-		function ReadAllDiscovery() {
-		vm.discoveries=Discoveries.query();
-		}
-		ReadAllDiscovery();
-	})
+	    	vm.discovery.$save(function(data) {
+		           vm.discovery = new Discovery();
+	        })
+	        };
+})
+	
 .controller('RegisterController', function($resource) {
 	var vm = this;
    var User = $resource('api/register');
@@ -87,11 +91,12 @@ angular.module('app', ['ngRoute','ngResource'])
         },
         function error(response) {
             console.log(response.status); //np. 404
-            alert("Lipa");
         }
         );
     }
 })
+
+
 .controller('IndexController',function($resource,$location,$anchorScroll){
 var vm = this;
 var check=$resource('api/home/check');
@@ -99,14 +104,4 @@ function Check(){
 vm.c=check.get();
 }
 Check();
-//vm.scrollTo=function(location){
-	//$location.hash(location);
-	//var newhash=location;
-	//if($location.hash()==location){
-	
-	//}
-	
-	//$anchorScroll();
-	//$location.hash()=='';
-//s}
 });

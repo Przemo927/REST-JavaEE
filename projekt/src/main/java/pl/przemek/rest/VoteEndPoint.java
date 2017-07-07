@@ -113,8 +113,8 @@ public Vote get(@PathParam("id") long id){
 @GET
 @Produces(MediaType.APPLICATION_JSON)
 @Path("/{id}/{id1}")
-public Vote get(@PathParam("id") long id,@PathParam("id1") long id1){
-	Vote vote=votrepo.getVoteByUserIdDiscoveryId(id, id1);
+public Vote get(@PathParam("id") long userId,@PathParam("id1") long discoveryId){
+	Vote vote=votrepo.getVoteByUserIdDiscoveryId(userId, discoveryId);
 	return vote;
 	
 }
