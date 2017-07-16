@@ -1,6 +1,5 @@
 package pl.przemek.repository;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import javax.ejb.Stateless;
@@ -14,18 +13,24 @@ import pl.przemek.model.Vote;
 public class VoteRepository {
 	@PersistenceContext
 	private EntityManager em;
-
+	
+	
 	public void add(Vote vote) {
 	    em.persist(vote);
 	}
-	 
+	
+	
 	public void remove(Vote vote) {
 	    em.remove(vote);
 	}
+	
+	
 	public Vote update(Vote vote) {
 		em.merge(vote);
 		return vote;
 	}
+	
+	
 	public Vote get(Long id) {
 	    Vote vote = em.find(Vote.class, id);
 	    return vote;

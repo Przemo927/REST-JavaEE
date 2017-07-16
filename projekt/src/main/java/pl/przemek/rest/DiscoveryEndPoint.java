@@ -58,7 +58,7 @@ public class DiscoveryEndPoint {
 	public List<Discovery> getALL(@QueryParam("orderBy") @DefaultValue("popular") String order){
 		List<Discovery> discoveries = null;
 		if(order.equals("popular")){
-		discoveries=discrepo.getAll(new Comparator<Discovery>() {
+		discoveries=((DiscoveryRepository)discrepo).getAll(new Comparator<Discovery>() {
 			 @Override
 			public int compare(Discovery d1, Discovery d2) {
 	            int d1Vote = d1.getUpVote() - d1.getDownVote();

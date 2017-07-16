@@ -1,5 +1,8 @@
 package pl.przemek.repository;
 
+import java.util.Comparator;
+import java.util.List;
+
 import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
@@ -7,27 +10,30 @@ import javax.persistence.TypedQuery;
 
 import pl.przemek.model.Discovery;
 
-import java.util.Comparator;
-import java.util.List;
-
 @Stateless
 public class DiscoveryRepository {
 	
 	
 	@PersistenceContext
 	private EntityManager em;
-
+	
+	
 	public void add(Discovery discovery) {
 	    em.persist(discovery);
 	}
-	 
+	
+	
 	public void remove(Discovery discovery) {
 	    em.remove(discovery);
 	}
-	public void update(Discovery discovery) {
-		em.merge(discovery);
+	
+	
+	public Discovery update(Discovery discovery) {
+		Discovery updateDiscovery=em.merge(discovery);
+		return updateDiscovery;
 	}
-
+	
+	
 	public Discovery get(Long id) {
 	    Discovery discovery = em.find(Discovery.class, id);
 	    return discovery;
@@ -53,4 +59,5 @@ public class DiscoveryRepository {
 		return discovery;
 	
 	}
+
 	}

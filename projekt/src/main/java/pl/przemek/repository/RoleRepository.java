@@ -5,7 +5,6 @@ import java.util.List;
 import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
-import javax.persistence.PersistenceContextType;
 import javax.persistence.TypedQuery;
 
 import pl.przemek.model.Role;
@@ -24,8 +23,8 @@ public Role get(String name_role){
 	TypedQuery<Role> getRole = em.createNamedQuery("Role.findByName", Role.class);
 	getRole.setParameter("role_name", name_role);
 	List<Role> getroles=getRole.getResultList();
-	Role chosenrole=getroles.get(0);
-	return chosenrole;
+	Role chosenRole=getroles.get(0);
+	return chosenRole;
 	
 }
 

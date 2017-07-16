@@ -8,10 +8,7 @@ import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.persistence.PersistenceException;
 import javax.persistence.TypedQuery;
-import javax.swing.JOptionPane;
-import javax.validation.ConstraintViolationException;
 
-import pl.przemek.model.Role;
 import pl.przemek.model.User;
 
 @Stateless
@@ -30,12 +27,18 @@ public void add(User user) {
 	}
 	
  }
+
+
 public void remove(User user) {
     em.remove(user);
 }
-public void update(User user) {
-	em.merge(user);
+
+
+public User update(User user) {
+	User updateUser=em.merge(user);
+	return updateUser;
 }
+
 
 public User get(Long id) {
     User user = em.find(User.class, id);

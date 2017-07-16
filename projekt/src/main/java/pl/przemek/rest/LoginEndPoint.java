@@ -14,7 +14,7 @@ public class LoginEndPoint {
 @GET
 public void Login(@Context HttpServletRequest request,@Context HttpServletResponse response) throws IOException{
 	if(request.getUserPrincipal() != null) {
-        response.sendRedirect("#home");
+        response.sendRedirect("/projekt/index.html#!/home");
     } else {
         response.sendError(403);
     }

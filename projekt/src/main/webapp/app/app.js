@@ -1,10 +1,10 @@
 angular.module('app', ['ngRoute','ngResource'])
-.config(function ($routeProvider,$locationProvider,$locationProvider) {
+.config(function ($routeProvider,$locationProvider) {
 	$routeProvider.caseInsensitiveMatch=true;
 	$locationProvider.hashPrefix('');
     $routeProvider
     .when('/', {
-        templateUrl: 'partials/home.html',
+        templateUrl: 'home.html',
         controller: 'HomeController',
         controllerAs: 'homCtrl'
     })
@@ -26,13 +26,13 @@ angular.module('app', ['ngRoute','ngResource'])
 
 .service('DiscoveryEndPoint', function($resource) {
         var vm=this;
-        vm.getEndPoint=function($resource){
+        vm.getEndPoint=function($resource) {
             return Discovery=$resource('api/discovery/:namedisc');
         }
     })
-.controller('HomeController', function($resource,DiscoveryEndPoint) {
+.controller('HomeController', function(DiscoveryEndPoint,$resource) {
 	var vm=this;
-	var Discoveries=DiscoveryEndPoint.getEndPoint();
+	var Discoveries=DiscoveryEndPoint.getEndPoint($resource);
 	
 	function ReadAllDiscovery() {
 	vm.discoveries=Discoveries.query(
@@ -51,22 +51,22 @@ angular.module('app', ['ngRoute','ngResource'])
 		vm.name=vm.textInput;
 		
 	vm.discoveries=Discoveries.query({namedisc:vm.name});
-	}
+	};
 	
-	vm.SortByTime=function(){
+	vm.SortByTime=function($resource){
 		var Sort=$resource('api/discovery?orderBy=:sort');
 	vm.discoveries=Sort.query({sort:'time'});
-	}
-	vm.SortByPopular=function(){
+	};
+	vm.SortByPopular=function($resource){
 		var Sort=$resource('api/discovery?orderBy=:sort');
 	vm.discoveries=Sort.query({sort:'popular'});
 	}
 })
 
 
-.controller('AddController', function($resource,DiscoveryEndPoint) {
+.controller('AddController', function(DiscoveryEndPoint) {
 	var vm = this;
-	   var Discovery = DiscoveryEndPoint.getEndPoint();
+	   var Discovery = DiscoveryEndPoint.getEndPoint($resource);
 	    vm.discovery = new Discovery();
 	    
 	    vm.addDiscovery = function(discovery) {
@@ -78,26 +78,34 @@ angular.module('app', ['ngRoute','ngResource'])
 	
 .controller('RegisterController', function($resource) {
 	var vm = this;
+	var username='username';
    var User = $resource('api/register');
     vm.user = new User();
     vm.addUser = function(user) {
-        vm.user.$save(function(data) {
-           vm.user = new User();
-        },
-        function success(data, headers) {
-            console.log('Pobrano dane: ' + data);
-            console.log(headers('Content-Type'));
-           
-        },
-        function error(response) {
-            console.log(response.status); //np. 404
-        }
-        );
-    }
-})
+    	 vm.user.$save(function(data) {
+             vm.user = new User();
+         },
+             function success(data, headers) {
+                 var InvalidFieldList=data['data']['InvalidFieldList'];
+                 console.log('Pobrano dane1: ' +data['data']['InvalidFieldList'][vm.s]);
+                 if(InvalidFieldList['username']){
+                        vm.MessageUser=InvalidFieldList['username'];
+                    }
+                 if(InvalidFieldList['email']){
+                     vm.MessageEmail=InvalidFieldList['username'];
+                 }
+                 console.log('Pobrano dane: ' + data['data']['InvalidFieldList']['username']);
+                 console.log(headers('Content-Type'));
+
+             },
+             function error(response) {
+                 console.log(response.status); //np. 404
+             });
+         }
+  })
 
 
-.controller('IndexController',function($resource,$location,$anchorScroll){
+.controller('IndexController',function($resource){
 var vm = this;
 var check=$resource('api/home/check');
 function Check(){

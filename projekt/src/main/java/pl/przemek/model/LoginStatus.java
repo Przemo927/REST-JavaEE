@@ -1,6 +1,6 @@
 package pl.przemek.model;
 
-public class Connection {
+public class LoginStatus {
 	private String name;
 	private String path;
 
@@ -19,6 +19,6 @@ public class Connection {
 	public void setName(String name) {
 		this.name = name;
 	}
-	 public Connection() { }
+	 public LoginStatus() { }
 
 }

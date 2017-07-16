@@ -1,13 +1,17 @@
 package pl.przemek.model;
 
 import java.io.Serializable;
+
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.NamedQuery;
 import javax.persistence.NamedQueries;
+import javax.persistence.NamedQuery;
+import javax.validation.constraints.Size;
+
+import pl.przemek.validation.UsernameMatching;
 
 @NamedQueries({
     @NamedQuery(name = "User.findAll", query = "SELECT p FROM User p"),
@@ -23,6 +27,7 @@ public class User implements Serializable {
 	@Column(name = "user_id",nullable = false, unique = true)
     private long id;
 	@Column(nullable = false, unique = true, length=45)
+	@UsernameMatching
     private String username;
 	@Column(nullable = false, unique = true, length=60)
     private String email;
