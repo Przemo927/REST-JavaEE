@@ -10,11 +10,12 @@ import javax.ws.rs.core.Context;
 
 @Path("/login")
 public class LoginEndPoint {
+    private final static String homePath="/projekt/index.html#!/home";
 
 @GET
 public void Login(@Context HttpServletRequest request,@Context HttpServletResponse response) throws IOException{
 	if(request.getUserPrincipal() != null) {
-        response.sendRedirect("/projekt/index.html#!/home");
+        response.sendRedirect(homePath);
     } else {
         response.sendError(403);
     }

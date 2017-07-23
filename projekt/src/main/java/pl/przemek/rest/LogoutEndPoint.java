@@ -10,10 +10,11 @@ import javax.ws.rs.core.Context;
 
 @Path("/logout")
 public class LogoutEndPoint {
+    private final static String homePath="/projekt/index.html#!/home";
 
 @GET
 public void Logout(@Context HttpServletRequest request,@Context HttpServletResponse response) throws IOException{
 request.getSession().invalidate();
-response.sendRedirect("/projekt/index.html#!/home");
+response.sendRedirect(homePath);
 }
 }

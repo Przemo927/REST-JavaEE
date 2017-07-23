@@ -10,7 +10,7 @@
 
       Posortuj po: 
       <button class="btn btn-default btn-pressure btn-sensitive" ng-click="homCtrl.SortByTime()">Czas dodania</button>
-      </a><button class="btn btn-default btn-pressure btn-sensitive" ng-click="homCtrl.SortByPopular()">Popularność</button>
+      <button class="btn btn-default btn-pressure btn-sensitive" ng-click="homCtrl.SortByPopular()">Popularność</button>
       
 
       </div>
@@ -23,7 +23,7 @@
        
       <a href="api/vote?vote=VOTE_UP&discovery_id={{d.id}}" class="btn btn-success"><span class="glyphicon glyphicon-thumbs-up"></span></a>
       <div class="well well-sm centered">{{d.upVote-d.downVote}}</div>
-        <a href="api/vote?vote=VOTE_DOWN&discovery_id={{d.id}}" class="btn btn-warning"><span class="glyphicon glyphicon-thumbs-down"></a>
+            <a href="api/vote?vote=VOTE_DOWN&discovery_id={{d.id}}" class="btn btn-warning"><span class="glyphicon glyphicon-thumbs-down"/></a>
         </div>
         <div class="col col-md-11 col-sm-10">
       
@@ -31,6 +31,8 @@
           <a href={{d.url}}><button class="btn btn-default btn-xs">Przejdź do strony</button></a>
       </div>
     </div>
+      </li>
+    </ul>
     </div>
    
     </li>

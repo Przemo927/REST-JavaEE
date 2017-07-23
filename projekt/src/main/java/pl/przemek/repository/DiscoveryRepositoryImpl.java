@@ -16,35 +16,36 @@ public class DiscoveryRepositoryImpl implements DiscoveryRepository {
 	
 	@PersistenceContext
 	private EntityManager em;
-	
-	
+
+    @Override
 	public void add(Discovery discovery) {
 	    em.persist(discovery);
 	}
-	
-	
+
+    @Override
 	public void remove(Discovery discovery) {
 	    em.remove(discovery);
 	}
-	
-	
+
+    @Override
 	public Discovery update(Discovery discovery) {
 		Discovery updateDiscovery=em.merge(discovery);
 		return updateDiscovery;
 	}
-	
-	
-	public Discovery get(Long id) {
-	    Discovery discovery = em.find(Discovery.class, id);
-	    return discovery;
+
+	@Override
+	public Discovery get(long id) {
+		Discovery discovery = em.find(Discovery.class, id);
+		return discovery;
 	}
-	 
+
+    @Override
 	public List<Discovery> getAll() {
 		 List<Discovery> discovery = getAll(null);
 	    return discovery;
 	}
 
-
+    @Override
 	public List<Discovery> getAll(Comparator<Discovery> comparator) {
 		TypedQuery<Discovery> getAllQuery = em.createNamedQuery("Discovery.findAll", Discovery.class);
 	    List<Discovery> discovery = getAllQuery.getResultList();
@@ -54,6 +55,8 @@ public class DiscoveryRepositoryImpl implements DiscoveryRepository {
         return discovery;
 		
 	}
+
+    @Override
 	public List<Discovery> getByName(String name){
 		TypedQuery<Discovery> disc = em.createNamedQuery("Discovery.search", Discovery.class);
 		disc.setParameter("name", name);
@@ -62,4 +65,4 @@ public class DiscoveryRepositoryImpl implements DiscoveryRepository {
 	
 	}
 
-	}
+}

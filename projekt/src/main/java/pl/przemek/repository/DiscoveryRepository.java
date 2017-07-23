@@ -12,4 +12,5 @@ public interface DiscoveryRepository {
     public List<Discovery> getAll();
     public List<Discovery> getAll(Comparator<Discovery> c);
     public List<Discovery> getByName(String name);
+    public Discovery get(long id);
 }

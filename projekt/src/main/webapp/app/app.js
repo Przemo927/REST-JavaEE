@@ -33,7 +33,8 @@ angular.module('app', ['ngRoute','ngResource'])
 .controller('HomeController', function(DiscoveryEndPoint,$resource) {
 	var vm=this;
 	var Discoveries=DiscoveryEndPoint.getEndPoint($resource);
-	
+    var Sort=$resource('api/discovery?orderBy=:sort');
+
 	function ReadAllDiscovery() {
 	vm.discoveries=Discoveries.query(
 	function success(data, headers) {
@@ -52,26 +53,26 @@ angular.module('app', ['ngRoute','ngResource'])
 		
 	vm.discoveries=Discoveries.query({namedisc:vm.name});
 	};
-	
-	vm.SortByTime=function($resource){
-		var Sort=$resource('api/discovery?orderBy=:sort');
+
+
+	vm.SortByTime=function(){
+
 	vm.discoveries=Sort.query({sort:'time'});
 	};
-	vm.SortByPopular=function($resource){
-		var Sort=$resource('api/discovery?orderBy=:sort');
+	vm.SortByPopular=function(){
 	vm.discoveries=Sort.query({sort:'popular'});
 	}
 })
 
 
-.controller('AddController', function(DiscoveryEndPoint) {
+.controller('AddController', function(DiscoveryEndPoint,$resource) {
 	var vm = this;
 	   var Discovery = DiscoveryEndPoint.getEndPoint($resource);
-	    vm.discovery = new Discovery();
+	    vm.discovery = new Discovery($resource);
 	    
 	    vm.addDiscovery = function(discovery) {
 	    	vm.discovery.$save(function(data) {
-		           vm.discovery = new Discovery();
+		           vm.discovery = new Discovery($resource);
 	        })
 	        };
 })

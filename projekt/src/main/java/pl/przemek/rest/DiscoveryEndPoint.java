@@ -22,64 +22,40 @@ import javax.ws.rs.core.MediaType;
 import pl.przemek.model.Discovery;
 import pl.przemek.model.User;
 import pl.przemek.repository.DiscoveryRepository;
+import pl.przemek.service.DiscoveryService;
 
 @Path("/discovery")
 public class DiscoveryEndPoint {
 
 	@Inject
-	private DiscoveryRepository discrepo;
-	@Inject 
+	private DiscoveryService discoveryService;
+	@Inject
 	HttpServletRequest request;
-	
+	Discovery discovery;
+
 	@POST
 	@Consumes(MediaType.APPLICATION_JSON)
-	public void AddDiscovery(Discovery discovery) throws IOException{
+	public void AddDiscovery(Discovery discovery) throws IOException {
 		request.setCharacterEncoding("UTF-8");
-		User user=(User) request.getSession().getAttribute("user");
+		User user = (User) request.getSession().getAttribute("user");
 		discovery.setUser(user);
-		discovery.setTimestamp(new Timestamp(new Date().getTime()));
-		discovery.setUpVote(0);
-		discovery.setUpVote(0);
-		discrepo.add(discovery);
+		discoveryService.addDiscovery(discovery);
 	}
-	
+
 	@GET
 	@Path("/{name}")
 	@Produces(MediaType.APPLICATION_JSON)
-	public List<Discovery> getByName(@PathParam ("name") String name){
-		List<Discovery> discovery=discrepo.getByName(name);
-		return discovery;
-		
+	public List<Discovery> getByName(@PathParam("name") String name) {
+		List<Discovery> discoveries = discoveryService.getByName(name);
+		return discoveries;
+
 	}
-	
+
 	@RequestScoped
 	@GET
 	@Produces(MediaType.APPLICATION_JSON)
-	public List<Discovery> getALL(@QueryParam("orderBy") @DefaultValue("popular") String order){
-		List<Discovery> discoveries = null;
-		if(order.equals("popular")){
-		discoveries=((DiscoveryRepository)discrepo).getAll(new Comparator<Discovery>() {
-			 @Override
-			public int compare(Discovery d1, Discovery d2) {
-	            int d1Vote = d1.getUpVote() - d1.getDownVote();
-	            int d2Vote = d2.getUpVote() - d2.getDownVote();
-	            if(d1Vote < d2Vote) {
-	                return 1;
-	            } else if(d1Vote > d2Vote) {
-	                return -1;
-	            }
-	            return 0;
-	        }});
-		return discoveries;
+	public List<Discovery> getALL(@QueryParam("orderBy") @DefaultValue("popular") String order) {
+		List<Discovery> allDiscoveries = discoveryService.getAll(order);
+		return allDiscoveries;
 	}
-		
-		else if(order.equals("time")){
-		discoveries=discrepo.getAll(new Comparator<Discovery>() {
-	            @Override
-	            public int compare(Discovery d1, Discovery d2) {
-	           return d1.getTimestamp().compareTo(d2.getTimestamp());
-		}});
-		}
-		return discoveries;
-		}
 }
