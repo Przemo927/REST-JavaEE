@@ -11,5 +11,6 @@ public interface VoteRepository {
     public Vote get(Long id);
     public List<Vote> getAll();
     public Vote getVoteByUserIdDiscoveryId(Long UserId,Long DiscoveryId);
+    public void removeByDiscoveryId(Long DiscoveryId);
 
 }

@@ -2,6 +2,7 @@ package pl.przemek.repository;
 
 import java.util.List;
 
+import javax.annotation.security.RolesAllowed;
 import javax.ejb.EJBException;
 import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
@@ -19,20 +20,14 @@ private EntityManager em;
 
 
 public void add(User user) {
-	try{
     em.persist(user);
 	}
-	catch (EJBException | PersistenceException e) {
-		 
-	}
-	
- }
+
 
 
 public void remove(User user) {
     em.remove(user);
 }
-
 
 public User update(User user) {
 	User updateUser=em.merge(user);

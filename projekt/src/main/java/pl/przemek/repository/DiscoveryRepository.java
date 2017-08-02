@@ -2,6 +2,7 @@ package pl.przemek.repository;
 
 import pl.przemek.model.Discovery;
 
+import javax.annotation.security.RolesAllowed;
 import java.util.Comparator;
 import java.util.List;
 

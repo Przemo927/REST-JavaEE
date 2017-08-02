@@ -93,4 +93,7 @@ public class VoteService {
         Vote vote = votrepo.getVoteByUserIdDiscoveryId(userId, discoveryId);
         return vote;
     }
+    public void removeByDiscveryId(Long discoveryid) {
+        votrepo.removeByDiscoveryId(discoveryid);
+    }
 }

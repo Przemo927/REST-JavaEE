@@ -3,13 +3,8 @@ package pl.przemek.model;
 import java.io.Serializable;
 import java.sql.Timestamp;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
+import javax.persistence.*;
+
 @Entity
 public class Vote implements Serializable {
 	/**
@@ -20,7 +15,7 @@ public class Vote implements Serializable {
 	@GeneratedValue(strategy=GenerationType.IDENTITY)
 	@Column(name = "vote_id",nullable = false, unique = true)
     private long id;
-    @ManyToOne
+    @ManyToOne(cascade = CascadeType.REMOVE)
     @JoinColumn(name = "discovery_id")
     private Discovery discovery;
     @ManyToOne

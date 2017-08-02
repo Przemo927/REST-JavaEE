@@ -1,7 +1,10 @@
 package pl.przemek.service;
 
 import pl.przemek.model.Discovery;
+import pl.przemek.model.User;
 import pl.przemek.repository.DiscoveryRepository;
+import pl.przemek.repository.UserRepository;
+import pl.przemek.repository.VoteRepository;
 
 import javax.inject.Inject;
 import javax.servlet.http.HttpServletResponse;
@@ -14,6 +17,9 @@ public class DiscoveryService {
 
     @Inject
     private DiscoveryRepository discrepo;
+    @Inject
+    private VoteRepository voterepo;
+
     List<Discovery> discoveries;
 
     public Discovery addDiscovery(Discovery discovery){
@@ -54,5 +60,10 @@ public class DiscoveryService {
                 }});
         }
         return discoveries;
+    }
+    public void removeDiscoveryByName(String name) {
+        Discovery discovery=discrepo.getByName(name).get(0);
+        voterepo.removeByDiscoveryId(discovery.getId());
+        discrepo.remove(discovery);
     }
     }

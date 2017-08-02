@@ -21,13 +21,14 @@
   </web-resource-collection>
   <auth-constraint>
    <role-name>user</role-name>
+   <role-name>admin</role-name>
   </auth-constraint>
  </security-constraint>
  <login-config>
   <auth-method>FORM</auth-method>
   <form-login-config>
-   <form-login-page>partials/login.html</form-login-page>
-   <form-error-page>partials/login.html</form-error-page>
+   <form-login-page>/partials/login.html</form-login-page>
+   <form-error-page>/partials/login.html</form-error-page>
   </form-login-config>
  </login-config>
  <security-role>

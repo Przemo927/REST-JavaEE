@@ -15,7 +15,6 @@ import org.json.simple.JSONObject;
 
 @Provider
 public class Mapper implements ExceptionMapper<ValidationException> {
-
 	
 JSONObject json;
 Map<String,String> map;

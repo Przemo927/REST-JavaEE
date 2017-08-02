@@ -3,6 +3,7 @@ package pl.przemek.repository;
 import java.util.Comparator;
 import java.util.List;
 
+import javax.annotation.security.RolesAllowed;
 import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
@@ -17,22 +18,26 @@ public class DiscoveryRepositoryImpl implements DiscoveryRepository {
 	@PersistenceContext
 	private EntityManager em;
 
+	@RolesAllowed({"admin","user"})
     @Override
 	public void add(Discovery discovery) {
 	    em.persist(discovery);
 	}
 
+	@RolesAllowed("admin")
     @Override
 	public void remove(Discovery discovery) {
-	    em.remove(discovery);
+	    em.remove(em.merge(discovery));
 	}
 
+	@RolesAllowed({"admin","user"})
     @Override
 	public Discovery update(Discovery discovery) {
 		Discovery updateDiscovery=em.merge(discovery);
 		return updateDiscovery;
 	}
 
+	@RolesAllowed({"admin","user"})
 	@Override
 	public Discovery get(long id) {
 		Discovery discovery = em.find(Discovery.class, id);
@@ -45,6 +50,7 @@ public class DiscoveryRepositoryImpl implements DiscoveryRepository {
 	    return discovery;
 	}
 
+	@RolesAllowed({"admin","user"})
     @Override
 	public List<Discovery> getAll(Comparator<Discovery> comparator) {
 		TypedQuery<Discovery> getAllQuery = em.createNamedQuery("Discovery.findAll", Discovery.class);
@@ -56,6 +62,7 @@ public class DiscoveryRepositoryImpl implements DiscoveryRepository {
 		
 	}
 
+	@RolesAllowed({"admin","user"})
     @Override
 	public List<Discovery> getByName(String name){
 		TypedQuery<Discovery> disc = em.createNamedQuery("Discovery.search", Discovery.class);

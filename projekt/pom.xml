@@ -94,7 +94,6 @@
                 <artifactId>maven-war-plugin</artifactId>
               <configuration>
                 <outputDirectory>deployments</outputDirectory>
-                <warName>projekt</warName>
               </configuration>
             </plugin>
         </plugins>

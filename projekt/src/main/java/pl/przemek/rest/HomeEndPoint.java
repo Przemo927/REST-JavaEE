@@ -8,26 +8,43 @@ import javax.ws.rs.Produces;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
 
+import org.json.simple.JSONObject;
 import pl.przemek.model.LoginStatus;
+import pl.przemek.model.Role;
+import pl.przemek.model.User;
+
+import java.util.List;
+import java.util.Set;
+
 @RequestScoped
 @Path("/home")
 public class HomeEndPoint {
 private final static String loginPath= "/projekt/api/login";
 private final static String logoutPath= "/projekt/api/logout";
+private JSONObject json;
 
 @GET
 @Path("/check")
 @Produces(MediaType.APPLICATION_JSON)
-public LoginStatus loginStatus (@Context HttpServletRequest request){
-	LoginStatus loginsStatus= new LoginStatus();
-	loginsStatus.setName("Zaloguj");
-	loginsStatus.setPath(loginPath);
-	if(request.getUserPrincipal() != null){
-		loginsStatus.setName("Wyloguj");
-		loginsStatus.setPath(logoutPath);
+public JSONObject loginStatus (@Context HttpServletRequest request){
+	json=new JSONObject();
+	if(request.getUserPrincipal() != null) {
+		User user = (User) request.getSession().getAttribute("user");
+		json.put("name", "Wyloguj");
+		json.put("path", logoutPath);
+		if (request.isUserInRole("admin")) {
+			json.put("role", "admin");
+		}
+		else{
+			json.put("role","user");
+		}
 	}
-
-	return loginsStatus;
+	else{
+		json.put("name","Zaloguj");
+		json.put("path",loginPath);
+	}
+	return json;
 }
 
 }
+

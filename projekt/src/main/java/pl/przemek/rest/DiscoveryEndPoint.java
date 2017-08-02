@@ -9,14 +9,7 @@ import java.util.List;
 import javax.enterprise.context.RequestScoped;
 import javax.inject.Inject;
 import javax.servlet.http.HttpServletRequest;
-import javax.ws.rs.Consumes;
-import javax.ws.rs.DefaultValue;
-import javax.ws.rs.GET;
-import javax.ws.rs.POST;
-import javax.ws.rs.Path;
-import javax.ws.rs.PathParam;
-import javax.ws.rs.Produces;
-import javax.ws.rs.QueryParam;
+import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
 
 import pl.przemek.model.Discovery;
@@ -24,6 +17,7 @@ import pl.przemek.model.User;
 import pl.przemek.repository.DiscoveryRepository;
 import pl.przemek.service.DiscoveryService;
 
+@RequestScoped
 @Path("/discovery")
 public class DiscoveryEndPoint {
 
@@ -51,7 +45,14 @@ public class DiscoveryEndPoint {
 
 	}
 
-	@RequestScoped
+    @DELETE
+    @Path("/{name}")
+    @Consumes(MediaType.APPLICATION_JSON)
+    public void removeByName(@PathParam("name") String name) {
+        discoveryService.removeDiscoveryByName(name);
+
+    }
+
 	@GET
 	@Produces(MediaType.APPLICATION_JSON)
 	public List<Discovery> getALL(@QueryParam("orderBy") @DefaultValue("popular") String order) {
