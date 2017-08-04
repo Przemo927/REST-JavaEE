@@ -23,12 +23,13 @@ public class DiscoveryService {
     List<Discovery> discoveries;
 
     public Discovery addDiscovery(Discovery discovery){
-    discovery.setDownVote(0);
-    discovery.setUpVote(0);
-    discovery.setTimestamp(new Timestamp(new Date().getTime()));
-    discrepo.add(discovery);
-    return discovery;
-    }
+        discovery.setDownVote(0);
+        discovery.setUpVote(0);
+        discovery.setTimestamp(new Timestamp(new Date().getTime()));
+        discrepo.add(discovery);
+        return discovery;
+        }
+
     public List<Discovery> getByName(String name){
         discoveries=discrepo.getByName(name);
         return discoveries;
@@ -61,9 +62,15 @@ public class DiscoveryService {
         }
         return discoveries;
     }
+
+
     public void removeDiscoveryByName(String name) {
         Discovery discovery=discrepo.getByName(name).get(0);
         voterepo.removeByDiscoveryId(discovery.getId());
         discrepo.remove(discovery);
+    }
+
+    public void updateDiscovery(Discovery discovery){
+        discrepo.update(discovery);
     }
     }

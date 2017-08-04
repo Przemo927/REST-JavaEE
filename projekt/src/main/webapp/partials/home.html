@@ -1,18 +1,22 @@
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
      
-     <form class="navbar-form navbar-right">
-        <div class="form-group">
-          Znajdź: <input type="text" class="form-control" ng-model="homCtrl.textInput" placeholder="Search">
-        </div>
-        <button type="submit" ng-click="homCtrl.SearchDiscovery()" class="btn btn-deafult">Szukaj</button>
-      </form>
-      <div class="panel-body">
-
-      Posortuj po: 
-      <button class="btn btn-default btn-pressure btn-sensitive" ng-click="homCtrl.SortByTime()">Czas dodania</button>
-      <button class="btn btn-default btn-pressure btn-sensitive" ng-click="homCtrl.SortByPopular()">Popularność</button>
-      
-
+     <div class="panel-body">
+          <div class="col col-md-3 col-sm-4">
+            Posortuj po:
+            <button class="btn btn-default btn-pressure btn-sensitive" ng-click="homCtrl.SortByTime()">Czas dodania</button>
+            <button class="btn btn-default btn-pressure btn-sensitive" ng-click="homCtrl.SortByPopular()">Popularność</button>
+          </div>
+          <div class="col col-md-6 col-sm-4 text-center">
+              <a href="#users"><button type="button" class="btn btn-default" ng-show="homCtrl.display">Lista użytkowników</button></a>
+          </div>
+          <div class="col col-md-3 col-sm-4">
+         <form class="navbar-form navbar-right">
+             <div class="form-group">
+                 Znajdź: <input type="text" class="form-control" ng-model="homCtrl.textInput" placeholder="Search">
+             </div>
+             <button type="submit" ng-click="homCtrl.SearchDiscovery()" class="btn btn-deafult">Szukaj</button>
+         </form>
+          </div>
       </div>
       <div class="container">
 	<ul class="list-unstyled">
@@ -20,22 +24,23 @@
    
       <div class="row bs-callout bs-callout-primary">
         <div class="col col-md-1 col-sm-2" >
-       
+
       <a href="api/vote?vote=VOTE_UP&discovery_id={{d.id}}" class="btn btn-success"><span class="glyphicon glyphicon-thumbs-up"></span></a>
       <div class="well well-sm centered">{{d.upVote-d.downVote}}</div>
             <a href="api/vote?vote=VOTE_DOWN&discovery_id={{d.id}}" class="btn btn-warning"><span class="glyphicon glyphicon-thumbs-down"/></a>
         </div>
-        <div class="col col-md-11 col-sm-10">
+        <div class="col col-md-10 col-sm-10">
       
           <p>{{d.description}}</p>
           <a href={{d.url}}><button class="btn btn-default btn-xs">Przejdź do strony</button></a>
-      </div>
+        </div>
+          <div class="col col-md-1 col-sm-2" >
+            <a href="#editdiscovery"><button type="button" class="btn btn-warning" ng-click="homCtrl.discoveryName.setName(d.name)" ng-show="homCtrl.display">Edytuj</button></a>
+           </div>
     </div>
       </li>
     </ul>
     </div>
-   
-    </li>
-    </ul>
+
 
     

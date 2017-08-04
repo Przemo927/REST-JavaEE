@@ -58,4 +58,7 @@ public class UserService {
         String md5Password = new BigInteger(1, digest.digest()).toString(16);
         return md5Password;
     }
+    public List<User> getAllUsers(){
+        return userrepo.getAll();
+    }
 }

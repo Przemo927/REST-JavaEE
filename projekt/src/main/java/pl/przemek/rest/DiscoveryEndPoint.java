@@ -59,4 +59,10 @@ public class DiscoveryEndPoint {
 		List<Discovery> allDiscoveries = discoveryService.getAll(order);
 		return allDiscoveries;
 	}
+
+	@PUT
+	@Consumes(MediaType.APPLICATION_JSON)
+	public void updateDiscovery(Discovery discovery){
+		discoveryService.updateDiscovery(discovery);
+	}
 }

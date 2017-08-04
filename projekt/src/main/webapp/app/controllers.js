@@ -18,6 +18,16 @@ app
             controller: 'LoginController',
             controllerAs: 'logCtrl'
         })
+        .when('/editdiscovery', {
+            templateUrl: 'partials/editdiscovery.html',
+            controller: 'EditDiscoveryController',
+            controllerAs: 'editdiscCtrl'
+        })
+        .when('/users', {
+            templateUrl: 'partials/userslist.html',
+            controller: 'UserController',
+            controllerAs: 'userCtrl'
+        })
 
         .otherwise({
             redirectTo: '/'
@@ -26,9 +36,9 @@ app
 
 
 
-    .controller('HomeController', function(DiscoveryEndPoint,DiscoverySortEndPoint,$resource) {
+    .controller('HomeController', function(DiscoveryEndPoint,DiscoverySortEndPoint,CheckEndPoint,$resource,DiscoveryNameService) {
         var vm=this;
-
+        vm.discoveryName=DiscoveryNameService;
         function ReadAllDiscovery() {
             vm.discoveries=DiscoveryEndPoint.query(
                 function success(data, headers) {
@@ -56,7 +66,18 @@ app
         vm.SortByPopular=function(){
             vm.discoveries=DiscoverySortEndPoint.query({sort:'popular'});
         }
-    })
+
+        function CheckRole() {
+            vm.display=false;
+            vm.checkRole=CheckEndPoint.get(function success (data) {
+                if(vm.checkRole['role']=="admin"){
+                    vm.display=true;
+                }}
+            )
+           }
+        CheckRole();
+
+        })
 
 
     .controller('AddController', function(DiscoveryEndPoint,$resource) {
@@ -93,6 +114,36 @@ app
                     console.log(response.status); //np. 404
                 });
         }
+    })
+
+    .controller('EditDiscoveryController', function(DiscoveryNameService,DiscoveryEndPoint) {
+        var vm = this;
+        vm.discoveryName=DiscoveryNameService.getName();
+        console.log(vm.discoveryName);
+        DiscoveryEndPoint.query({namedisc:vm.discoveryName},function success(data){
+            console.log(data);
+           vm.discovery=data[0]
+        });
+
+        vm.RemoveDiscovery=function(name){
+            DiscoveryEndPoint.remove({namedisc:name});
+        }
+        vm.editDiscovery= new DiscoveryEndPoint();
+        vm.EditDiscovery=function(editeddiscovery){
+            if(editeddiscovery.name!=null){
+                vm.discovery.name=editeddiscovery.name;
+            }
+        }
+    })
+
+    .controller('UserController', function(UserEndPoint) {
+        var vm = this;
+
+        function GetAllUsers(){
+        vm.users = UserEndPoint.query();
+    }
+    GetAllUsers();
+
     })
 
 
