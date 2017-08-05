@@ -2,6 +2,7 @@ package pl.przemek.repository;
 
 import java.util.List;
 
+import javax.annotation.security.PermitAll;
 import javax.annotation.security.RolesAllowed;
 import javax.ejb.EJBException;
 import javax.ejb.Stateless;
@@ -18,7 +19,7 @@ public class UserRepositoryImpl implements UserRepository  {
 @PersistenceContext
 private EntityManager em;
 
-@RolesAllowed({"admin","user"})
+@PermitAll
 public void add(User user) {
     em.persist(user);
 	}

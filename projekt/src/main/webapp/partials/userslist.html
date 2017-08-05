@@ -5,8 +5,9 @@
         <div class="col-md-6 col-md-offset-3">
     <div class="list-group">
 	<ul class="list-unstyled">
-      <li ng-repeat="d in userCtrl.users">
-          <p class="list-group-item">{{d.username}}</p>
+     <li  ng-repeat="d in usersCtrl.users">
+         <a href="#user"><p ng-click="usersCtrl.id.setId(d.id)" class="list-group-item">{{d.username}}</p></a>
+         <p>{{d.id}}</p>
    
 
       </li>

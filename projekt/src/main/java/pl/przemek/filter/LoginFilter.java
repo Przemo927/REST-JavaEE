@@ -11,6 +11,7 @@ import javax.servlet.ServletRequest;
 import javax.servlet.ServletResponse;
 import javax.servlet.annotation.WebFilter;
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 
 import pl.przemek.model.User;
 import pl.przemek.repository.UserRepository;
@@ -27,16 +28,24 @@ public class LoginFilter implements Filter {
 	  @Override
 	    public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain) throws IOException, ServletException {
 	        HttpServletRequest httpReq = (HttpServletRequest) request;
+		  HttpServletResponse httpResp = (HttpServletResponse) response;
 	        if(httpReq.getUserPrincipal() != null && httpReq.getSession().getAttribute("user") == null) {
-	            saveUserInSession(httpReq);
+				String username = httpReq.getUserPrincipal().getName();
+				User userByUsername = userrep.getUserByUsername(username);
+				LogoutIfInActiveStatus(userByUsername,httpReq,httpResp);
+	            saveUserInSession(httpReq,userByUsername);
 	        }
 	        chain.doFilter(request, response);
 	    }
-	 
-	    private void saveUserInSession(HttpServletRequest request) {
-	        String username = request.getUserPrincipal().getName();
-	        User userByUsername = userrep.getUserByUsername(username);
-	        request.getSession(true).setAttribute("user", userByUsername);
+	    private void LogoutIfInActiveStatus(User user,HttpServletRequest request,HttpServletResponse response) throws IOException {
+			if(!user.isActive()){
+				request.getSession().invalidate();
+				response.sendRedirect("http://localhost:8080/projekt/index.html#/");
+			}
+		}
+	    private void saveUserInSession(HttpServletRequest request,User user) {
+
+	        request.getSession(true).setAttribute("user", user);
 	    }
 	 
 	    @Override

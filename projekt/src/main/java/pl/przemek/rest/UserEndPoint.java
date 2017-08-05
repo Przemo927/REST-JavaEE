@@ -21,6 +21,13 @@ public class UserEndPoint {
         userservice.RemoveByUserName(username);
     }
 
+    @GET
+    @Path("/{id}")
+    @Produces(MediaType.APPLICATION_JSON)
+    public User getUserById(@PathParam("id") Long id){
+        return userservice.getUserById(id);
+    }
+
     @PUT
     @Consumes(MediaType.APPLICATION_JSON)
     public void updateUser(User user){

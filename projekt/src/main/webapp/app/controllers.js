@@ -25,6 +25,11 @@ app
         })
         .when('/users', {
             templateUrl: 'partials/userslist.html',
+            controller: 'UsersController',
+            controllerAs: 'usersCtrl'
+        })
+        .when('/user', {
+            templateUrl: 'partials/user.html',
             controller: 'UserController',
             controllerAs: 'userCtrl'
         })
@@ -65,7 +70,7 @@ app
         };
         vm.SortByPopular=function(){
             vm.discoveries=DiscoverySortEndPoint.query({sort:'popular'});
-        }
+        };
 
         function CheckRole() {
             vm.display=false;
@@ -116,34 +121,58 @@ app
         }
     })
 
-    .controller('EditDiscoveryController', function(DiscoveryNameService,DiscoveryEndPoint) {
+    .controller('EditDiscoveryController', function(DiscoveryNameService,DiscoveryEndPoint,UpdateDiscoveryEndPoint) {
         var vm = this;
         vm.discoveryName=DiscoveryNameService.getName();
         console.log(vm.discoveryName);
         DiscoveryEndPoint.query({namedisc:vm.discoveryName},function success(data){
             console.log(data);
-           vm.discovery=data[0]
+           vm.discovery=data[0];
         });
-
         vm.RemoveDiscovery=function(name){
             DiscoveryEndPoint.remove({namedisc:name});
-        }
-        vm.editDiscovery= new DiscoveryEndPoint();
+        };
         vm.EditDiscovery=function(editeddiscovery){
             if(editeddiscovery.name!=null){
                 vm.discovery.name=editeddiscovery.name;
             }
+            if(editeddiscovery.url!=null){
+                vm.discovery.url=editeddiscovery.url;
+            }
+            if(editeddiscovery.description!=null){
+                vm.discovery.description=editeddiscovery.description;
+            }
+            UpdateDiscoveryEndPoint.update(vm.discovery);
         }
     })
 
-    .controller('UserController', function(UserEndPoint) {
+    .controller('UsersController', function(UserEndPoint,IdUser) {
         var vm = this;
+        vm.id=IdUser;
 
         function GetAllUsers(){
         vm.users = UserEndPoint.query();
     }
     GetAllUsers();
 
+    })
+    .controller('UserController', function(UserEndPoint,UpdateUserEndPoint,IdUser) {
+        var vm = this;
+        vm.id=IdUser.getId();
+        function GetUserById(id){
+            vm.getuser=UserEndPoint.get({parameter:id});
+        }
+        GetUserById(vm.id);
+        vm.UpdateUser=function(user){
+            if(user.username!=null){
+            vm.getuser.username=user.username;
+            }
+            if(user.email!=null) {
+                vm.getuser.email = user.email;
+            }
+            console.log(user.active);
+        UpdateUserEndPoint.update(vm.getuser);
+            }
     })
 
 
