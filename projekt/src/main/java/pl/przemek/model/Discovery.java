@@ -1,5 +1,8 @@
 package pl.przemek.model;
 
+import org.hibernate.validator.constraints.URL;
+import pl.przemek.validation.URLUnique;
+
 import java.io.Serializable;
 import java.sql.Timestamp;
 
@@ -12,6 +15,9 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
+import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Size;
+
 @Entity
 @NamedQueries({
     @NamedQuery(name = "Discovery.findAll", query = "SELECT p FROM Discovery p"),
@@ -23,19 +29,29 @@ public class Discovery implements Serializable {
 	@GeneratedValue(strategy=GenerationType.IDENTITY)
 	@Column(name = "discovery_id",nullable = false, unique = true)
 	private long id;
+	@Size(max=100)
+    @NotNull
 	@Column(nullable = false, length=100)
     private String name;
+	@Size(max=250)
+    @NotNull
 	@Column(nullable = false, length=250)
     private String description;
+    @Size(max=200)
+    @URL
+    @URLUnique
 	@Column(nullable = false, length=200, unique = true)
     private String url;
+    @NotNull
 	@Column(nullable = false)
     private Timestamp timestamp;
     @ManyToOne
     @JoinColumn(name = "user_id")
     private User user;
+    @NotNull
     @Column(nullable = false)
     private int upVote;
+    @NotNull
     @Column(nullable = false)
     private int downVote;
      

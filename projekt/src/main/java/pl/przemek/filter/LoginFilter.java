@@ -16,9 +16,7 @@ import javax.servlet.http.HttpServletResponse;
 import pl.przemek.model.User;
 import pl.przemek.repository.UserRepository;
 
-/**
- * Servlet Filter implementation class LoginFilter
- */
+
 @WebFilter("/*")
 public class LoginFilter implements Filter {
 	

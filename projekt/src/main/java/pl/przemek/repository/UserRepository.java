@@ -14,5 +14,5 @@ public interface UserRepository {
     public User get(Long id);
     public List<User> getAll();
     public User getUserByUsername(String name);
-
+    public boolean checkPresenceOfUserByUsername(String username);
 }

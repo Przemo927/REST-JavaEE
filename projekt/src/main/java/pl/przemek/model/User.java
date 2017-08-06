@@ -4,9 +4,12 @@ import java.io.Serializable;
 import java.util.Set;
 
 import javax.persistence.*;
+import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 
+import org.hibernate.validator.constraints.Email;
 import pl.przemek.validation.UsernameMatching;
+import pl.przemek.validation.UsernameUnique;
 
 @NamedQueries({
     @NamedQuery(name = "User.findAll", query = "SELECT p FROM User p"),
@@ -21,13 +24,22 @@ public class User implements Serializable {
 	@GeneratedValue(strategy=GenerationType.IDENTITY)
 	@Column(name = "user_id",nullable = false, unique = true)
     private long id;
+	@Size(max=45)
+    @NotNull
 	@Column(nullable = false, unique = true, length=45)
 	@UsernameMatching
+    @UsernameUnique
     private String username;
+	@Size(max=60)
+    @NotNull
+    @Email
 	@Column(nullable = false, unique = true, length=60)
     private String email;
+    @Size(max=45)
+    @NotNull
 	@Column(nullable = false, length=45)
     private String password;
+    @NotNull
 	@Column(nullable = false)
     private boolean active;
 

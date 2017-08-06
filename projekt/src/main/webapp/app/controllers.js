@@ -170,6 +170,7 @@ app
             if(user.email!=null) {
                 vm.getuser.email = user.email;
             }
+                vm.getuser.active=user.active;
             console.log(user.active);
         UpdateUserEndPoint.update(vm.getuser);
             }

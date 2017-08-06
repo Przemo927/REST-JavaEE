@@ -9,6 +9,7 @@ import java.util.List;
 import javax.enterprise.context.RequestScoped;
 import javax.inject.Inject;
 import javax.servlet.http.HttpServletRequest;
+import javax.validation.Valid;
 import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
 
@@ -29,7 +30,7 @@ public class DiscoveryEndPoint {
 
 	@POST
 	@Consumes(MediaType.APPLICATION_JSON)
-	public void AddDiscovery(Discovery discovery) throws IOException {
+	public void AddDiscovery(@Valid Discovery discovery) throws IOException {
 		request.setCharacterEncoding("UTF-8");
 		User user = (User) request.getSession().getAttribute("user");
 		discovery.setUser(user);

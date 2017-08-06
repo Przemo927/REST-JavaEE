@@ -1,6 +1,7 @@
 package pl.przemek.rest;
 
 import pl.przemek.model.User;
+import pl.przemek.repository.UserRepository;
 import pl.przemek.service.UserService;
 
 import javax.inject.Inject;
@@ -13,6 +14,8 @@ public class UserEndPoint {
 
     @Inject
     private UserService userservice;
+    @Inject
+    private UserRepository userrepo;
 
     @Path("/{username}")
     @Consumes(MediaType.APPLICATION_JSON)
@@ -39,4 +42,5 @@ public class UserEndPoint {
     public List<User> getAllUsers(){
        return userservice.getAllUsers();
     }
+
 }

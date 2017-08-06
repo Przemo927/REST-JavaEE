@@ -6,10 +6,7 @@ import javax.annotation.security.PermitAll;
 import javax.annotation.security.RolesAllowed;
 import javax.ejb.EJBException;
 import javax.ejb.Stateless;
-import javax.persistence.EntityManager;
-import javax.persistence.PersistenceContext;
-import javax.persistence.PersistenceException;
-import javax.persistence.TypedQuery;
+import javax.persistence.*;
 
 import pl.przemek.model.User;
 
@@ -54,5 +51,15 @@ public User getUserByUsername(String username) {
     User chosenuser=users.get(0);
     return chosenuser;
 	
+}
+@RolesAllowed({"admin","user"})
+public boolean checkPresenceOfUserByUsername(String username){
+    Query query=em.createNativeQuery("SELECT 1 FROM User WHERE username=:username");
+    query.setParameter("username",username);
+    List list=query.getResultList();
+    if(list.size()!=0){
+        return false;
+    }
+    return true;
 }
 }

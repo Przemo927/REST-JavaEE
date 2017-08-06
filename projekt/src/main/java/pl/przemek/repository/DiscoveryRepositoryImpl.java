@@ -3,10 +3,12 @@ package pl.przemek.repository;
 import java.util.Comparator;
 import java.util.List;
 
+import javax.annotation.security.PermitAll;
 import javax.annotation.security.RolesAllowed;
 import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
+import javax.persistence.Query;
 import javax.persistence.TypedQuery;
 
 import pl.przemek.model.Discovery;
@@ -70,6 +72,16 @@ public class DiscoveryRepositoryImpl implements DiscoveryRepository {
 		List<Discovery> discovery=disc.getResultList();
 		return discovery;
 	
+	}
+	@PermitAll
+	public boolean checkPresenceDiscveryByUrl(String url){
+		Query query=em.createNativeQuery("SELECT 1 FROM Discovery WHERE url=:url");
+		query.setParameter("url",url);
+		List list=query.getResultList();
+		if(list.size()!=0){
+			return false;
+		}
+		return true;
 	}
 
 }
