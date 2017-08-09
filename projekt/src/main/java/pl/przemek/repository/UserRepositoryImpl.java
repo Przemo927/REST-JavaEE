@@ -52,7 +52,7 @@ public User getUserByUsername(String username) {
     return chosenuser;
 	
 }
-@RolesAllowed({"admin","user"})
+@PermitAll
 public boolean checkPresenceOfUserByUsername(String username){
     Query query=em.createNativeQuery("SELECT 1 FROM User WHERE username=:username");
     query.setParameter("username",username);

@@ -1,13 +1,20 @@
 package pl.przemek.rest;
 
+import pl.przemek.Message.MailService;
+import pl.przemek.Message.MessageWrapper;
 import pl.przemek.model.User;
 import pl.przemek.repository.UserRepository;
 import pl.przemek.service.UserService;
 
 import javax.inject.Inject;
+import javax.mail.*;
+import javax.mail.internet.AddressException;
+import javax.mail.internet.InternetAddress;
+import javax.mail.internet.MimeMessage;
 import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
 import java.util.List;
+import java.util.Properties;
 
 @Path("/user")
 public class UserEndPoint {
@@ -16,6 +23,8 @@ public class UserEndPoint {
     private UserService userservice;
     @Inject
     private UserRepository userrepo;
+    @Inject
+    private MailService mailService;
 
     @Path("/{username}")
     @Consumes(MediaType.APPLICATION_JSON)
