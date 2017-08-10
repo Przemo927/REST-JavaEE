@@ -13,10 +13,11 @@ import javax.mail.Session;
 import javax.mail.Transport;
 import javax.mail.internet.InternetAddress;
 import javax.mail.internet.MimeMessage;
-import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.Properties;
+
+import static com.sun.org.apache.xalan.internal.utils.SecuritySupport.getResourceAsStream;
 
 @MessageDriven(activationConfig = {
         @ActivationConfigProperty(
@@ -24,33 +25,37 @@ import java.util.Properties;
                 propertyValue = "jms/queue/Emails"),
 })
 public class MailSendingService implements MessageListener {
-    String fromEmail;
-    String username;
-    String password;
-    String fileName="/InformationGmail.properties";
-    Properties prop=System.getProperties();
-    Properties props;
-    FileInputStream input;
+
+    private String fromEmail;
+    private String username;
+    private String password;
+    private final String emailProperties= "/InformationEmail.properties";
+    private final String gmailProperties= "/loginInformationGmail.properties";
     @Override
     public void onMessage(Message message) {
         try {
-            props=new Properties();
-            ClassLoader loader = Thread.currentThread().getContextClassLoader();
-            try(InputStream resourceStream = loader.getResourceAsStream(fileName)){
-                props.load(resourceStream);}
+            Properties propsEmail=new Properties();
+            Properties propsGmail=new Properties();
+            ClassLoader loaderEmailInformation = Thread.currentThread().getContextClassLoader();
+            ClassLoader loaderLoginGmailInformation = Thread.currentThread().getContextClassLoader();
+            try(
+                    InputStream resourceStreamEmail = loaderEmailInformation.getResourceAsStream(emailProperties);
+                    InputStream resourceStreamGmail = loaderEmailInformation.getResourceAsStream(gmailProperties);
+            ){
+                    propsEmail.load(resourceStreamEmail);
+                    propsGmail.load(resourceStreamGmail);
+                    fromEmail=propsGmail.getProperty("fromEmail");
+                    username=propsGmail.getProperty("username");
+                    password=propsGmail.getProperty("password");
+            }
+
             MessageWrapper msg = message.getBody(MessageWrapper.class);
 
-
-
-            Session mailSession= Session.getDefaultInstance(props,null);
+            Session mailSession= Session.getDefaultInstance(propsEmail,null);
             mailSession.setDebug(true);
 
             javax.mail.Message mailMessage=createMailMessage(mailSession,msg.getMessage(),msg.getUser());
-
-
-            Transport transport=mailSession.getTransport("smtp");
-            transport.connect("smtp.gmail.com",username,password);
-            transport.sendMessage(mailMessage,mailMessage.getAllRecipients());
+            getTransportAndSendEmail(mailSession,mailMessage,username,password);
         } catch (MessagingException e) {
                 e.printStackTrace();
         } catch (JMSException e) {
@@ -66,5 +71,11 @@ public class MailSendingService implements MessageListener {
         mailMessage.setContent(message,"text/html");
         mailMessage.setSubject("Email");
         return mailMessage;
+    }
+    private void getTransportAndSendEmail(Session mailSession,javax.mail.Message mailMessage,String username,String password) throws MessagingException {
+        Transport transport=mailSession.getTransport("smtp");
+        transport.connect("smtp.gmail.com",username,password);
+        transport.sendMessage(mailMessage,mailMessage.getAllRecipients());
+
     }
 }

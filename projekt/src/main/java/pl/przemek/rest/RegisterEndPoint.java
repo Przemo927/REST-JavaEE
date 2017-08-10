@@ -13,6 +13,9 @@ import pl.przemek.Message.MessageWrapper;
 import pl.przemek.model.User;
 import pl.przemek.service.UserService;
 
+import java.net.URI;
+import java.net.URISyntaxException;
+
 @Produces(MediaType.APPLICATION_JSON)
 @Path("/register")
 public class RegisterEndPoint {
@@ -29,11 +32,11 @@ public class RegisterEndPoint {
 @Consumes(MediaType.APPLICATION_JSON)
 public Response sendEmailAndSaveUserToRegistration(@Valid User user) {
 	//this.user=userService.addUser(user);
-    String message="Click link below to continue registration"+"</br>"+"<a href=http://localhost:8080/projekt/api/register/"+user.getUsername()+">Klik</a>";
+    String message="Click link below to continue registration"+
+            "<br><br><a href=http://localhost:8080/projekt/api/register/"+user.getUsername()+">Continue</a>";
     MessageWrapper msg = new MessageWrapper(message,user);
     mailService.sendMessage(msg);
     request.getSession(true).setAttribute(user.getUsername(),user);
-    //User user1=(User)request.getSession(false).getAttribute("userToRegistration");
     return Response
           .accepted(this.user)
         .build();
@@ -41,12 +44,10 @@ public Response sendEmailAndSaveUserToRegistration(@Valid User user) {
     @GET
     @Path("/{username}")
     @Consumes(MediaType.APPLICATION_JSON)
-    public Response addUser(@PathParam("username") String username) {
+    public Response addUser(@PathParam("username") String username) throws URISyntaxException {
         User user=(User)request.getSession(false).getAttribute(username);
         this.user=userService.addUser(user);
-        return Response
-                .accepted(this.user)
-                .build();
+        return Response.seeOther(new URI("http://localhost:8080/projekt/index.html#/")).build();
     }
 
 }
