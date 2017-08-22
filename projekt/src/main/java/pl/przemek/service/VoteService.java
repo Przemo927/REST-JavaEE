@@ -22,9 +22,9 @@ public class VoteService {
     @Inject
     UserRepository userrepo;
 
-    private Vote CreateVote(long user_id, long discovery_id, VoteType votetype) {
-        User user = userrepo.get(user_id);
-        Discovery discovery = disrepo.get(discovery_id);
+    private Vote CreateVote(long userId, long discoveryId, VoteType votetype) {
+        User user = userrepo.get(userId);
+        Discovery discovery = disrepo.get(discoveryId);
         Vote vote = new Vote();
         vote.setUser(user);
         vote.setDiscovery(discovery);
@@ -33,13 +33,14 @@ public class VoteService {
         return vote;
     }
 
-    public void updateVote(long user_id, long discovery_id, VoteType newVoteType) {
+    public void updateVote(long userId, long discovery_id, VoteType newVoteType) {
         Vote updateVote = null;
         Vote existingVote = null;
-        existingVote = votrepo.getVoteByUserIdDiscoveryId(user_id, discovery_id);
+        existingVote = votrepo.getVoteByUserIdDiscoveryId(userId, discovery_id);
         if (existingVote == null) {
-            updateVote = CreateVote(user_id, discovery_id, newVoteType);
+            updateVote = CreateVote(userId, discovery_id, newVoteType);
             votrepo.add(updateVote);
+            updateDiscovery(discovery_id,null,updateVote);
         } else {
             Vote oldVote = new Vote(existingVote);
             existingVote.setVoteType(newVoteType);
@@ -51,15 +52,16 @@ public class VoteService {
 
     }
 
-    private void updateDiscovery(long discovery_id, Vote oldVote, Vote updateVote) {
-        Discovery discovery = disrepo.get(discovery_id);
+    private void updateDiscovery(long discoveryId, Vote oldVote, Vote updateVote) {
+        Discovery discovery = disrepo.get(discoveryId);
+        Discovery updateDiscovery=null;
         if (oldVote == null && updateVote != null) {
-            Discovery newdiscovery = AddDiscoveryVote(discovery, updateVote.getVoteType());
-            disrepo.update(newdiscovery);
+            updateDiscovery = AddDiscoveryVote(discovery, updateVote.getVoteType());
+            disrepo.update(updateDiscovery);
         } else if (oldVote != null && updateVote != null) {
-            Discovery ndiscovery = removeDiscoveryVote(discovery, oldVote.getVoteType());
-            Discovery newdiscovery = AddDiscoveryVote(ndiscovery, updateVote.getVoteType());
-            disrepo.update(newdiscovery);
+            Discovery discoveryWithRemovedVote = removeDiscoveryVote(discovery, oldVote.getVoteType());
+            updateDiscovery = AddDiscoveryVote(discoveryWithRemovedVote, updateVote.getVoteType());
+            disrepo.update(updateDiscovery);
         }
 
     }

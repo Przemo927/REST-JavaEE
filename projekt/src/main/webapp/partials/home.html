@@ -29,13 +29,14 @@
       <div class="well well-sm centered">{{d.upVote-d.downVote}}</div>
             <a href="api/vote?vote=VOTE_DOWN&discovery_id={{d.id}}" class="btn btn-warning"><span class="glyphicon glyphicon-thumbs-down"/></a>
         </div>
+
         <div class="col col-md-10 col-sm-10">
       
-          <p>{{d.description}}</p>
+            <a href="#discovery/{{d.name}}"><p>{{d.name}}</p></a>
           <a href={{d.url}}><button class="btn btn-default btn-xs">Przejdź do strony</button></a>
         </div>
           <div class="col col-md-1 col-sm-2" >
-            <a href="#editdiscovery"><button type="button" class="btn btn-warning" ng-click="homCtrl.discoveryName.setName(d.name)" ng-show="homCtrl.display">Edytuj</button></a>
+            <a href="#editdiscovery/{{d.name}}"><button type="button" class="btn btn-warning" ng-show="homCtrl.display">Edytuj</button></a>
            </div>
     </div>
       </li>

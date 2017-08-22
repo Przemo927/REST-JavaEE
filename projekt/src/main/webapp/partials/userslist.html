@@ -6,7 +6,7 @@
     <div class="list-group">
 	<ul class="list-unstyled">
      <li  ng-repeat="d in usersCtrl.users">
-         <a href="#user"><p ng-click="usersCtrl.id.setId(d.id)" class="list-group-item">Id:{{d.id}}. Username: {{d.username}}</p></a>
+         <a href="#edituser/{{d.id}}"><p class="list-group-item">Id:{{d.id}}. Username: {{d.username}}</p></a>
          <p></p>
    
 

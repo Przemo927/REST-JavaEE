@@ -31,12 +31,12 @@ public class RegisterEndPoint {
 @POST
 @Consumes(MediaType.APPLICATION_JSON)
 public Response sendEmailAndSaveUserToRegistration(@Valid User user) {
-	//this.user=userService.addUser(user);
-    String message="Click link below to continue registration"+
-            "<br><br><a href=http://localhost:8080/projekt/api/register/"+user.getUsername()+">Continue</a>";
-    MessageWrapper msg = new MessageWrapper(message,user);
-    mailService.sendMessage(msg);
-    request.getSession(true).setAttribute(user.getUsername(),user);
+	this.user=userService.addUser(user);
+    //String message="Click link below to continue registration"+
+    //        "<br><br><a href=http://localhost:8080/projekt/api/register/"+user.getUsername()+">Continue</a>";
+    //MessageWrapper msg = new MessageWrapper(message,user);
+    //mailService.sendMessage(msg);
+    //request.getSession(true).setAttribute(user.getUsername(),user);
     return Response
           .accepted(this.user)
         .build();

@@ -1,6 +1,5 @@
 package pl.przemek.Message;
 
-
 import pl.przemek.model.User;
 
 import javax.ejb.ActivationConfigProperty;
@@ -31,38 +30,43 @@ public class MailSendingService implements MessageListener {
     private String password;
     private final String emailProperties= "/InformationEmail.properties";
     private final String gmailProperties= "/loginInformationGmail.properties";
+    private Properties propsEmail;
+    private Properties propsGmail;
     @Override
     public void onMessage(Message message) {
-        try {
-            Properties propsEmail=new Properties();
-            Properties propsGmail=new Properties();
-            ClassLoader loaderEmailInformation = Thread.currentThread().getContextClassLoader();
-            ClassLoader loaderLoginGmailInformation = Thread.currentThread().getContextClassLoader();
-            try(
-                    InputStream resourceStreamEmail = loaderEmailInformation.getResourceAsStream(emailProperties);
-                    InputStream resourceStreamGmail = loaderEmailInformation.getResourceAsStream(gmailProperties);
-            ){
-                    propsEmail.load(resourceStreamEmail);
-                    propsGmail.load(resourceStreamGmail);
-                    fromEmail=propsGmail.getProperty("fromEmail");
-                    username=propsGmail.getProperty("username");
-                    password=propsGmail.getProperty("password");
-            }
+            propsEmail=openPropertiesFile(emailProperties);
+            propsGmail=openPropertiesFile(gmailProperties);
+            fromEmail=propsGmail.getProperty("fromEmail");
+            username=propsGmail.getProperty("username");
+            password=propsGmail.getProperty("password");
 
+            Session mailSession= createSession();
+        try{
             MessageWrapper msg = message.getBody(MessageWrapper.class);
-
-            Session mailSession= Session.getDefaultInstance(propsEmail,null);
-            mailSession.setDebug(true);
-
             javax.mail.Message mailMessage=createMailMessage(mailSession,msg.getMessage(),msg.getUser());
-            getTransportAndSendEmail(mailSession,mailMessage,username,password);
+            getTransportSMTPAndSendEmail(mailSession,mailMessage,username,password);
         } catch (MessagingException e) {
                 e.printStackTrace();
         } catch (JMSException e) {
             e.printStackTrace();
+        }
+    }
+    private Properties openPropertiesFile(String fileName){
+        Properties property=new Properties();
+        ClassLoader loader = Thread.currentThread().getContextClassLoader();
+        try(InputStream resourceStream = loader.getResourceAsStream(fileName);
+        ){property.load(resourceStream);
+
+
         } catch (IOException e) {
             e.printStackTrace();
         }
+        return property;
+    }
+    private Session createSession(){
+        Session mailSession= Session.getInstance(propsEmail,null);
+        mailSession.setDebug(true);
+        return mailSession;
     }
     private javax.mail.Message createMailMessage(Session mailSession, String message,User user) throws MessagingException {
         javax.mail.Message mailMessage=new MimeMessage(mailSession);
@@ -72,7 +76,7 @@ public class MailSendingService implements MessageListener {
         mailMessage.setSubject("Email");
         return mailMessage;
     }
-    private void getTransportAndSendEmail(Session mailSession,javax.mail.Message mailMessage,String username,String password) throws MessagingException {
+    private void getTransportSMTPAndSendEmail(Session mailSession,javax.mail.Message mailMessage,String username,String password) throws MessagingException {
         Transport transport=mailSession.getTransport("smtp");
         transport.connect("smtp.gmail.com",username,password);
         transport.sendMessage(mailMessage,mailMessage.getAllRecipients());

@@ -1,22 +1,4 @@
 app
-    .service('DiscoveryNameService',function(){
-        var vm=this;
-        vm.setName = function(name) {
-            vm.name=name;
-        };
-        vm.getName=function() {
-            return vm.name;
-        }
-    })
-    .service('IdUser', function() {
-        var vm = this;
-        vm.setId = function (id) {
-            vm.id = id;
-        };
-        vm.getId = function () {
-            return vm.id;
-        }
-    })
     .factory('DiscoveryEndPoint', function($resource) {
         return $resource('api/discovery/:namedisc');
     })
@@ -38,6 +20,9 @@ app
     })
     .factory('RegisterEndPoint', function($resource) {
         return $resource('api/register');
+    })
+    .factory('CommentEndPoint', function($resource) {
+        return $resource('api/comment/:name');
     })
     .factory('CheckEndPoint', function($resource) {
         return $resource('api/home/check');

@@ -10,7 +10,7 @@ app
         })
         .when('/add', {
             templateUrl: 'partials/new.html',
-            controller: 'AddController',
+            controller: 'AddDiscoveryController',
             controllerAs: 'addCtrl'
         })
         .when('/login', {
@@ -18,18 +18,23 @@ app
             controller: 'LoginController',
             controllerAs: 'logCtrl'
         })
-        .when('/editdiscovery', {
+        .when('/editdiscovery/:discoveryName', {
             templateUrl: 'partials/editdiscovery.html',
             controller: 'EditDiscoveryController',
             controllerAs: 'editdiscCtrl'
+        })
+        .when('/discovery/:discoveryName', {
+            templateUrl: 'partials/discovery.html',
+            controller: 'DiscoveryController',
+            controllerAs: 'discCtrl'
         })
         .when('/users', {
             templateUrl: 'partials/userslist.html',
             controller: 'UsersController',
             controllerAs: 'usersCtrl'
         })
-        .when('/user', {
-            templateUrl: 'partials/user.html',
+        .when('/edituser/:id', {
+            templateUrl: 'partials/edituser.html',
             controller: 'UserController',
             controllerAs: 'userCtrl'
         })
@@ -41,9 +46,8 @@ app
 
 
 
-    .controller('HomeController', function(DiscoveryEndPoint,DiscoverySortEndPoint,CheckEndPoint,$resource,DiscoveryNameService) {
+    .controller('HomeController', function(DiscoveryEndPoint,DiscoverySortEndPoint,CheckEndPoint,$resource) {
         var vm=this;
-        vm.discoveryName=DiscoveryNameService;
         function ReadAllDiscovery() {
             vm.discoveries=DiscoveryEndPoint.query(
                 function success(data, headers) {
@@ -84,17 +88,6 @@ app
 
         })
 
-
-    .controller('AddController', function(DiscoveryEndPoint,$resource) {
-        var vm = this;
-        vm.discovery = new DiscoveryEndPoint();
-        vm.addDiscovery = function(discovery) {
-            vm.discovery.$save(function(data) {
-                vm.discovery = new DiscoveryEndPoint();
-            })
-        };
-    })
-
     .controller('RegisterController', function(RegisterEndPoint) {
         var vm = this;
         vm.user = new RegisterEndPoint();
@@ -121,9 +114,19 @@ app
         }
     })
 
-    .controller('EditDiscoveryController', function(DiscoveryNameService,DiscoveryEndPoint,UpdateDiscoveryEndPoint) {
+    .controller('AddDiscoveryController', function(DiscoveryEndPoint,$resource) {
         var vm = this;
-        vm.discoveryName=DiscoveryNameService.getName();
+        vm.discovery = new DiscoveryEndPoint();
+        vm.addDiscovery = function(discovery) {
+            vm.discovery.$save(function(data) {
+                vm.discovery = new DiscoveryEndPoint();
+            })
+        };
+    })
+
+    .controller('EditDiscoveryController', function(DiscoveryEndPoint,UpdateDiscoveryEndPoint,$routeParams) {
+        var vm = this;
+        vm.discoveryName=$routeParams.discoveryName;
         console.log(vm.discoveryName);
         DiscoveryEndPoint.query({namedisc:vm.discoveryName},function success(data){
             console.log(data);
@@ -146,19 +149,33 @@ app
         }
     })
 
-    .controller('UsersController', function(UserEndPoint,IdUser) {
+    .controller('DiscoveryController', function(DiscoveryEndPoint,$routeParams,CommentEndPoint) {
         var vm = this;
-        vm.id=IdUser;
+        vm.discoveryName=$routeParams.discoveryName;
+        DiscoveryEndPoint.get({namedisc:vm.discoveryName},function success(data){
+            console.log(data);
+            vm.discovery=data;
+        });
+        vm.getComment=CommentEndPoint.query({name:vm.discoveryName});
+        vm.comment=new CommentEndPoint();
+        vm.addComment=function(comment){
 
+            vm.comment.$save({name:vm.discoveryName},function(data) {
+            });
+        }
+    })
+
+    .controller('UsersController', function(UserEndPoint) {
+        var vm = this;
         function GetAllUsers(){
         vm.users = UserEndPoint.query();
     }
     GetAllUsers();
 
     })
-    .controller('UserController', function(UserEndPoint,UpdateUserEndPoint,IdUser) {
+    .controller('UserController', function(UserEndPoint,UpdateUserEndPoint,$routeParams) {
         var vm = this;
-        vm.id=IdUser.getId();
+        vm.id=$routeParams.id;
         function GetUserById(id){
             vm.getuser=UserEndPoint.get({parameter:id});
         }

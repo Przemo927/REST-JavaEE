@@ -40,9 +40,9 @@ public class DiscoveryEndPoint {
 	@GET
 	@Path("/{name}")
 	@Produces(MediaType.APPLICATION_JSON)
-	public List<Discovery> getByName(@PathParam("name") String name) {
-		List<Discovery> discoveries = discoveryService.getByName(name);
-		return discoveries;
+	public Discovery getByName(@PathParam("name") String name) {
+		return discoveryService.getByName(name);
+
 
 	}
 

@@ -29,7 +29,7 @@ public class VoteEndPoint {
 @Inject
 private VoteService voteService;
 @Inject
-	HttpServletRequest request;
+HttpServletRequest request;
 
 @GET
 public void Voting(@QueryParam("vote") String vote,@QueryParam("discovery_id") Long discovery_id){

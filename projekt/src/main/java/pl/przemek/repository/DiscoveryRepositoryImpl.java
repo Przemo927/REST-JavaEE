@@ -10,6 +10,7 @@ import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.persistence.Query;
 import javax.persistence.TypedQuery;
+import javax.validation.constraints.Null;
 
 import pl.przemek.model.Discovery;
 
@@ -66,10 +67,16 @@ public class DiscoveryRepositoryImpl implements DiscoveryRepository {
 
 	@RolesAllowed({"admin","user"})
     @Override
-	public List<Discovery> getByName(String name){
+	public Discovery getByName(String name){
+		Discovery discovery=null;
 		TypedQuery<Discovery> disc = em.createNamedQuery("Discovery.search", Discovery.class);
 		disc.setParameter("name", name);
-		List<Discovery> discovery=disc.getResultList();
+		List<Discovery> discoveryResultList=disc.getResultList();
+		try{
+			discovery=discoveryResultList.get(0);
+		} catch(NullPointerException e){
+
+		}
 		return discovery;
 	
 	}

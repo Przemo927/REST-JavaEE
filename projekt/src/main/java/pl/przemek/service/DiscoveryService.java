@@ -30,9 +30,9 @@ public class DiscoveryService {
         return discovery;
         }
 
-    public List<Discovery> getByName(String name){
-        discoveries=discrepo.getByName(name);
-        return discoveries;
+    public Discovery getByName(String name){
+        return discrepo.getByName(name);
+
     }
 
     public List<Discovery> getAll(String order){
@@ -65,7 +65,7 @@ public class DiscoveryService {
 
 
     public void removeDiscoveryByName(String name) {
-        Discovery discovery=discrepo.getByName(name).get(0);
+        Discovery discovery=discrepo.getByName(name);
         voterepo.removeByDiscoveryId(discovery.getId());
         discrepo.remove(discovery);
     }

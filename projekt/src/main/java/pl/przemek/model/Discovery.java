@@ -5,16 +5,9 @@ import pl.przemek.validation.URLUnique;
 
 import java.io.Serializable;
 import java.sql.Timestamp;
+import java.util.List;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
-import javax.persistence.NamedQueries;
-import javax.persistence.NamedQuery;
+import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 
@@ -42,12 +35,12 @@ public class Discovery implements Serializable {
     @URLUnique
 	@Column(nullable = false, length=200, unique = true)
     private String url;
-    @NotNull
 	@Column(nullable = false)
     private Timestamp timestamp;
     @ManyToOne
     @JoinColumn(name = "user_id")
     private User user;
+
     @NotNull
     @Column(nullable = false)
     private int upVote;
@@ -181,4 +174,5 @@ public class Discovery implements Serializable {
             return false;
         return true;
     }
+
 }
