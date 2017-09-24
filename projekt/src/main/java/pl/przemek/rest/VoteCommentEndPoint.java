@@ -13,11 +13,15 @@ import javax.ws.rs.QueryParam;
 @Path("/votecom")
 public class VoteCommentEndPoint {
 
-    @Inject
+
     VoteCommentService votecommentservice;
     @Inject
     HttpServletRequest request;
-
+    @Inject
+    public VoteCommentEndPoint(VoteCommentService votecommentservice){
+        this.votecommentservice=votecommentservice;
+    }
+    public VoteCommentEndPoint(){}
     @GET
     public void voting(@QueryParam("vote") String vote, @QueryParam("commentId") long commentId){
         User loggedUser=(User)request.getSession().getAttribute("user");

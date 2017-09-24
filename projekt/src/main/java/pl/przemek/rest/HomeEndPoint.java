@@ -30,7 +30,7 @@ public JSONObject loginStatus (@Context HttpServletRequest request){
 	json=new JSONObject();
 	if(request.getUserPrincipal() != null) {
 		User user = (User) request.getSession().getAttribute("user");
-		json.put("name", "Wyloguj");
+		json.put("name", "Logout");
 		json.put("path", logoutPath);
 		if (request.isUserInRole("admin")) {
 			json.put("role", "admin");
@@ -40,7 +40,7 @@ public JSONObject loginStatus (@Context HttpServletRequest request){
 		}
 	}
 	else{
-		json.put("name","Zaloguj");
+		json.put("name","Login");
 		json.put("path",loginPath);
 	}
 	return json;

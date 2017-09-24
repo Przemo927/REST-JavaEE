@@ -8,6 +8,7 @@ import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 
 import org.hibernate.validator.constraints.Email;
+import pl.przemek.validation.EmailUnique;
 import pl.przemek.validation.UsernameMatching;
 import pl.przemek.validation.UsernameUnique;
 
@@ -31,6 +32,7 @@ public class User implements Serializable {
     @UsernameUnique
     private String username;
 	@Size(max=60)
+    @EmailUnique
     @NotNull
     @Email
 	@Column(nullable = false, unique = true, length=60)

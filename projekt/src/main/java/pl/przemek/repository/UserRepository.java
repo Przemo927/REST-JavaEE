@@ -15,4 +15,5 @@ public interface UserRepository {
     public List<User> getAll();
     public User getUserByUsername(String name);
     public boolean checkPresenceOfUserByUsername(String username);
+    public boolean checkPresenceOfEmail(String email);
 }

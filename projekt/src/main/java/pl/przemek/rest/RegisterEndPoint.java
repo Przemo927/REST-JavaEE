@@ -20,23 +20,28 @@ import java.net.URISyntaxException;
 @Path("/register")
 public class RegisterEndPoint {
 
-    @Inject
-    UserService userService;
-    @Inject
-    private MailService mailService;
 
+    private UserService userService;
+    private MailService mailService;
     private User user;
     @Context
     HttpServletRequest request;
+    @Inject
+    public RegisterEndPoint(UserService userService,MailService mailService){
+        this.userService=userService;
+        this.mailService=mailService;
+    }
+    public RegisterEndPoint(){}
+
 @POST
 @Consumes(MediaType.APPLICATION_JSON)
 public Response sendEmailAndSaveUserToRegistration(@Valid User user) {
-	this.user=userService.addUser(user);
-    //String message="Click link below to continue registration"+
-    //        "<br><br><a href=http://localhost:8080/projekt/api/register/"+user.getUsername()+">Continue</a>";
-    //MessageWrapper msg = new MessageWrapper(message,user);
-    //mailService.sendMessage(msg);
-    //request.getSession(true).setAttribute(user.getUsername(),user);
+	//this.user=userService.addUser(user);
+    String message="Click link below to continue registration"+
+            "<br><br><a href=http://localhost:8080/projekt/api/register/"+user.getUsername()+">Continue</a>";
+    MessageWrapper msg = new MessageWrapper(message,user);
+    mailService.sendMessage(msg);
+    request.getSession(true).setAttribute(user.getUsername(),user);
     return Response
           .accepted(this.user)
         .build();

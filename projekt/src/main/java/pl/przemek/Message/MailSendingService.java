@@ -16,7 +16,6 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.util.Properties;
 
-import static com.sun.org.apache.xalan.internal.utils.SecuritySupport.getResourceAsStream;
 
 @MessageDriven(activationConfig = {
         @ActivationConfigProperty(
@@ -45,16 +44,14 @@ public class MailSendingService implements MessageListener {
             MessageWrapper msg = message.getBody(MessageWrapper.class);
             javax.mail.Message mailMessage=createMailMessage(mailSession,msg.getMessage(),msg.getUser());
             getTransportSMTPAndSendEmail(mailSession,mailMessage,username,password);
-        } catch (MessagingException e) {
+        } catch (MessagingException | JMSException e) {
                 e.printStackTrace();
-        } catch (JMSException e) {
-            e.printStackTrace();
         }
     }
     private Properties openPropertiesFile(String fileName){
         Properties property=new Properties();
         ClassLoader loader = Thread.currentThread().getContextClassLoader();
-        try(InputStream resourceStream = loader.getResourceAsStream(fileName);
+        try(InputStream resourceStream = loader.getResourceAsStream(fileName)
         ){property.load(resourceStream);
 
 

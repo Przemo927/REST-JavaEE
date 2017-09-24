@@ -19,13 +19,17 @@ import java.util.Properties;
 @Path("/user")
 public class UserEndPoint {
 
-    @Inject
-    private UserService userservice;
-    @Inject
-    private UserRepository userrepo;
-    @Inject
-    private MailService mailService;
 
+    private UserService userservice;
+    private UserRepository userrepo;
+    private MailService mailService;
+    @Inject
+    public UserEndPoint(UserService userService,UserRepository userRepository,MailService mailService){
+        this.userservice=userService;
+        this.userrepo=userRepository;
+        this.mailService=mailService;
+    }
+    public UserEndPoint(){}
     @Path("/{username}")
     @Consumes(MediaType.APPLICATION_JSON)
     @DELETE

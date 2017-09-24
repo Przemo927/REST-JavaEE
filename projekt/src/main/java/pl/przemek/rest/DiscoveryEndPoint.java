@@ -1,9 +1,7 @@
 package pl.przemek.rest;
 
 import java.io.IOException;
-import java.sql.Timestamp;
-import java.util.Comparator;
-import java.util.Date;
+
 import java.util.List;
 
 import javax.enterprise.context.RequestScoped;
@@ -15,18 +13,21 @@ import javax.ws.rs.core.MediaType;
 
 import pl.przemek.model.Discovery;
 import pl.przemek.model.User;
-import pl.przemek.repository.DiscoveryRepository;
 import pl.przemek.service.DiscoveryService;
 
 @RequestScoped
 @Path("/discovery")
 public class DiscoveryEndPoint {
 
-	@Inject
 	private DiscoveryService discoveryService;
 	@Inject
 	HttpServletRequest request;
-	Discovery discovery;
+
+	@Inject
+	public DiscoveryEndPoint(DiscoveryService discoveryService){
+		this.discoveryService=discoveryService;
+	}
+	public DiscoveryEndPoint(){}
 
 	@POST
 	@Consumes(MediaType.APPLICATION_JSON)

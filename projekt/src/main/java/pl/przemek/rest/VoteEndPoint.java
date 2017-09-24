@@ -26,11 +26,15 @@ import pl.przemek.service.VoteService;
 @Path("/vote")
 public class VoteEndPoint {
 
-@Inject
 private VoteService voteService;
+
 @Inject
 HttpServletRequest request;
-
+@Inject
+public VoteEndPoint(VoteService voteService){
+	this.voteService=voteService;
+}
+public VoteEndPoint(){}
 @GET
 public void Voting(@QueryParam("vote") String vote,@QueryParam("discovery_id") Long discovery_id){
 	User loggedUser = (User) request.getSession().getAttribute("user");

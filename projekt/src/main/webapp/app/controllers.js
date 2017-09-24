@@ -128,9 +128,9 @@ app
         var vm = this;
         vm.discoveryName=$routeParams.discoveryName;
         console.log(vm.discoveryName);
-        DiscoveryEndPoint.query({namedisc:vm.discoveryName},function success(data){
+        DiscoveryEndPoint.get({namedisc:vm.discoveryName},function success(data){
             console.log(data);
-           vm.discovery=data[0];
+           vm.discovery=data;
         });
         vm.RemoveDiscovery=function(name){
             DiscoveryEndPoint.remove({namedisc:name});

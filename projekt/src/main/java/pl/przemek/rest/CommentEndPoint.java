@@ -13,10 +13,15 @@ import java.util.*;
 @Path("/comment")
 public class CommentEndPoint {
 
-    @Inject
     private CommentService commentservice;
     @Inject
     HttpServletRequest request;
+
+    @Inject
+    public CommentEndPoint(CommentService commentservice){
+        this.commentservice=commentservice;
+    }
+    public CommentEndPoint(){}
 
     @GET
     @Produces(MediaType.APPLICATION_JSON)

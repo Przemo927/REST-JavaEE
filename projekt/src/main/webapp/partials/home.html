@@ -2,19 +2,19 @@
      
      <div class="panel-body">
           <div class="col col-md-3 col-sm-4">
-            Posortuj po:
-            <button class="btn btn-default btn-pressure btn-sensitive" ng-click="homCtrl.SortByTime()">Czas dodania</button>
-            <button class="btn btn-default btn-pressure btn-sensitive" ng-click="homCtrl.SortByPopular()">Popularność</button>
+            Sort by:
+            <button class="btn btn-default btn-pressure btn-sensitive" ng-click="homCtrl.SortByTime()">Time</button>
+            <button class="btn btn-default btn-pressure btn-sensitive" ng-click="homCtrl.SortByPopular()">Popularity</button>
           </div>
           <div class="col col-md-6 col-sm-4 text-center">
-              <a href="#users"><button type="button" class="btn btn-default" ng-show="homCtrl.display">Lista użytkowników</button></a>
+              <a href="#users"><button type="button" class="btn btn-default" ng-show="homCtrl.display">List of users</button></a>
           </div>
           <div class="col col-md-3 col-sm-4">
          <form class="navbar-form navbar-right">
              <div class="form-group">
-                 Znajdź: <input type="text" class="form-control" ng-model="homCtrl.textInput" placeholder="Search">
+                 Find: <input type="text" class="form-control" ng-model="homCtrl.textInput" placeholder="Search">
              </div>
-             <button type="submit" ng-click="homCtrl.SearchDiscovery()" class="btn btn-deafult">Szukaj</button>
+             <button type="submit" ng-click="homCtrl.SearchDiscovery()" class="btn btn-deafult">Search</button>
          </form>
           </div>
       </div>
@@ -33,10 +33,10 @@
         <div class="col col-md-10 col-sm-10">
       
             <a href="#discovery/{{d.name}}"><p>{{d.name}}</p></a>
-          <a href={{d.url}}><button class="btn btn-default btn-xs">Przejdź do strony</button></a>
+          <a href={{d.url}}><button class="btn btn-default btn-xs">Source</button></a>
         </div>
           <div class="col col-md-1 col-sm-2" >
-            <a href="#editdiscovery/{{d.name}}"><button type="button" class="btn btn-warning" ng-show="homCtrl.display">Edytuj</button></a>
+            <a href="#editdiscovery/{{d.name}}"><button type="button" class="btn btn-warning" ng-show="homCtrl.display">Edit</button></a>
            </div>
     </div>
       </li>
