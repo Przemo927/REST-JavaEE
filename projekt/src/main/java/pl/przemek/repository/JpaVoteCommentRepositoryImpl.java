@@ -10,7 +10,7 @@ import javax.persistence.TypedQuery;
 import javax.validation.constraints.Null;
 
 @Stateless
-public class VoteCommentRepositoryImpl implements VoteCommentRepository {
+public class JpaVoteCommentRepositoryImpl implements JpaVoteCommentRepository {
 
     @PersistenceContext
     private EntityManager em;

@@ -6,7 +6,7 @@ import pl.przemek.model.VoteComment;
 
 import java.util.List;
 
-public interface VoteCommentRepository {
+public interface JpaVoteCommentRepository {
     public void add(VoteComment vote);
     public VoteComment update(VoteComment vote);
     public void remove(VoteComment vote);

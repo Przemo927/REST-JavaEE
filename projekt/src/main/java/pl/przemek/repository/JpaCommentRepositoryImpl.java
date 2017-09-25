@@ -10,7 +10,7 @@ import javax.persistence.TypedQuery;
 import java.util.List;
 
 @Stateless
-public class CommentRepositoryImpl implements CommentRepository {
+public class JpaCommentRepositoryImpl implements JpaCommentRepository {
 
     @PersistenceContext
     private EntityManager em;

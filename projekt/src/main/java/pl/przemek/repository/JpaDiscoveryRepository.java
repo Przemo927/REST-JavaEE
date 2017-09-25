@@ -6,7 +6,7 @@ import javax.annotation.security.RolesAllowed;
 import java.util.Comparator;
 import java.util.List;
 
-public interface DiscoveryRepository {
+public interface JpaDiscoveryRepository {
     public void add(Discovery discovery);
     public void remove(Discovery discovery);
     public Discovery update(Discovery discovery);

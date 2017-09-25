@@ -11,7 +11,7 @@ import javax.persistence.*;
 import pl.przemek.model.User;
 
 @Stateless
-public class UserRepositoryImpl implements UserRepository  {
+public class JpaUserRepositoryImpl implements JpaUserRepository  {
 	
 @PersistenceContext
 private EntityManager em;

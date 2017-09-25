@@ -15,7 +15,7 @@ import javax.validation.constraints.Null;
 import pl.przemek.model.Discovery;
 
 @Stateless
-public class DiscoveryRepositoryImpl implements DiscoveryRepository {
+public class JpaDiscoveryRepositoryImpl implements JpaDiscoveryRepository {
 	
 	
 	@PersistenceContext

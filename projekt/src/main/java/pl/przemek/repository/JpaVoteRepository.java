@@ -4,7 +4,7 @@ import pl.przemek.model.Vote;
 
 import java.util.List;
 
-public interface VoteRepository {
+public interface JpaVoteRepository {
     public void add(Vote vote);
     public Vote update(Vote vote);
     public void remove(Vote vote);

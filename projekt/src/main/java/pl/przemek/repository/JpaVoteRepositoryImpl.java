@@ -12,7 +12,7 @@ import javax.persistence.TypedQuery;
 import pl.przemek.model.Role;
 import pl.przemek.model.Vote;
 @Stateless
-public class VoteRepositoryImpl implements VoteRepository {
+public class JpaVoteRepositoryImpl implements JpaVoteRepository {
 	@PersistenceContext
 	private EntityManager em;
 

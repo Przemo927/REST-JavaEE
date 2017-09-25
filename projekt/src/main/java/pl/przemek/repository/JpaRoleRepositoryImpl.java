@@ -10,7 +10,7 @@ import javax.persistence.TypedQuery;
 import pl.przemek.model.Role;
 import pl.przemek.model.User;
 @Stateless
-public class RoleRepositoryImpl implements RoleRepository {
+public class JpaRoleRepositoryImpl implements JpaRoleRepository {
 
 	 @PersistenceContext
 	private EntityManager em;

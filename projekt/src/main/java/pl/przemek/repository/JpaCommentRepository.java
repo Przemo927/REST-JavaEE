@@ -5,7 +5,7 @@ import pl.przemek.model.Comment;
 
 import java.util.List;
 
-public interface CommentRepository {
+public interface JpaCommentRepository {
     public void add(Comment commment);
     public void remove(Comment comment);
     public Comment update(Comment comment);
