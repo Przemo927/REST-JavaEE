@@ -31,17 +31,17 @@ public class CommentEndPoint {
 
     @POST
     @Consumes(MediaType.APPLICATION_JSON)
-    @Path("/{name}")
-    public void addComment(Comment comment,@PathParam("name") String name){
+    @Path("/{id}")
+    public void addComment(Comment comment,@PathParam("id") long id){
         User user=(User)request.getSession(false).getAttribute("user");
         comment.setUser(user);
-        commentservice.addComment(comment,name);
+        commentservice.addComment(comment,id);
     }
 
     @GET
     @Produces(MediaType.APPLICATION_JSON)
-    @Path("/{name}")
-    public List<Comment> getByDiscoveryId(@PathParam("name") String name){
-        return commentservice.getByDiscoveryName(name);
+    @Path("/{id}")
+    public List<Comment> getByDiscoveryId(@PathParam("id") long id){
+        return commentservice.getByDiscoveryId(id);
     }
 }

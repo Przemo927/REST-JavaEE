@@ -34,8 +34,8 @@ public class UserService {
     public User getUserById(Long id){
         return userrepo.get(id);
     }
-    public void RemoveByUserName(String username) {
-        User user=userrepo.getUserByUsername(username);
+    public void RemoveByUserId(long id) {
+        User user=userrepo.get(id);
         userrepo.remove(user);
     }
 

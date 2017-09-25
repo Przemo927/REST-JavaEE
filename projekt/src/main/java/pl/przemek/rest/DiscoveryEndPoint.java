@@ -39,19 +39,19 @@ public class DiscoveryEndPoint {
 	}
 
 	@GET
-	@Path("/{name}")
+	@Path("/{id}")
 	@Produces(MediaType.APPLICATION_JSON)
-	public Discovery getByName(@PathParam("name") String name) {
-		return discoveryService.getByName(name);
+	public Discovery getByName(@PathParam("id") long id) {
+		return discoveryService.getById(id);
 
 
 	}
 
     @DELETE
-    @Path("/{name}")
+    @Path("/{id}")
     @Consumes(MediaType.APPLICATION_JSON)
-    public void removeByName(@PathParam("name") String name) {
-        discoveryService.removeDiscoveryByName(name);
+    public void removeById(@PathParam("id") long id) {
+        discoveryService.removeDiscoveryById(id);
 
     }
 

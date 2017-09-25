@@ -11,5 +11,6 @@ public interface CommentRepository {
     public Comment update(Comment comment);
     public List<Comment> getAll();
     public List<Comment> getByDiscoveryName(String name);
+    public List<Comment> getByDiscoveryId(long id);
     public Comment get(long id);
 }

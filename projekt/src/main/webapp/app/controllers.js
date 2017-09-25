@@ -18,12 +18,12 @@ app
             controller: 'LoginController',
             controllerAs: 'logCtrl'
         })
-        .when('/editdiscovery/:discoveryName', {
+        .when('/editdiscovery/:discoveryId', {
             templateUrl: 'partials/editdiscovery.html',
             controller: 'EditDiscoveryController',
             controllerAs: 'editdiscCtrl'
         })
-        .when('/discovery/:discoveryName', {
+        .when('/discovery/:discoveryId', {
             templateUrl: 'partials/discovery.html',
             controller: 'DiscoveryController',
             controllerAs: 'discCtrl'
@@ -126,14 +126,13 @@ app
 
     .controller('EditDiscoveryController', function(DiscoveryEndPoint,UpdateDiscoveryEndPoint,$routeParams) {
         var vm = this;
-        vm.discoveryName=$routeParams.discoveryName;
-        console.log(vm.discoveryName);
-        DiscoveryEndPoint.get({namedisc:vm.discoveryName},function success(data){
+        vm.discoveryId=$routeParams.discoveryId;
+        DiscoveryEndPoint.get({id:vm.discoveryId},function success(data){
             console.log(data);
            vm.discovery=data;
         });
-        vm.RemoveDiscovery=function(name){
-            DiscoveryEndPoint.remove({namedisc:name});
+        vm.RemoveDiscovery=function(id){
+            DiscoveryEndPoint.remove({id:id});
         };
         vm.EditDiscovery=function(editeddiscovery){
             if(editeddiscovery.name!=null){
@@ -151,16 +150,16 @@ app
 
     .controller('DiscoveryController', function(DiscoveryEndPoint,$routeParams,CommentEndPoint) {
         var vm = this;
-        vm.discoveryName=$routeParams.discoveryName;
-        DiscoveryEndPoint.get({namedisc:vm.discoveryName},function success(data){
+        vm.discoveryId=$routeParams.discoveryId;
+        DiscoveryEndPoint.get({id:vm.discoveryId},function success(data){
             console.log(data);
             vm.discovery=data;
         });
-        vm.getComment=CommentEndPoint.query({name:vm.discoveryName});
+        vm.getComment=CommentEndPoint.query({name:vm.discoveryId});
         vm.comment=new CommentEndPoint();
         vm.addComment=function(comment){
 
-            vm.comment.$save({name:vm.discoveryName},function(data) {
+            vm.comment.$save({name:vm.discoveryId},function(data) {
             });
         }
     })

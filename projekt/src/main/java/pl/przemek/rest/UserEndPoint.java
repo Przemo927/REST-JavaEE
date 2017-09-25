@@ -30,11 +30,11 @@ public class UserEndPoint {
         this.mailService=mailService;
     }
     public UserEndPoint(){}
-    @Path("/{username}")
+    @Path("/{id}")
     @Consumes(MediaType.APPLICATION_JSON)
     @DELETE
-    public void removeByUserName(@PathParam("username") String username) {
-        userservice.RemoveByUserName(username);
+    public void removeByUserName(@PathParam("id") long id) {
+        userservice.RemoveByUserId(id);
     }
 
     @GET

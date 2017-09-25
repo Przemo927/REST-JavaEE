@@ -45,6 +45,13 @@ public class CommentRepositoryImpl implements CommentRepository {
     }
 
     @Override
+    public List<Comment> getByDiscoveryId(long id) {
+        TypedQuery<Comment> query=em.createNamedQuery("Comment.findByDiscoveryId",Comment.class);
+        query.setParameter("id",id);
+        return query.getResultList();
+    }
+
+    @Override
     public Comment get(long id) {
         return em.find(Comment.class,id);
     }

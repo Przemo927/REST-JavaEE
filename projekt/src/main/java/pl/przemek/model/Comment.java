@@ -8,7 +8,8 @@ import java.io.Serializable;
 @Entity
 @NamedQueries({
 @NamedQuery(name="Comment.findAll",query="SELECT p FROM Comment p"),
-@NamedQuery(name="Comment.findByDiscoveryName",query="SELECT p FROM Comment p WHERE p.discvovery.name=:name")})
+@NamedQuery(name="Comment.findByDiscoveryName",query="SELECT p FROM Comment p WHERE p.discvovery.name=:name"),
+@NamedQuery(name="Comment.findByDiscoveryId",query="SELECT p FROM Comment p WHERE p.discvovery.id=:id")})
 public class Comment implements Serializable {
     @Id
     @GeneratedValue(strategy= GenerationType.IDENTITY)

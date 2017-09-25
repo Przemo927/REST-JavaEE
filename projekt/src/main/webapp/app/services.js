@@ -1,6 +1,6 @@
 app
     .factory('DiscoveryEndPoint', function($resource) {
-        return $resource('api/discovery/:namedisc');
+        return $resource('api/discovery/:id');
     })
     .factory('UserEndPoint', function($resource) {
         return $resource('api/user/:parameter');

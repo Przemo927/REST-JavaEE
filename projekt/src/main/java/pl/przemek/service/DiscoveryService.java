@@ -34,6 +34,9 @@ public class DiscoveryService {
         return discrepo.getByName(name);
 
     }
+    public Discovery getById(long id){
+        return discrepo.get(id);
+    }
 
     public List<Discovery> getAll(String order){
         List<Discovery> discoveries = null;
@@ -67,6 +70,11 @@ public class DiscoveryService {
     public void removeDiscoveryByName(String name) {
         Discovery discovery=discrepo.getByName(name);
         voterepo.removeByDiscoveryId(discovery.getId());
+        discrepo.remove(discovery);
+    }
+    public void removeDiscoveryById(long id){
+        Discovery discovery=discrepo.get(id);
+        voterepo.removeByDiscoveryId(id);
         discrepo.remove(discovery);
     }
 

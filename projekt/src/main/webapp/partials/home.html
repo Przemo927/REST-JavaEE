@@ -32,11 +32,11 @@
 
         <div class="col col-md-10 col-sm-10">
       
-            <a href="#discovery/{{d.name}}"><p>{{d.name}}</p></a>
+            <a href="#discovery/{{d.id}}"><p>{{d.name}}</p></a>
           <a href={{d.url}}><button class="btn btn-default btn-xs">Source</button></a>
         </div>
           <div class="col col-md-1 col-sm-2" >
-            <a href="#editdiscovery/{{d.name}}"><button type="button" class="btn btn-warning" ng-show="homCtrl.display">Edit</button></a>
+            <a href="#editdiscovery/{{d.id}}"><button type="button" class="btn btn-warning" ng-show="homCtrl.display">Edit</button></a>
            </div>
     </div>
       </li>

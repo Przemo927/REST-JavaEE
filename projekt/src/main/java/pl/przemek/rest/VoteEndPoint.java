@@ -1,6 +1,8 @@
 
 package pl.przemek.rest;
 
+import java.net.URI;
+import java.net.URISyntaxException;
 import java.sql.Timestamp;
 import java.util.Date;
 
@@ -13,6 +15,7 @@ import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.MediaType;
+import javax.ws.rs.core.Response;
 
 import pl.przemek.model.Discovery;
 import pl.przemek.model.User;
@@ -36,14 +39,16 @@ public VoteEndPoint(VoteService voteService){
 }
 public VoteEndPoint(){}
 @GET
-public void Voting(@QueryParam("vote") String vote,@QueryParam("discovery_id") Long discovery_id){
+public Response Voting(@QueryParam("vote") String vote, @QueryParam("discovery_id") Long discovery_id) throws URISyntaxException {
 	User loggedUser = (User) request.getSession().getAttribute("user");
 
 	if(loggedUser!=null){
 		VoteType votetype=VoteType.valueOf(vote);
 		Long user_id=loggedUser.getId();
 		voteService.updateVote(user_id,discovery_id,votetype);
+
 	}
+	return Response.seeOther(new URI("http://localhost:8080/projekt/index.html#/")).build();
 }
 @GET
 @Produces(MediaType.APPLICATION_JSON)

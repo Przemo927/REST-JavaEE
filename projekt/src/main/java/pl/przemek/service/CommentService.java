@@ -16,8 +16,8 @@ public class CommentService {
     @Inject
     private DiscoveryRepository discrepo;
 
-    public void addComment(Comment comment, String name){
-        Discovery discvoery=discrepo.getByName(name);
+    public void addComment(Comment comment, long id){
+        Discovery discvoery=discrepo.get(id);
         comment.setDiscvovery(discvoery);
         commentrepo.add(comment);
     }
@@ -28,5 +28,8 @@ public class CommentService {
     public List<Comment> getByDiscoveryName(String name){
         return commentrepo.getByDiscoveryName(name);
 
+    }
+    public List<Comment> getByDiscoveryId(long id){
+        return commentrepo.getByDiscoveryId(id);
     }
 }
