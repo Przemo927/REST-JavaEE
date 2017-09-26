@@ -13,4 +13,4 @@
 
 # Maven
 log/
-projekt/target/**
+/target/**
