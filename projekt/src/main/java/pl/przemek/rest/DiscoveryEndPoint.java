@@ -31,7 +31,7 @@ public class DiscoveryEndPoint {
 
 	@POST
 	@Consumes(MediaType.APPLICATION_JSON)
-	public void AddDiscovery(@Valid Discovery discovery) throws IOException {
+	public void addDiscovery(@Valid Discovery discovery) throws IOException {
 		request.setCharacterEncoding("UTF-8");
 		User user = (User) request.getSession().getAttribute("user");
 		discovery.setUser(user);

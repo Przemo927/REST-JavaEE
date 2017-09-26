@@ -14,14 +14,14 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import pl.przemek.model.User;
-import pl.przemek.repository.UserRepository;
+import pl.przemek.repository.JpaUserRepository;
 
 
 @WebFilter("/*")
 public class LoginFilter implements Filter {
 	
-	@Inject 
-	UserRepository userrep;
+	@Inject
+	JpaUserRepository userrep;
 
 	  @Override
 	    public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain) throws IOException, ServletException {

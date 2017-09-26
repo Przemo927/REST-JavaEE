@@ -21,9 +21,6 @@ import pl.przemek.model.Discovery;
 import pl.przemek.model.User;
 import pl.przemek.model.Vote;
 import pl.przemek.model.VoteType;
-import pl.przemek.repository.DiscoveryRepository;
-import pl.przemek.repository.UserRepository;
-import pl.przemek.repository.VoteRepository;
 import pl.przemek.service.VoteService;
 
 @Path("/vote")

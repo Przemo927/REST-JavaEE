@@ -3,7 +3,7 @@ package pl.przemek.rest;
 import pl.przemek.Message.MailService;
 import pl.przemek.Message.MessageWrapper;
 import pl.przemek.model.User;
-import pl.przemek.repository.UserRepository;
+import pl.przemek.repository.JpaUserRepository;
 import pl.przemek.service.UserService;
 
 import javax.inject.Inject;
@@ -21,10 +21,10 @@ public class UserEndPoint {
 
 
     private UserService userservice;
-    private UserRepository userrepo;
+    private JpaUserRepository userrepo;
     private MailService mailService;
     @Inject
-    public UserEndPoint(UserService userService,UserRepository userRepository,MailService mailService){
+    public UserEndPoint(UserService userService,JpaUserRepository userRepository,MailService mailService){
         this.userservice=userService;
         this.userrepo=userRepository;
         this.mailService=mailService;

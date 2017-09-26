@@ -4,9 +4,9 @@ import pl.przemek.model.Discovery;
 import pl.przemek.model.User;
 import pl.przemek.model.Vote;
 import pl.przemek.model.VoteType;
-import pl.przemek.repository.DiscoveryRepository;
-import pl.przemek.repository.UserRepository;
-import pl.przemek.repository.VoteRepository;
+import pl.przemek.repository.JpaDiscoveryRepository;
+import pl.przemek.repository.JpaUserRepository;
+import pl.przemek.repository.JpaVoteRepository;
 
 import javax.inject.Inject;
 import java.sql.Timestamp;
@@ -16,11 +16,11 @@ import java.util.Date;
 public class VoteService {
 
     @Inject
-    VoteRepository votrepo;
+    JpaVoteRepository votrepo;
     @Inject
-    DiscoveryRepository disrepo;
+    JpaDiscoveryRepository disrepo;
     @Inject
-    UserRepository userrepo;
+    JpaUserRepository userrepo;
 
     private Vote CreateVote(long userId, long discoveryId, VoteType votetype) {
         User user = userrepo.get(userId);

@@ -13,7 +13,7 @@ public class LoginEndPoint {
     private final static String homePath="/projekt/index.html#!/home";
 
 @GET
-public void Login(@Context HttpServletRequest request,@Context HttpServletResponse response) throws IOException{
+public void login(@Context HttpServletRequest request,@Context HttpServletResponse response) throws IOException{
 	if(request.getUserPrincipal() != null) {
         response.sendRedirect(homePath);
     } else {

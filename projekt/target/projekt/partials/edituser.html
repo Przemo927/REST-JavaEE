@@ -1,0 +1,14 @@
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+
+    <div class="container">
+    </br>
+        <form class="form-signin" method="post">
+            <h2 class="form-signin-heading">Edit user</h2>
+            <input ng-model="userCtrl.user.email" type="email" class="form-control" placeholder="Email" required autofocus />
+            <input ng-model="userCtrl.user.username" type="text" name="inputUsername" class="form-control" placeholder="Nazwa użytkownika" required autofocus />
+            <label>Active:</label>
+                <input type="checkbox" ng-model="userCtrl.user.active" checked="checked"/>
+            <button ng-click="userCtrl.UpdateUser(userCtrl.user)" class="btn btn-lg btn-primary btn-block" type="submit" >Edit</button>
+        </form>
+
+</div>

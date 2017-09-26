@@ -3,8 +3,8 @@ package pl.przemek.service;
 
 import pl.przemek.model.Comment;
 import pl.przemek.model.Discovery;
-import pl.przemek.repository.CommentRepository;
-import pl.przemek.repository.DiscoveryRepository;
+import pl.przemek.repository.JpaCommentRepository;
+import pl.przemek.repository.JpaDiscoveryRepository;
 
 import javax.inject.Inject;
 import java.util.List;
@@ -12,9 +12,9 @@ import java.util.List;
 public class CommentService {
 
     @Inject
-    private CommentRepository commentrepo;
+    private JpaCommentRepository commentrepo;
     @Inject
-    private DiscoveryRepository discrepo;
+    private JpaDiscoveryRepository discrepo;
 
     public void addComment(Comment comment, long id){
         Discovery discvoery=discrepo.get(id);

@@ -2,9 +2,8 @@ package pl.przemek.service;
 
 import pl.przemek.model.Discovery;
 import pl.przemek.model.User;
-import pl.przemek.repository.DiscoveryRepository;
-import pl.przemek.repository.UserRepository;
-import pl.przemek.repository.VoteRepository;
+import pl.przemek.repository.JpaDiscoveryRepository;
+import pl.przemek.repository.JpaVoteRepository;
 
 import javax.inject.Inject;
 import javax.servlet.http.HttpServletResponse;
@@ -16,9 +15,9 @@ import java.util.List;
 public class DiscoveryService {
 
     @Inject
-    private DiscoveryRepository discrepo;
+    private JpaDiscoveryRepository discrepo;
     @Inject
-    private VoteRepository voterepo;
+    private JpaVoteRepository voterepo;
 
     List<Discovery> discoveries;
 

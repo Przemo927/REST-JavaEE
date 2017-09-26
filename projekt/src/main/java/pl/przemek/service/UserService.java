@@ -2,8 +2,8 @@ package pl.przemek.service;
 
 import pl.przemek.model.Role;
 import pl.przemek.model.User;
-import pl.przemek.repository.RoleRepository;
-import pl.przemek.repository.UserRepository;
+import pl.przemek.repository.JpaRoleRepository;
+import pl.przemek.repository.JpaUserRepository;
 
 import javax.inject.Inject;
 import java.math.BigInteger;
@@ -13,9 +13,9 @@ import java.util.List;
 
 public class UserService {
     @Inject
-    private UserRepository userrepo;
+    private JpaUserRepository userrepo;
     @Inject
-    private RoleRepository rolrepo;
+    private JpaRoleRepository rolrepo;
 
     public User addUser(User user){
         user.setActive(true);

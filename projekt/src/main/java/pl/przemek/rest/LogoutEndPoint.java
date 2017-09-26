@@ -13,7 +13,7 @@ public class LogoutEndPoint {
     private final static String homePath="/projekt/index.html#!/home";
 
 @GET
-public void Logout(@Context HttpServletRequest request,@Context HttpServletResponse response) throws IOException{
+public void logout(@Context HttpServletRequest request,@Context HttpServletResponse response) throws IOException{
 request.getSession().invalidate();
 response.sendRedirect(homePath);
 }

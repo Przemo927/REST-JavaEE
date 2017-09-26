@@ -5,9 +5,9 @@ import pl.przemek.model.Comment;
 import pl.przemek.model.User;
 import pl.przemek.model.VoteComment;
 import pl.przemek.model.VoteType;
-import pl.przemek.repository.CommentRepository;
-import pl.przemek.repository.UserRepository;
-import pl.przemek.repository.VoteCommentRepository;
+import pl.przemek.repository.JpaCommentRepository;
+import pl.przemek.repository.JpaUserRepository;
+import pl.przemek.repository.JpaVoteCommentRepository;
 
 import javax.inject.Inject;
 import java.sql.Timestamp;
@@ -16,11 +16,11 @@ import java.util.Date;
 public class VoteCommentService {
 
     @Inject
-    UserRepository userrepo;
+    JpaUserRepository userrepo;
     @Inject
-    CommentRepository commentrepo;
+    JpaCommentRepository commentrepo;
     @Inject
-    VoteCommentRepository votecommentrepo;
+    JpaVoteCommentRepository votecommentrepo;
 
     private VoteComment CreateVote(long userId, long commentId, VoteType voteType) {
         User user = userrepo.get(userId);

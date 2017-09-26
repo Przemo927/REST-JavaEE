@@ -1,7 +1,6 @@
 package pl.przemek.validation;
 
-import pl.przemek.repository.DiscoveryRepository;
-import pl.przemek.repository.UserRepository;
+import pl.przemek.repository.JpaDiscoveryRepository;
 
 import javax.inject.Inject;
 import javax.validation.ConstraintValidator;
@@ -10,7 +9,7 @@ import javax.validation.ConstraintValidatorContext;
 public class URLUniqueValidator implements ConstraintValidator<URLUnique, String> {
 
 	@Inject
-	DiscoveryRepository discrepo;
+	JpaDiscoveryRepository discrepo;
 	@Override
 	public void initialize(URLUnique arg0) {
 		// TODO Auto-generated method stub
