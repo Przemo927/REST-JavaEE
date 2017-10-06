@@ -24,6 +24,15 @@ app
     .factory('CommentEndPoint', function($resource) {
         return $resource('api/comment/:name');
     })
+    .factory('EventEndPoint', function($resource) {
+        return $resource('api/event/:id');
+    })
+    .factory('EventPositionEndPoint', function($resource) {
+        return $resource('api/position');
+    })
+    .factory('EventFindByPositionEndPoint', function($resource) {
+        return $resource('api/event/position');
+    })
     .factory('CheckEndPoint', function($resource) {
         return $resource('api/home/check');
     });

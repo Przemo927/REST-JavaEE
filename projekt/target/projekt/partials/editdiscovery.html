@@ -6,8 +6,8 @@
                 <input ng-model="editdiscCtrl.discovery.url" type="url" class="form-control" required autofocus />
                 <textarea ng-model="editdiscCtrl.discovery.description" rows="5"
                     class="form-control" required autofocus></textarea>
-                <button ng-click="editdiscCtrl.EditDiscovery(editdiscCtrl.discovery)" class="btn btn-lg btn-primary btn-block" type="submit">Edit</button>
+                <button ng-click="editdiscCtrl.editDiscovery(editdiscCtrl.discovery)" class="btn btn-lg btn-primary btn-block" type="submit">Edit</button>
             </form>
-              <button ng-click="editdiscCtrl.RemoveDiscovery(editdiscCtrl.discovery.id)" type="button" class="btn btn-lg btn-danger btn-block">Delete</button>
+              <button ng-click="editdiscCtrl.removeDiscovery(editdiscCtrl.discovery.id)" type="button" class="btn btn-lg btn-danger btn-block">Delete</button>
         </div>
         </div>

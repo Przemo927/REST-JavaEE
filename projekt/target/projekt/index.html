@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">	
     <link href="css/bootstrap.min.css" rel="stylesheet" media="screen">
     <link href="css/style.css" type="text/css" rel="stylesheet">
+    <link rel="stylesheet" href="bower_components/leaflet/dist/leaflet.css" />
 	
   </head>
  
@@ -26,7 +27,14 @@
             <ul class="nav navbar-nav navbar-right">
                 <li><a href="#">Main Page</a></li>
                 <li><a href="#add">Add new Discovery</a></li>
+                <li class="dropdown"><a href="" class="dropdown-toggle" data-toggle="dropdown">Event</a>
+                    <ul class="dropdown-menu">
+                        <li><a href="#addevent">Add</a></li>
+                        <li><a href="#findevent">Search</a></li>
+                        <li><a href="#">Delete</a></li>
+                    </ul></li>
                 <li><a href="{{indCtrl.c.path}}">{{indCtrl.c.name}}</a></li>
+
             </ul>
             </div>
         </div>
@@ -52,6 +60,9 @@
     <script src="app/app.js" type="application/javascript"></script>
     <script src="app/services.js" type="application/javascript"></script>
     <script src="app/controllers.js" type="application/javascript"></script>
-       
-     </body>
+      <script src="bower_components/leaflet/dist/leaflet.js"></script>
+      <script src="bower_components/angular-leaflet-directive/dist/angular-leaflet-directive.js"></script>
+
+
+  </body>
 </html>

@@ -47,6 +47,7 @@ public class JpaDiscoveryRepositoryImpl implements JpaDiscoveryRepository {
 		return discovery;
 	}
 
+	@RolesAllowed({"admin","user"})
     @Override
 	public List<Discovery> getAll() {
 		 List<Discovery> discovery = getAll(null);

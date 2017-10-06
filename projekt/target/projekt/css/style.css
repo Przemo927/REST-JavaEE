@@ -11,6 +11,34 @@ body {
   margin-bottom: 60px;
   padding-top: 50px;
 }
+.map {
+    position: relative;
+    top: 50px;
+    width: 50%;
+    left: 200px;
+}
+.map1 {
+    top: 10px;
+    width: 50%;
+    margin: auto;
+}
+.searchcity {
+    position: absolute;
+    width: 50%;
+    left: 600px;
+}
+.events {
+    position: absolute;
+    top:70px;
+    width: 30%;
+    float: left;
+}
+#button_show_map {
+    width: 30%;
+    float: left;
+    position: relative;
+    top: 215px;
+}
 .footer {
   position: absolute;
   bottom: 0;

@@ -15,6 +15,10 @@
   "dependencies": {
     "angular": "^1.6.1",
     "angular-route": "^1.6.1",
-    "angular-resource": "^1.6.1"
+    "angular-resource": "^1.6.1",
+    "angularjs-datepicker": "^2.1.23"
+  },
+  "resolutions": {
+    "leaflet": "^1.2.0"
   }
 }

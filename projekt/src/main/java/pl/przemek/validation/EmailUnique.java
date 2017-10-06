@@ -14,7 +14,7 @@ import static java.lang.annotation.RetentionPolicy.RUNTIME;
 @Retention(RUNTIME)
 @Target({ FIELD, METHOD, PARAMETER, ANNOTATION_TYPE })
 public @interface EmailUnique {
-	String message() default "{pl.przemek.validation.UmailUnique.message}";
+	String message() default "{pl.przemek.validation.EmailUnique.message}";
     Class<?>[] groups() default {};
     Class<? extends Payload>[] payload() default {};
 }

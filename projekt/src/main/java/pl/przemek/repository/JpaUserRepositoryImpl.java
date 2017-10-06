@@ -31,8 +31,7 @@ public User update(User user) {
 	User updateUser=em.merge(user);
 	return updateUser;
 }
-
-    @RolesAllowed({"admin","user"})
+@RolesAllowed({"admin","user"})
 public User get(Long id) {
     User user = em.find(User.class, id);
     return user;

@@ -3,8 +3,8 @@
      <div class="panel-body">
           <div class="col col-md-3 col-sm-4">
             Sort by:
-            <button class="btn btn-default btn-pressure btn-sensitive" ng-click="homCtrl.SortByTime()">Time</button>
-            <button class="btn btn-default btn-pressure btn-sensitive" ng-click="homCtrl.SortByPopular()">Popularity</button>
+            <button class="btn btn-default btn-pressure btn-sensitive" ng-click="homCtrl.sortByTime()">Time</button>
+            <button class="btn btn-default btn-pressure btn-sensitive" ng-click="homCtrl.sortByPopular()">Popularity</button>
           </div>
           <div class="col col-md-6 col-sm-4 text-center">
               <a href="#users"><button type="button" class="btn btn-default" ng-show="homCtrl.display">List of users</button></a>
@@ -14,7 +14,7 @@
              <div class="form-group">
                  Find: <input type="text" class="form-control" ng-model="homCtrl.textInput" placeholder="Search">
              </div>
-             <button type="submit" ng-click="homCtrl.SearchDiscovery()" class="btn btn-deafult">Search</button>
+             <button type="submit" ng-click="homCtrl.searchDiscovery()" class="btn btn-deafult">Search</button>
          </form>
           </div>
       </div>

@@ -2,6 +2,7 @@ package pl.przemek.rest;
 
 import javax.inject.Inject;
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
 import javax.ws.rs.*;
 import javax.ws.rs.core.Context;
@@ -24,12 +25,12 @@ public class RegisterEndPoint {
     private UserService userService;
     private MailService mailService;
     private User user;
-    @Context
-    HttpServletRequest request;
+    private HttpServletRequest request;
     @Inject
-    public RegisterEndPoint(UserService userService,MailService mailService){
+    public RegisterEndPoint(UserService userService, MailService mailService, HttpServletRequest request){
         this.userService=userService;
         this.mailService=mailService;
+        this.request=request;
     }
     public RegisterEndPoint(){}
 

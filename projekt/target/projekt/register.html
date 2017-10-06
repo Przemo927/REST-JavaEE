@@ -35,9 +35,7 @@
 <div class="col-sm-6 col-md-4 col-md-offset-4">
             <form class="form-signin" method="post">
                 <h2 class="form-signin-heading">Register</h2>
-                {{regCtrl.MessageEmail}}
                 <input ng-model="regCtrl.user.email" type="email" class="form-control" placeholder="Email" required autofocus />
-                {{regCtrl.MessageUser}}
                 <input ng-model="regCtrl.user.username" type="text" name="inputUsername" class="form-control" placeholder="Nazwa użytkownika" required autofocus />
                 <input ng-model="regCtrl.user.password" type="password" class="form-control" placeholder="Hasło" required />
                 <button ng-click="regCtrl.addUser(regCtrl.user)" class="btn btn-lg btn-primary btn-block" type="submit" >Register</button>
@@ -61,6 +59,8 @@
      <script type="application/javascript" src="app/app.js"></script>
       <script type="application/javascript" src="app/controllers.js"></script>
       <script type="application/javascript" src="app/services.js"></script>
+      <script src="bower_components/leaflet/dist/leaflet.js"></script>
+      <script src="bower_components/angular-leaflet-directive/dist/angular-leaflet-directive.js"></script>
        
      </body>
      </html>
