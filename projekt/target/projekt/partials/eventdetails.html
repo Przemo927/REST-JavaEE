@@ -1,0 +1,12 @@
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+
+    <div class="container">
+    </br>
+            <h2 class="form-signin-heading">{{eventdetailsCtrl.event.name}}</h2>
+            <p>City: {{eventdetailsCtrl.event.nameOfCity}}</p>
+            <p>Organized by: {{eventdetailsCtrl.event.user.username}} </p>
+        <p>{{eventdetailsCtrl.event.eventPosition[0].xCoordinate}}</p>
+        <leaflet width="400px" height="300px" markers="eventdetailsCtrl.markers" center="eventdetailsCtrl.center">
+
+
+</div>
