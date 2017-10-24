@@ -110,8 +110,6 @@ app
                     vm.user = new RegisterEndPoint();
                 },
                 function success(data, headers) {
-                    var InvalidFieldList=data['data']['InvalidFieldList'];
-                    console.log('Pobrano dane1: ' +data['data'][0]);
                     console.log('Pobrano dane: ' + data['data']['InvalidFieldList']);
                 },
                 function error(response) {

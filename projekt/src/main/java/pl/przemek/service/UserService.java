@@ -12,39 +12,51 @@ import java.security.NoSuchAlgorithmException;
 import java.util.List;
 
 public class UserService {
-    @Inject
-    private JpaUserRepository userrepo;
-    @Inject
-    private JpaRoleRepository rolrepo;
 
-    public User addUser(User user){
+    private JpaUserRepository userRepo;
+    private JpaRoleRepository rolRepo;
+    @Inject
+    public UserService(JpaUserRepository userRepo,JpaRoleRepository rolRepo){
+        this.userRepo=userRepo;
+        this.rolRepo=rolRepo;
+    }
+    public UserService(){
+        this.userRepo=null;
+        this.rolRepo=null;
+    }
+
+
+    public User addUser(User user) throws Exception {
         user.setActive(true);
         String password=user.getPassword();
         String md5Pass = encryptPassword(password);
         user.setPassword(md5Pass);
-        userrepo.add(user);
-        Addrole(user);
+        userRepo.add(user);
+        addRole(user);
         return user;
     }
 
-    private void Addrole(User user){
-        Role role=rolrepo.get("user");
-        rolrepo.update(role, user);
+    void addRole(User user) throws Exception {
+        Role role=rolRepo.get("user");
+        rolRepo.update(role, user);
     }
-    public User getUserById(Long id){
-        return userrepo.get(id);
+    public User getUserById(long id){
+        return userRepo.get(id);
     }
-    public void RemoveByUserId(long id) {
-        User user=userrepo.get(id);
-        userrepo.remove(user);
+
+    public void removeByUserId(long id) {
+        User user=userRepo.get(id);
+        userRepo.remove(user);
     }
 
     public void updateUser(User user){
-        String password=user.getPassword();
-        userrepo.update(user);
+        userRepo.update(user);
+    }
+    public List<User> getAllUsers(){
+        return userRepo.getAll();
     }
 
-    private String encryptPassword(String password) {
+    String encryptPassword(String password) {
         MessageDigest digest = null;
         try {
             digest = MessageDigest.getInstance("MD5");
@@ -55,7 +67,5 @@ public class UserService {
         String md5Password = new BigInteger(1, digest.digest()).toString(16);
         return md5Password;
     }
-    public List<User> getAllUsers(){
-        return userrepo.getAll();
-    }
+
 }

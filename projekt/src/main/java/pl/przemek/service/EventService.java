@@ -12,49 +12,62 @@ import java.util.stream.Collectors;
 
 public class EventService {
 
+    private JpaEventRepository eventRepo;
+
     @Inject
-    private JpaEventRepository eventrepo;
+    public EventService(JpaEventRepository eventRepo){
+        this.eventRepo=eventRepo;
+    }
+    public EventService(){
+        this.eventRepo=null;
+    }
+
 
     public void addEvent(Event event){
-        eventrepo.add(event);
-    }
-    public Event updateEvent(Event event){
-        return eventrepo.update(event);
-    }
-    public void removeEvent(Event event){
-        eventrepo.remove(event);
-    }
-    public Event getEvent(long id){
-        return eventrepo.get(id);
-    }
-    public List<Event> getAllEvents(){
-        return eventrepo.getAll();
-    }
-    public List<Event> getEventsByCity(String city){
-        return eventrepo.getByCity(city);
+        eventRepo.add(event);
     }
 
-    public List<Event> getEventByPosition(double x, double y, int distance){
-        List<Event> lisOfEvents=eventrepo.getAll();
-        return getListOfEventInsideDistanceBufor(x,y,distance,lisOfEvents);
+    public void updateEvent(Event event){
+        eventRepo.update(event);
     }
-    private List<Event> getListOfEventInsideDistanceBufor(double x, double y,int distance, List<Event> listOfEvent){
-        List<Event> listOfEventAfterChecking=listOfEvent.stream().parallel().filter(event->checkingDistance(x,y,distance,event.getEventPosition()))
+
+    public void removeEventById(long id){
+        Event event=eventRepo.get(id);
+        eventRepo.remove(event);
+    }
+    public Event getEvent(long id){
+        return eventRepo.get(id);
+    }
+
+    public List<Event> getAllEvents(){
+        return eventRepo.getAll();
+    }
+
+    public List<Event> getEventsByCity(String city){
+        return eventRepo.getByCity(city);
+    }
+
+    public List<Event> getEventByPosition(double latCoordinate, double lngCoordinate, int distance){
+        List<Event> lisOfEvents=eventRepo.getAll();
+        return getListOfEventInsideDistanceBufor(latCoordinate,lngCoordinate,distance,lisOfEvents);
+    }
+    List<Event> getListOfEventInsideDistanceBufor(double latCoordinate, double lngCoordinate,int distance, List<Event> listOfEvent){
+        List<Event> listOfEventAfterChecking=listOfEvent.stream().parallel().filter(event->checkingDistance(latCoordinate,lngCoordinate,distance,event.getEventPosition()))
         .collect(Collectors.toList());
         return listOfEventAfterChecking;
     }
-    private static boolean checkingDistance(double x1, double y1, int distance, List<EventPosition> listOfEventPosition){
+    boolean checkingDistance(double latCoordinate, double lngCoordinate, double distance, List<EventPosition> listOfEventPosition){
         double computedDistance;
         for(int i=0;i<listOfEventPosition.size();i++){
-            computedDistance=patternToComputeDistance(x1,y1,listOfEventPosition.get(i).getxCoordinate(),listOfEventPosition.get(i).getyCoordinate());
+            computedDistance=formulaToComputeDistance(latCoordinate,lngCoordinate,listOfEventPosition.get(i).getxCoordinate(),listOfEventPosition.get(i).getyCoordinate());
             if(distance>computedDistance){
                 return true;
             }
         }
-        return false;
 
+        return false;
     }
-    private static double patternToComputeDistance(double x1, double y1,double x2, double y2){
-        return Math.sqrt(Math.pow(x1-x2,2)+Math.pow(Math.cos((x1*Math.PI)/180)*(y2-y1),2))*40075.704/360;
+    double formulaToComputeDistance(double latCoordinateGivenByUser, double lngCoordinateGivenByUser,double latCoordinateOfEvent, double lngCoordinateOfEvent){
+        return Math.sqrt(Math.pow(latCoordinateGivenByUser-latCoordinateOfEvent,2)+Math.pow(Math.cos((latCoordinateGivenByUser*Math.PI)/180)*(lngCoordinateOfEvent-lngCoordinateGivenByUser),2))*40075.704/360;
     }
 }

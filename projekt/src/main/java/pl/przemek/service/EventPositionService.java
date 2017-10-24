@@ -8,10 +8,19 @@ import javax.inject.Inject;
 
 public class EventPositionService {
 
-    @Inject
+
     private JpaEventPositionRepository eventposrepo;
 
+    @Inject
+    public EventPositionService(JpaEventPositionRepository eventposrepo){
+        this.eventposrepo=eventposrepo;
+    }
+    public EventPositionService () {
+        this.eventposrepo=null;
+    }
+
     public void addEventPosition(EventPosition position){
+
         eventposrepo.add(position);
     }
 }

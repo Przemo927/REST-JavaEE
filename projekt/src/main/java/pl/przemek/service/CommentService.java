@@ -7,29 +7,38 @@ import pl.przemek.repository.JpaCommentRepository;
 import pl.przemek.repository.JpaDiscoveryRepository;
 
 import javax.inject.Inject;
+import javax.validation.constraints.Null;
 import java.util.List;
 
 public class CommentService {
 
+    private JpaCommentRepository commentRepo;
+    private JpaDiscoveryRepository discRepo;
+
     @Inject
-    private JpaCommentRepository commentrepo;
-    @Inject
-    private JpaDiscoveryRepository discrepo;
+    public CommentService(JpaCommentRepository commentRepo,JpaDiscoveryRepository discRepo){
+        this.commentRepo=commentRepo;
+        this.discRepo=discRepo;
+    }
+    public CommentService(){
+        this.commentRepo=null;
+        this.discRepo=null;
+    }
 
     public void addComment(Comment comment, long id){
-        Discovery discvoery=discrepo.get(id);
-        comment.setDiscvovery(discvoery);
-        commentrepo.add(comment);
+        Discovery discovery=discRepo.get(id);
+        comment.setDiscvovery(discovery);
+        commentRepo.add(comment);
     }
     public List<Comment> getAllComment(){
-        return commentrepo.getAll();
+        return commentRepo.getAll();
     }
 
     public List<Comment> getByDiscoveryName(String name){
-        return commentrepo.getByDiscoveryName(name);
+        return commentRepo.getByDiscoveryName(name);
 
     }
     public List<Comment> getByDiscoveryId(long id){
-        return commentrepo.getByDiscoveryId(id);
+        return commentRepo.getByDiscoveryId(id);
     }
 }

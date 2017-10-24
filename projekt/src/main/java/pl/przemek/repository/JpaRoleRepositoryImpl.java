@@ -19,9 +19,9 @@ public void update(Role role,User user){
 	role.getUsers().add(user);
 	em.merge(role);
 }
-public Role get(String name_role){
+public Role get(String nameRole){
 	TypedQuery<Role> getRole = em.createNamedQuery("Role.findByName", Role.class);
-	getRole.setParameter("role_name", name_role);
+	getRole.setParameter("role_name", nameRole);
 	List<Role> getroles=getRole.getResultList();
 	Role chosenRole=getroles.get(0);
 	return chosenRole;

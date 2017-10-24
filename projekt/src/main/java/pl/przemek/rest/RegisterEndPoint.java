@@ -50,7 +50,7 @@ public Response sendEmailAndSaveUserToRegistration(@Valid User user) {
     @GET
     @Path("/{username}")
     @Consumes(MediaType.APPLICATION_JSON)
-    public Response addUser(@PathParam("username") String username) throws URISyntaxException {
+    public Response addUser(@PathParam("username") String username) throws Exception {
         User user=(User)request.getSession(false).getAttribute(username);
         this.user=userService.addUser(user);
         return Response.seeOther(new URI("http://localhost:8080/projekt/index.html#/")).build();

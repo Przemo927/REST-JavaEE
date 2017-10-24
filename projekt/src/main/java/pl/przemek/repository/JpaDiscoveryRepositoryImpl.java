@@ -68,16 +68,12 @@ public class JpaDiscoveryRepositoryImpl implements JpaDiscoveryRepository {
 
 	@RolesAllowed({"admin","user"})
     @Override
-	public Discovery getByName(String name){
+	public Discovery getByName(String name) throws NullPointerException{
 		Discovery discovery=null;
 		TypedQuery<Discovery> disc = em.createNamedQuery("Discovery.search", Discovery.class);
 		disc.setParameter("name", name);
 		List<Discovery> discoveryResultList=disc.getResultList();
-		try{
-			discovery=discoveryResultList.get(0);
-		} catch(NullPointerException e){
-
-		}
+		discovery=discoveryResultList.get(0);
 		return discovery;
 	
 	}

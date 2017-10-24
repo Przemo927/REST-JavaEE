@@ -34,7 +34,7 @@ public class UserEndPoint {
     @Consumes(MediaType.APPLICATION_JSON)
     @DELETE
     public void removeByUserName(@PathParam("id") long id) {
-        userservice.RemoveByUserId(id);
+        userservice.removeByUserId(id);
     }
 
     @GET
