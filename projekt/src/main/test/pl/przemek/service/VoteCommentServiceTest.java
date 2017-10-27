@@ -49,7 +49,7 @@ public class VoteCommentServiceTest {
     }
     @Test
     @Parameters(method = "validParameters")
-    public void shouldAddNewVoteAndUpdateCommentWhenOldVoteDoesnotExist(int userId,int commentId,VoteType voteType) throws Exception {
+    public void shouldAddNewVoteAndUpdateCommentWhenOldVoteIsNotExist(int userId,int commentId,VoteType voteType) throws Exception {
         VoteComment vote=mock(VoteComment.class);
         VoteCommentService voteCommentService=spy(new VoteCommentService(userRepo,commentRepo,voteCommentRepo));
 
@@ -147,34 +147,44 @@ public class VoteCommentServiceTest {
     }
     @Test
     public void shouldReturnCommentWithValueOfVoteUpPlusOneWhenNewVoteIsVoteUp(){
+        int valueOfVoteUp=0;
         Comment comment=new Comment();
-        comment.setUpVote(0);
+        comment.setUpVote(valueOfVoteUp);
+
         Comment comment1=voteCommentService.addCommentVote(comment,VoteType.VOTE_UP);
-        assertEquals(1,comment1.getUpVote());
+
+        assertEquals(valueOfVoteUp+1,comment1.getUpVote());
 
     }
     @Test
     public void shouldReturnCommentWithValueOfVoteDownPlusOneWhenNewVoteIsVoteDown() throws Exception{
+        int valueOfVoteDown=0;
         Comment comment=new Comment();
-        comment.setDownVote(0);
+        comment.setDownVote(valueOfVoteDown);
+
         Comment comment1=voteCommentService.addCommentVote(comment,VoteType.VOTE_DOWN);
-        assertEquals(1,comment1.getDownVote());
+
+        assertEquals(valueOfVoteDown+1,comment1.getDownVote());
 
     }
     @Test
     public void shouldReturnCommentWithValueOfVoteUpMinusOneWhenVoteTypeIsUp() throws Exception {
+        int valueOfVoteUp=1;
         Comment comment=new Comment();
-        comment.setUpVote(1);
+        comment.setUpVote(valueOfVoteUp);
+
         Comment comment1=voteCommentService.removeCommentVote(comment,VoteType.VOTE_UP);
-        assertEquals(0,comment1.getUpVote());
+
+        assertEquals(valueOfVoteUp-1,comment1.getUpVote());
 
     }
     @Test
     public void shouldReturnCommentWithValueOfVoteDownMinusOneWhenVoteTypeIDown() throws Exception {
+        int valueOfVoteDown=1;
         Comment comment=new Comment();
-        comment.setDownVote(1);
+        comment.setDownVote(valueOfVoteDown);
         Comment comment1=voteCommentService.removeCommentVote(comment,VoteType.VOTE_DOWN);
-        assertEquals(0,comment1.getDownVote());
+        assertEquals(valueOfVoteDown-1,comment1.getDownVote());
 
     }
 }
