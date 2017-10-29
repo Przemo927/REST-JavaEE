@@ -8,6 +8,7 @@ import javax.persistence.NoResultException;
 import javax.persistence.PersistenceContext;
 import javax.persistence.TypedQuery;
 import javax.validation.constraints.Null;
+import java.util.List;
 
 @Stateless
 public class JpaVoteCommentRepositoryImpl implements JpaVoteCommentRepository {
@@ -42,11 +43,13 @@ public class JpaVoteCommentRepositoryImpl implements JpaVoteCommentRepository {
         query.setParameter("userId",UserId);
         query.setParameter("commentId",CommentId);
         VoteComment voteComment = null;
-        try {
-            voteComment = query.getSingleResult();
-        } catch (NoResultException nre){
+        List<VoteComment> listOfVoteComment = query.getResultList();
+        if(listOfVoteComment.isEmpty()){
+            throw new NoResultException("Vote of comment is not exist");
         }
-        return voteComment;
+        else {
+            return listOfVoteComment.get(0);
+        }
     }
 
     @Override

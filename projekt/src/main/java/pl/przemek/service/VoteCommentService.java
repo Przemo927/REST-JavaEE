@@ -12,6 +12,7 @@ import pl.przemek.repository.JpaVoteCommentRepository;
 import javax.inject.Inject;
 import java.sql.Timestamp;
 import java.util.Date;
+import java.util.List;
 
 public class VoteCommentService {
 

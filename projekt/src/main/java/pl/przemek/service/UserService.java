@@ -37,8 +37,14 @@ public class UserService {
     }
 
     void addRole(User user) throws Exception {
-        Role role=rolRepo.get("user");
-        rolRepo.update(role, user);
+        List<Role> listOfRoles=rolRepo.getRoles("user");
+        if(listOfRoles.isEmpty()){
+
+        }
+        else {
+            Role role = listOfRoles.get(0);
+            rolRepo.update(role, user);
+        }
     }
     public User getUserById(long id){
         return userRepo.get(id);

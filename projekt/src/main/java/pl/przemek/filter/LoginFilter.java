@@ -1,6 +1,7 @@
 package pl.przemek.filter;
 
 import java.io.IOException;
+import java.util.List;
 
 import javax.inject.Inject;
 import javax.servlet.Filter;
@@ -29,7 +30,8 @@ public class LoginFilter implements Filter {
 		  HttpServletResponse httpResp = (HttpServletResponse) response;
 	        if(httpReq.getUserPrincipal() != null && httpReq.getSession().getAttribute("user") == null) {
 				String username = httpReq.getUserPrincipal().getName();
-				User userByUsername = userrep.getUserByUsername(username);
+				List<User> listUserByUsername = userrep.getUserByUsername(username);
+				User userByUsername=listUserByUsername.get(0);
 				LogoutIfInActiveStatus(userByUsername,httpReq,httpResp);
 	            saveUserInSession(httpReq,userByUsername);
 	        }

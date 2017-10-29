@@ -16,7 +16,6 @@ import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.ArgumentMatchers.isA;
 import static org.mockito.Mockito.*;
 
-@RunWith(JUnitParamsRunner.class)
 public class VoteCommentServiceTest {
 
     private JpaUserRepository userRepo;
@@ -29,26 +28,24 @@ public class VoteCommentServiceTest {
         userRepo=mock(JpaUserRepository.class);
         commentRepo=mock(JpaCommentRepository.class);
         voteCommentRepo=mock(JpaVoteCommentRepository.class);
-        voteCommentService=new VoteCommentService(userRepo,commentRepo,voteCommentRepo);
     }
 
     @Test
     public void shouldReturnVoteWithAssignVoteTypeAndUserAndComment() throws Exception {
+        voteCommentService=new VoteCommentService(userRepo,commentRepo,voteCommentRepo);
         User user=mock(User.class);
         Comment comment=mock(Comment.class);
+
         when(userRepo.get(anyLong())).thenReturn(user);
         when(commentRepo.get(anyLong())).thenReturn(comment);
         VoteComment voteComment=voteCommentService.createVote(1,1, VoteType.VOTE_UP);
+
         assertEquals(user, voteComment.getUser());
         assertEquals(comment,voteComment.getComment());
         assertEquals(VoteType.VOTE_UP,voteComment.getVoteType());
     }
 
-    public Object[] validParameters(){
-        return $(new Object[]{1,2,VoteType.VOTE_UP},new Object[]{100,200,VoteType.VOTE_DOWN});
-    }
     @Test
-    @Parameters(method = "validParameters")
     public void shouldAddNewVoteAndUpdateCommentWhenOldVoteIsNotExist(int userId,int commentId,VoteType voteType) throws Exception {
         VoteComment vote=mock(VoteComment.class);
         VoteCommentService voteCommentService=spy(new VoteCommentService(userRepo,commentRepo,voteCommentRepo));

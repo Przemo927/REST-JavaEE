@@ -34,7 +34,7 @@ public class DiscoveryService {
         discRepo.add(discovery);
         }
 
-    public Discovery getByName(String name){
+    public List<Discovery> getByName(String name){
         return discRepo.getByName(name);
 
     }

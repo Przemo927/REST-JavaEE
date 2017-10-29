@@ -43,12 +43,11 @@ public List<User> getAll() {
     return users;
 }
 @RolesAllowed({"admin","user"})
-public User getUserByUsername(String username) {
+public List<User> getUserByUsername(String username) {
 	TypedQuery<User> getAllQuery = em.createNamedQuery("User.findByUsername", User.class);
 	getAllQuery.setParameter("username",username);
     List<User> users = getAllQuery.getResultList();
-    User chosenuser=users.get(0);
-    return chosenuser;
+    return users;
 	
 }
 @PermitAll

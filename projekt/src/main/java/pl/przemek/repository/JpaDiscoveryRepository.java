@@ -12,7 +12,7 @@ public interface JpaDiscoveryRepository {
     public Discovery update(Discovery discovery);
     public List<Discovery> getAll();
     public List<Discovery> getAll(Comparator<Discovery> c);
-    public Discovery getByName(String name);
+    public List<Discovery> getByName(String name);
     public Discovery get(long id);
     public boolean checkPresenceDiscveryByUrl(String url);
 }

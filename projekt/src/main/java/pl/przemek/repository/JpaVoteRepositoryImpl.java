@@ -45,28 +45,25 @@ public class JpaVoteRepositoryImpl implements JpaVoteRepository {
 
 	@RolesAllowed({"admin","user"})
 	public Vote getVoteByUserIdDiscoveryId(Long UserId,Long DiscoveryId) {
-		TypedQuery<Vote> getQuery = em.createQuery("SELECT p FROM Vote p WHERE p.user.id=:userid AND p.discovery.id=:discoveryid", Vote.class);
-	    getQuery.setParameter("userid", UserId);
-	    getQuery.setParameter("discoveryid", DiscoveryId);
-	    Vote chosenvote=null;
-	    
-	    try{
-	    	 chosenvote=getQuery.getSingleResult();
-	    }
-	    	catch (NoResultException nre){
-	    	}
-	    
-	 
-	    	return chosenvote;
-	    }
+		TypedQuery<Vote> query = em.createQuery("SELECT p FROM Vote p WHERE p.user.id=:userid AND p.discovery.id=:discoveryid", Vote.class);
+		query.setParameter("userid", UserId);
+		query.setParameter("discoveryid", DiscoveryId);
+		Vote chosenvote = null;
+		List<Vote> lisOfVote = query.getResultList();
+		if (lisOfVote.isEmpty()) {
+			throw new NoResultException("Vote is not exist");
+		}
+		return lisOfVote.get(0);
+	}
+
 
 	@RolesAllowed({"admin","user"})
 	@Override
 	public void removeByDiscoveryId(Long DiscoveryId) {
 		TypedQuery<Vote> query= em.createQuery("SELECT p FROM Vote p WHERE p.discovery.id=:discoveryid", Vote.class);
 		query.setParameter("discoveryid",DiscoveryId);
-		List<Vote> rolesToRemove=query.getResultList();
-		rolesToRemove.forEach(x-> remove(x));
+		List<Vote> votesToRemove=query.getResultList();
+		votesToRemove.forEach(x-> remove(x));
 
 	}
 

@@ -59,7 +59,7 @@ public class JpaDiscoveryRepositoryImpl implements JpaDiscoveryRepository {
 	public List<Discovery> getAll(Comparator<Discovery> comparator) {
 		TypedQuery<Discovery> getAllQuery = em.createNamedQuery("Discovery.findAll", Discovery.class);
 	    List<Discovery> discovery = getAllQuery.getResultList();
-	    if(comparator != null && discovery != null) {
+	    if(comparator != null && !discovery.isEmpty()) {
             discovery.sort(comparator);
         }
         return discovery;
@@ -68,13 +68,12 @@ public class JpaDiscoveryRepositoryImpl implements JpaDiscoveryRepository {
 
 	@RolesAllowed({"admin","user"})
     @Override
-	public Discovery getByName(String name) throws NullPointerException{
+	public List<Discovery> getByName(String name) throws NullPointerException{
 		Discovery discovery=null;
 		TypedQuery<Discovery> disc = em.createNamedQuery("Discovery.search", Discovery.class);
 		disc.setParameter("name", name);
 		List<Discovery> discoveryResultList=disc.getResultList();
-		discovery=discoveryResultList.get(0);
-		return discovery;
+		return discoveryResultList;
 	
 	}
 	@PermitAll

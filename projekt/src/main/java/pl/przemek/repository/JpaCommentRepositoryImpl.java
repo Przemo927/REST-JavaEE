@@ -16,8 +16,8 @@ public class JpaCommentRepositoryImpl implements JpaCommentRepository {
     private EntityManager em;
 
     @Override
-    public void add(Comment commment) {
-        em.persist(commment);
+    public void add(Comment comment) {
+        em.persist(comment);
     }
 
     @Override

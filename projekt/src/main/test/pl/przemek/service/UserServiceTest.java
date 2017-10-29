@@ -15,6 +15,8 @@ import pl.przemek.repository.JpaUserRepository;
 
 import javax.jws.soap.SOAPBinding;
 import java.security.MessageDigest;
+import java.util.ArrayList;
+import java.util.List;
 
 import static junitparams.JUnitParamsRunner.$;
 import static org.junit.Assert.*;
@@ -71,12 +73,27 @@ public class UserServiceTest {
     }
 
     @Test
-    public void shouldExecuteMethodUpdateOfRoleRepository() throws Exception {
+    public void shouldNotExecuteMethodUpdateOfRoleRepositoryWhenListOfRolesIsEmpty() throws Exception {
         User user=mock(User.class);
         Role role=mock(Role.class);
-        when(rolRepo.get(anyString())).thenReturn(role);
+        List<Role> roleList=new ArrayList<>();
+
+        when(rolRepo.getRoles(anyString())).thenReturn(roleList);
         userService.addRole(user);
-        verify(rolRepo).update(role,user);
+
+        verify(rolRepo, never()).update(isA(Role.class),isA(User.class));
+    }
+    @Test
+    public void shouldExecuteMethodUpdateOfRoleRepositoryWhenListOfRolesIsNotEmpty() throws Exception {
+        User user=mock(User.class);
+        Role role=mock(Role.class);
+        List<Role> roleList=new ArrayList<>();
+        roleList.add(new Role());
+
+        when(rolRepo.getRoles(anyString())).thenReturn(roleList);
+        userService.addRole(user);
+
+        verify(rolRepo).update(isA(Role.class),isA(User.class));
     }
 
     @Test
