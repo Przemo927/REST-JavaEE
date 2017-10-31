@@ -17,6 +17,7 @@ import java.util.List;
 
 import static junitparams.JUnitParamsRunner.$;
 import static org.junit.Assert.*;
+import static org.mockito.AdditionalMatchers.not;
 import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.*;
@@ -32,10 +33,10 @@ public class EventServiceTest {
     @Before
     public void setUp(){
         eventRepo=mock(JpaEventRepository.class);
-        eventService=new EventService(eventRepo);
     }
     @Test
     public void shouldExecuteMethodAdd() throws Exception {
+        eventService=new EventService(eventRepo);
         Event event=mock(Event.class);
         eventService.addEvent(event);
         verify(eventRepo).add(event);
@@ -43,6 +44,7 @@ public class EventServiceTest {
 
     @Test
     public void shouldExecuteMethodUpdate() throws Exception {
+        eventService=new EventService(eventRepo);
         Event event=mock(Event.class);
         eventService.updateEvent(event);
         verify(eventRepo).update(event);
@@ -50,6 +52,7 @@ public class EventServiceTest {
 
     @Test
     public void shouldExecuteMethodRemoveOfEventRepository() throws Exception {
+        eventService=new EventService(eventRepo);
         Event event=mock(Event.class);
         when(eventRepo.get(anyLong())).thenReturn(event);
         eventService.removeEventById(anyLong());
@@ -57,91 +60,69 @@ public class EventServiceTest {
     }
 
     @Test
-    public void shouldThrowNullPointerExceptionWhenIdIsNull() throws Exception {
-        Long id=null;
-        thrown.expect(NullPointerException.class);
-        eventService.removeEventById(id);
-    }
-    @Test
     public void shouldUseTheSameValueOfId() throws Exception {
+        eventService=new EventService(eventRepo);
         long id=12345;
         eventService.removeEventById(id);
         verify(eventRepo).get(id);
-        verify(eventRepo,never()).get(1);
-        verify(eventRepo,never()).get(1234);
-        verify(eventRepo,never()).get(12346);
+        verify(eventRepo,never()).get(not(eq(id)));
     }
 
     @Test
-    public void shouldExecuteGet() throws Exception {
+    public void shouldExecuteGetMethod() throws Exception {
+        eventService=new EventService(eventRepo);
         eventService.getEvent(anyLong());
         verify(eventRepo).get(anyLong());
     }
 
     @Test
-    public void shouldThrowNullPointerExceptionWhenIdIsNull2() throws Exception {
-        Long id=null;
-        thrown.expect(NullPointerException.class);
-        eventService.getEvent(id);
-    }
-
-    @Test
     public void shouldUseTheSameValueOfIdMethodGetEvent() throws Exception {
+        eventService=new EventService(eventRepo);
         long id=12345;
         eventService.getEvent(id);
-        verify(eventRepo,never()).get(1);
-        verify(eventRepo,never()).get(1234);
-        verify(eventRepo,never()).get(12346);
+        verify(eventRepo,never()).get(not(eq(id)));
     }
 
     @Test
     public void shouldExecuteMethodGetAll() throws Exception {
+        eventService=new EventService(eventRepo);
         eventService.getAllEvents();
         verify(eventRepo).getAll();
     }
-    @Test
-    public void shouldReturnEmptyListOfEvents() throws Exception {
-        List<Event> listOfEvents=new ArrayList<>();
-        assertEquals(listOfEvents,eventService.getAllEvents());
-    }
+
     @Test
     public void shouldExecuteMethodGetByCity() throws Exception {
+        eventService=new EventService(eventRepo);
         eventService.getEventsByCity(anyString());
         verify(eventRepo).getByCity(anyString());
     }
     @Test
     public void shouldUseTheSameNameOfCity() throws Exception {
+        eventService=new EventService(eventRepo);
         String city="City";
         eventService.getEventsByCity(city);
         verify(eventRepo).getByCity(city);
-        verify(eventRepo,never()).getByCity("city");
-        verify(eventRepo,never()).getByCity("City1");
-        verify(eventRepo,never()).getByCity(null);
+        verify(eventRepo,never()).getByCity(not(eq(city)));
     }
     @Test
     public void shouldExecuteMethodGetListOfEventInsideDistanceBuffor() throws Exception {
-        EventService eventService=spy(new EventService(eventRepo));
+        eventService=spy(new EventService(eventRepo));
         when(eventRepo.getAll()).thenReturn(new ArrayList<Event>());
         eventService.getEventByPosition(anyDouble(), anyDouble(), anyInt());
         verify(eventService).getListOfEventInsideDistanceBufor(anyDouble(),anyDouble(),anyInt(),anyList());
     }
-    @Test
-    public void shouldReturnEmptyListOfEventsInsideDistanceBuffor() throws Exception {
-        List<Event> listOfEvents=new ArrayList<>();
-        EventService eventService=spy(new EventService(eventRepo));
-        when(eventRepo.getAll()).thenReturn(new ArrayList<Event>());
-        assertEquals(listOfEvents,eventService.getEventByPosition(anyDouble(), anyDouble(), anyInt()));
-    }
 
     @Test
     public void shouldReturnListWithEventsWhenCheckingDistanceMethodReturnTrue() throws Exception {
-        EventService eventService=spy(new EventService(eventRepo));
+        eventService=spy(new EventService(eventRepo));
         Event event1=mock(Event.class);
         Event event2=mock(Event.class);
         Event event3=mock(Event.class);
         List<Event> listOfEvents= Arrays.asList(event1,event2,event3);
+
         when(eventService.checkingDistance(anyDouble(),anyDouble(),anyInt(), anyList())).thenReturn(true,false, true);
         List<Event> listOfEventsInsidePosition=eventService.getListOfEventInsideDistanceBufor(1,2,3,listOfEvents);
+
         assertEquals(2,listOfEventsInsidePosition.size());
         assertTrue(listOfEvents.contains(event1));
         assertTrue(listOfEvents.contains(event3));
@@ -153,11 +134,13 @@ public class EventServiceTest {
 
     @Test
     @Parameters(method ="differenceShorterThanGivenDistance")
-    public void shouldReturnFalseWhenComputedDistanceIsShorterThanGivenDistance(double difference) throws Exception{
+    public void shouldReturnTrueWhenComputedDistanceIsShorterThanGivenDistance(double difference) throws Exception{
+        eventService=spy(new EventService(eventRepo));
         List<EventPosition> listOfPositions=new ArrayList<EventPosition>();
         listOfPositions.add(mock(EventPosition.class));
-        EventService eventService=spy(new EventService(eventRepo));
+
         when(eventService.formulaToComputeDistance(anyDouble(),anyDouble(),anyDouble(),anyDouble())).thenReturn(difference);
+
         assertTrue(eventService.checkingDistance(1,1,10,listOfPositions));
 
 
@@ -168,7 +151,7 @@ public class EventServiceTest {
 
     @Test
     @Parameters(method ="differenceLongerandEqualThanGivenDistance")
-    public void shouldReturTrueWhenComputedDistanceIsLongerOrEqualThanGivenDistance(double difference) {
+    public void shouldReturFalseWhenComputedDistanceIsLongerOrEqualThanGivenDistance(double difference) {
         List<EventPosition> listOfPositions=new ArrayList<EventPosition>();
         listOfPositions.add(mock(EventPosition.class));
         EventService eventService=spy(new EventService(eventRepo));

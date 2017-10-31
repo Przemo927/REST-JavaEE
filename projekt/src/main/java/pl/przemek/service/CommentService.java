@@ -27,8 +27,13 @@ public class CommentService {
 
     public void addComment(Comment comment, long id){
         Discovery discovery=discRepo.get(id);
-        comment.setDiscvovery(discovery);
-        commentRepo.add(comment);
+        if(comment!=null) {
+            comment.setDiscvovery(discovery);
+            commentRepo.add(comment);
+        }
+        else{
+            throw new NullPointerException("Comment is null");
+        }
     }
     public List<Comment> getAllComment(){
         return commentRepo.getAll();

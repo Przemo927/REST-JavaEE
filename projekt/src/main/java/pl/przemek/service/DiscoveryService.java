@@ -1,13 +1,10 @@
 package pl.przemek.service;
 
 import pl.przemek.model.Discovery;
-import pl.przemek.model.User;
 import pl.przemek.repository.JpaDiscoveryRepository;
 import pl.przemek.repository.JpaVoteRepository;
 
 import javax.inject.Inject;
-import javax.servlet.http.HttpServletResponse;
-import javax.validation.constraints.Null;
 import java.sql.Timestamp;
 import java.util.Comparator;
 import java.util.Date;
@@ -28,10 +25,15 @@ public class DiscoveryService {
         this.voteRepo=null;
     }
     public void addDiscovery(Discovery discovery){
-        discovery.setDownVote(0);
-        discovery.setUpVote(0);
-        discovery.setTimestamp(new Timestamp(new Date().getTime()));
-        discRepo.add(discovery);
+        if(discovery!=null) {
+            discovery.setDownVote(0);
+            discovery.setUpVote(0);
+            discovery.setTimestamp(new Timestamp(new Date().getTime()));
+            discRepo.add(discovery);
+        }
+        else{
+            throw new NullPointerException("Comment is null");
+        }
         }
 
     public List<Discovery> getByName(String name){
@@ -44,15 +46,16 @@ public class DiscoveryService {
 
     public List<Discovery> getAll(String order){
         List<Discovery> discoveries = null;
-        if(order.equals("popular")){
-            discoveries=discRepo.getAll(new PopularComparator());
-        }
-
-        else if(order.equals("time")){
-            discoveries=discRepo.getAll(new TimeComparator());
-        }
-        else {
-            discoveries=discRepo.getAll();
+        try {
+            if (order.equals("popular")) {
+                discoveries = discRepo.getAll(new PopularComparator());
+            } else if (order.equals("time")) {
+                discoveries = discRepo.getAll(new TimeComparator());
+            } else {
+                discoveries = discRepo.getAll();
+            }
+        }catch(NullPointerException e){
+            discoveries = discRepo.getAll();
         }
         return discoveries;
     }

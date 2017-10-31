@@ -45,7 +45,7 @@ public class JpaVoteCommentRepositoryImpl implements JpaVoteCommentRepository {
         VoteComment voteComment = null;
         List<VoteComment> listOfVoteComment = query.getResultList();
         if(listOfVoteComment.isEmpty()){
-            throw new NoResultException("Vote of comment is not exist");
+            return null;
         }
         else {
             return listOfVoteComment.get(0);

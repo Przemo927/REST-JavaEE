@@ -7,7 +7,6 @@ import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.ExpectedException;
 import org.junit.runner.RunWith;
-import org.powermock.reflect.Whitebox;
 import pl.przemek.model.Role;
 import pl.przemek.model.User;
 import pl.przemek.repository.JpaRoleRepository;
@@ -20,6 +19,7 @@ import java.util.List;
 
 import static junitparams.JUnitParamsRunner.$;
 import static org.junit.Assert.*;
+import static org.mockito.AdditionalMatchers.not;
 import static org.mockito.ArgumentMatchers.anyBoolean;
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.*;
@@ -51,6 +51,7 @@ public class UserServiceTest {
     @Test
     public void shouldThrowNullPointerExceptionWhenUserIsNull() throws Exception {
         thrown.expect(NullPointerException.class);
+        thrown.expectMessage("User is null");
         userService.addUser(null);
 
     }
@@ -58,18 +59,12 @@ public class UserServiceTest {
     @Test
     public void ShouldUseTheSameObjectOfUser() throws Exception {
         User user=mock(User.class);
-        User user1=mock(User.class);
+
         when(user.getPassword()).thenReturn(anyString());
         userService.addUser(user);
-        verify(userRepo).add(user);
-        verify(userRepo,never()).add(user1);
-    }
 
-    @Test
-    public void ShouldReturnTheSameObjectOfUser() throws Exception {
-        User user=mock(User.class);
-        when(user.getPassword()).thenReturn(anyString());
-        assertEquals(user,userService.addUser(user));
+        verify(userRepo).add(user);
+        verify(userRepo,never()).add(not(eq(user)));
     }
 
     @Test
@@ -107,7 +102,7 @@ public class UserServiceTest {
         long id=12345;
         userService.getUserById(id);
         verify(userRepo).get(id);
-        verify(userRepo).get(12345L);
+        verify(userRepo,never()).get(not(eq(id)));
     }
     public Object[] invalidValuesOfId(){
         return $(-1,1,0,1234,12344,12346);
@@ -122,12 +117,6 @@ public class UserServiceTest {
     }
 
     @Test
-    public void shouldThrowNullPointerExceptionWhenIdIsNullGetUserById(){
-        Long id=null;
-        thrown.expect(NullPointerException.class);
-        userService.getUserById(id);
-    }
-    @Test
     public void shouldExecuteMethodRemoveOfUserRepository() throws Exception{
         User user=mock(User.class);
         when(userRepo.get(anyLong())).thenReturn(user);
@@ -136,18 +125,11 @@ public class UserServiceTest {
     }
 
     @Test
-    public void shouldThrowNullPointerExceptionWhenIdIsNullRemoveByUserId(){
-        Long id=null;
-        thrown.expect(NullPointerException.class);
-        userService.removeByUserId(id);
-    }
-
-    @Test
     public void shouldUseTheSameValueOfId() throws Exception{
         long id=1234;
         userService.removeByUserId(id);
         verify(userRepo).get(id);
-        verify(userRepo).get(1234L);
+        verify(userRepo,never()).get(not(eq(id)));
     }
 
     @Test

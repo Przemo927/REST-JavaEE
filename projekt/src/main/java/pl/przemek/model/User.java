@@ -7,6 +7,8 @@ import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import org.hibernate.validator.constraints.Email;
 import pl.przemek.validation.EmailUnique;
 import pl.przemek.validation.UsernameMatching;
@@ -37,6 +39,7 @@ public class User implements Serializable {
     @Email
 	@Column(nullable = false, unique = true, length=60)
     private String email;
+    @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
     @Size(max=45)
     @NotNull
 	@Column(nullable = false, length=45)
@@ -73,6 +76,7 @@ public class User implements Serializable {
     public void setEmail(String email) {
         this.email = email;
     }
+    @JsonIgnore
     public String getPassword() {
         return password;
     }

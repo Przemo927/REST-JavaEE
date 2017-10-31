@@ -7,8 +7,6 @@ import org.junit.rules.ExpectedException;
 import pl.przemek.model.EventPosition;
 import pl.przemek.repository.JpaEventPositionRepository;
 
-import javax.validation.constraints.Null;
-
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
 

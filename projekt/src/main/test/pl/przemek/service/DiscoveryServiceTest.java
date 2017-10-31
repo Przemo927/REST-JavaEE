@@ -16,6 +16,9 @@ import java.util.*;
 
 import static junitparams.JUnitParamsRunner.$;
 import static org.junit.Assert.*;
+import static org.mockito.AdditionalMatchers.and;
+import static org.mockito.AdditionalMatchers.not;
+import static org.mockito.AdditionalMatchers.or;
 import static org.mockito.ArgumentMatchers.*;
 import static org.mockito.Mockito.*;
 
@@ -50,6 +53,7 @@ public class DiscoveryServiceTest {
     @Test
     public void shouldThrowNullPointerException() throws Exception {
         thrown.expect(NullPointerException.class);
+        thrown.expectMessage("Comment is null");
         discoveryService.addDiscovery(null);
 
     }
@@ -62,20 +66,11 @@ public class DiscoveryServiceTest {
     }
 
     @Test
-    public void shouldThrowNullPointerExceptionWhenIdIsNull() throws Exception {
-        Long id=null;
-        thrown.expect(NullPointerException.class);
-        discoveryService.getById(id);
-    }
-
-    @Test
     public void shouldUseTheSameLong() throws Exception {
         long id=12345;
         discoveryService.getById(id);
         verify(discRepo).get(id);
-        verify(discRepo,never()).get(1);
-        verify(discRepo,never()).get(1234);
-        verify(discRepo,never()).get(12346);
+        verify(discRepo,never()).get(not(eq(id)));
     }
 
     @Test
@@ -88,9 +83,7 @@ public class DiscoveryServiceTest {
     public void shouldUseTheSameString() throws Exception {
         String name="Name";
         discoveryService.getByName(name);
-        verify(discRepo).getByName(name);
-        verify(discRepo,never()).getByName("name");
-        verify(discRepo,never()).getByName("Name1");
+        verify(discRepo,never()).getByName(not(eq(name)));
     }
 
     public Object[] validNamesOfComparators() {
@@ -105,7 +98,7 @@ public class DiscoveryServiceTest {
     }
 
     public Object[] invalidNamesOfComparators() {
-        return $( "date","comparator");
+        return $( "date","comparator","Time","Popular","TIME","POPULAR",null);
     }
 
     @Test
@@ -113,12 +106,6 @@ public class DiscoveryServiceTest {
     public void ShouldExecuteMethodWithoutComparatorWhenNameOfComparatorIsInvalid(String names) throws Exception{
         discoveryService.getAll(names);
         verify(discRepo).getAll();
-    }
-
-    @Test
-    public void shouldThrowNullPointerExceptionWhenNameOfComparatorIsNull() throws Exception{
-        thrown.expect(NullPointerException.class);
-        discoveryService.getAll(null);
     }
 
     @Test
@@ -142,6 +129,7 @@ public class DiscoveryServiceTest {
         discovery3.setTimestamp(Timestamp.valueOf("2003-01-01 00:00:00"));
         List<Discovery> listWithVelidOrder= Arrays.asList(discovery1,discovery2,discovery3);
         List<Discovery> listOrderdByTimeCompartor= Arrays.asList(discovery3,discovery1,discovery2);
+
         assertTrue(!(listOrderdByTimeCompartor.equals(listWithVelidOrder)));
         listOrderdByTimeCompartor.sort(new DiscoveryService.TimeComparator());
         assertTrue(listOrderdByTimeCompartor.equals(listWithVelidOrder));
@@ -162,6 +150,7 @@ public class DiscoveryServiceTest {
         discovery3.setDownVote(10);
         List<Discovery> listWithVelidOrder= Arrays.asList(discovery1,discovery2,discovery3);
         List<Discovery> listOrderedByPopularComparator= Arrays.asList(discovery3,discovery1,discovery2);
+
         assertTrue(!(listOrderedByPopularComparator.equals(listWithVelidOrder)));
         listOrderedByPopularComparator.sort(new DiscoveryService.PopularComparator());
         assertTrue(listOrderedByPopularComparator.equals(listWithVelidOrder));
@@ -171,19 +160,12 @@ public class DiscoveryServiceTest {
     @Test
     public void shouldExecuteMethodGetRemoveByDiscoveryIdAndRemove() throws Exception {
         Discovery discovery=mock(Discovery.class);
+
         when(discRepo.get(anyLong())).thenReturn(discovery);
         discoveryService.removeDiscoveryById(anyLong());
-        verify(discRepo).get(anyLong());
+
         verify(voteRepo).removeByDiscoveryId(anyLong());
         verify(discRepo).remove(discovery);
-
-    }
-
-    @Test
-    public void shouldThrowNullPointerExceptionWhenIdIsNull2() throws Exception {
-        Long id=null;
-        thrown.expect(NullPointerException.class);
-        discoveryService.removeDiscoveryById(id);
 
     }
 
@@ -191,8 +173,8 @@ public class DiscoveryServiceTest {
     public void methodsShouldUseTheSameValueOfId() throws Exception {
         long id=12345;
         discoveryService.removeDiscoveryById(id);
-        verify(discRepo).get(id);
-        verify(voteRepo).removeByDiscoveryId(id);
+        verify(discRepo,never()).get(not(eq(id)));
+        verify(voteRepo,never()).removeByDiscoveryId(not(eq(id)));
 
     }
     @Test
@@ -200,12 +182,6 @@ public class DiscoveryServiceTest {
         Discovery discovery=mock(Discovery.class);
         discoveryService.updateDiscovery(discovery);
         verify(discRepo).update(discovery);
-
-    }
-    @Test
-    public void shouldThrowNullPointerExceptionWhenDiscoveryIsNull() throws Exception {
-        thrown.expect(NullPointerException.class);
-        discoveryService.updateDiscovery(null);
 
     }
 }

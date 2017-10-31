@@ -26,6 +26,7 @@ public class CommentEndPoint {
     @GET
     @Produces(MediaType.APPLICATION_JSON)
     public List<Comment> getAllComment(){
+        commentservice.getAllComment();
         return commentservice.getAllComment();
     }
 

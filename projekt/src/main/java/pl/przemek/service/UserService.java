@@ -27,12 +27,17 @@ public class UserService {
 
 
     public User addUser(User user) throws Exception {
-        user.setActive(true);
-        String password=user.getPassword();
-        String md5Pass = encryptPassword(password);
-        user.setPassword(md5Pass);
-        userRepo.add(user);
-        addRole(user);
+        if(user!=null) {
+            user.setActive(true);
+            String password = user.getPassword();
+            String md5Pass = encryptPassword(password);
+            user.setPassword(md5Pass);
+            userRepo.add(user);
+            addRole(user);
+        }
+         else{
+                throw new NullPointerException("User is null");
+            }
         return user;
     }
 

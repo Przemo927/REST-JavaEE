@@ -10,9 +10,11 @@ import pl.przemek.repository.JpaCommentRepository;
 import pl.przemek.repository.JpaDiscoveryRepository;
 
 import java.util.ArrayList;
+import java.util.LinkedList;
 import java.util.List;
 
 import static org.junit.Assert.*;
+import static org.mockito.AdditionalMatchers.not;
 import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.*;
@@ -47,19 +49,21 @@ public class CommentServiceTest {
     public void shouldUseTheSameValueOfLong() throws Exception{
         Comment comment=mock(Comment.class);
         long id=12345;
+
         commentService.addComment(comment,id);
+
         verify(discRepo).get(id);
-        verify(discRepo,never()).get(1234);
-        verify(discRepo,never()).get(12346);
-        verify(discRepo,never()).get(1);
+        verify(discRepo,never()).get(not(eq(id)));
     }
 
     @Test
     public void commentShouldHasAssignDiscovery() throws Exception{
         Comment comment=new Comment();
         Discovery discovery=mock(Discovery.class);
+
         when(discRepo.get(anyLong())).thenReturn(discovery);
         commentService.addComment(comment,anyLong());
+
         assertEquals(discovery,comment.getDiscvovery());
 
     }
@@ -67,14 +71,8 @@ public class CommentServiceTest {
     @Test
     public void shouldThrowNullPointerExceptionWhenCommentIsNull() throws Exception{
         thrown.expect(NullPointerException.class);
+        thrown.expectMessage("Comment is null");
         commentService.addComment(null,anyLong());
-    }
-    @Test
-    public void shouldThrowNullPointerExceptionWhenIdIsNullAddCommentMethod() throws Exception{
-        thrown.expect(NullPointerException.class);
-        Comment comment=mock(Comment.class);
-        Long id=null;
-        commentService.addComment(comment,id);
     }
 
     @Test
@@ -82,12 +80,7 @@ public class CommentServiceTest {
         commentService.getAllComment();
         verify(commentRepo).getAll();
     }
-    @Test
-    public void shouldReturnEmptyListOfComments() throws Exception{
-        List<Comment> listofComments=new ArrayList<>();
-        commentService.getAllComment();
-        assertEquals(listofComments,commentRepo.getAll());
-    }
+
     @Test
     public void shouldExecuteGetByDiscoveryIdMethod() throws Exception {
         commentService.getByDiscoveryId(anyLong());
@@ -95,18 +88,21 @@ public class CommentServiceTest {
     }
 
     @Test
-    public void shouldReturnEmptyListOfCommentsFoundByName() throws Exception {
-        List<Comment> listOfComments=new ArrayList<>();
-        assertEquals(listOfComments,commentService.getByDiscoveryName(anyString()));
+    public void shoulUseTheSameValueOfId() throws Exception {
+        long id=12345;
+
+        commentService.getByDiscoveryId(id);
+
+        verify(commentRepo).getByDiscoveryId(id);
+        verify(commentRepo,never()).getByDiscoveryId(not(eq(id)));
+
     }
     @Test
     public void shouldUseTheSameString() throws Exception {
         String discoveryName="Name";
         commentService.getByDiscoveryName(discoveryName);
         verify(commentRepo).getByDiscoveryName(discoveryName);
-        verify(commentRepo,never()).getByDiscoveryName("Name1");
-        verify(commentRepo,never()).getByDiscoveryName(null);
-        verify(commentRepo,never()).getByDiscoveryName("name");
+        verify(commentRepo,never()).getByDiscoveryName(not(eq(discoveryName)));
 
     }
 
@@ -117,26 +113,11 @@ public class CommentServiceTest {
     }
 
     @Test
-    public void shouldThrowNullPointerExceptionWhenIdIsNullGetDiscoveryByIdMethod() throws Exception {
-        Long id=null;
-        thrown.expect(NullPointerException.class);
-        commentService.getByDiscoveryId(id);
-
-    }
-
-    @Test
-    public void shouldReturnEmptyListOFCommentFoundById() throws Exception {
-        List<Comment> listOfComments=new ArrayList<>();
-        assertEquals(listOfComments,commentService.getByDiscoveryId(anyLong()));
-    }
-    @Test
     public void shouldUseTheSameVaulueOfLong() throws Exception {
         long id=12345;
         commentService.getByDiscoveryId(id);
         verify(commentRepo).getByDiscoveryId(id);
-        verify(commentRepo,never()).getByDiscoveryId(1);
-        verify(commentRepo,never()).getByDiscoveryId(1234);
-        verify(commentRepo,never()).getByDiscoveryId(12346);
+        verify(commentRepo,never()).getByDiscoveryId(not(eq(id)));
 
     }
 
