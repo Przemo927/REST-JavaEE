@@ -119,10 +119,8 @@ public class EventServiceTest {
         Event event2=mock(Event.class);
         Event event3=mock(Event.class);
         List<Event> listOfEvents= Arrays.asList(event1,event2,event3);
-
-        when(eventService.checkingDistance(anyDouble(),anyDouble(),anyInt(), anyList())).thenReturn(true,false, true);
+        doReturn(true,false,true).when(eventService).checkingDistance(anyDouble(),anyDouble(),anyDouble(), anyList());
         List<Event> listOfEventsInsidePosition=eventService.getListOfEventInsideDistanceBufor(1,2,3,listOfEvents);
-
         assertEquals(2,listOfEventsInsidePosition.size());
         assertTrue(listOfEvents.contains(event1));
         assertTrue(listOfEvents.contains(event3));
