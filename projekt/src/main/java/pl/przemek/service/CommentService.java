@@ -25,8 +25,8 @@ public class CommentService {
         this.discRepo=null;
     }
 
-    public void addComment(Comment comment, long id){
-        Discovery discovery=discRepo.get(id);
+    public void addComment(Comment comment, long discoveryId){
+        Discovery discovery=discRepo.get(discoveryId);
         if(comment!=null) {
             comment.setDiscvovery(discovery);
             commentRepo.add(comment);

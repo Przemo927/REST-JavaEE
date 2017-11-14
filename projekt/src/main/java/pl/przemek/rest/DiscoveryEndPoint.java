@@ -7,6 +7,7 @@ import java.util.List;
 import javax.enterprise.context.RequestScoped;
 import javax.inject.Inject;
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpSession;
 import javax.validation.Valid;
 import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
@@ -20,12 +21,12 @@ import pl.przemek.service.DiscoveryService;
 public class DiscoveryEndPoint {
 
 	private DiscoveryService discoveryService;
-	@Inject
-	HttpServletRequest request;
+	private HttpServletRequest request;
 
 	@Inject
-	public DiscoveryEndPoint(DiscoveryService discoveryService){
+	public DiscoveryEndPoint(DiscoveryService discoveryService, HttpServletRequest request){
 		this.discoveryService=discoveryService;
+		this.request=request;
 	}
 	public DiscoveryEndPoint(){}
 
@@ -33,7 +34,8 @@ public class DiscoveryEndPoint {
 	@Consumes(MediaType.APPLICATION_JSON)
 	public void addDiscovery(@Valid Discovery discovery) throws IOException {
 		request.setCharacterEncoding("UTF-8");
-		User user = (User) request.getSession().getAttribute("user");
+		HttpSession session=request.getSession(false);
+		User user = (User) session.getAttribute("user");
 		discovery.setUser(user);
 		discoveryService.addDiscovery(discovery);
 	}

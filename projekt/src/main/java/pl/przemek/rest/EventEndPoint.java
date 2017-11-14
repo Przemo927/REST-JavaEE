@@ -39,8 +39,8 @@ public class EventEndPoint {
 
     @GET
     @Produces(MediaType.APPLICATION_JSON)
-    public List<Event> getEvents(@QueryParam("city") @DefaultValue("all") String city ) {
-        if("all".equals(city)){
+    public List<Event> getEvents(@QueryParam("city") @DefaultValue("allCities") String city ) {
+        if("allCities".equals(city)){
             return eventservice.getAllEvents();
         }
         return eventservice.getEventsByCity(city);
