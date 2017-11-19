@@ -5,9 +5,13 @@
 	<persistence-unit name="myPersistenceUnit" transaction-type="JTA">
         <jta-data-source>java:jboss/Aplikacja</jta-data-source>
         <properties>
-            <property name="hibernate.hbm2ddl.auto" value="none" />
+
+            <property name="javax.persistence.schema-generation.database.action"
+                      value="none" />
             <property name="hibernate.show_sql" value="true" />
+            <property name="javax.persistence.sql-load-script-source" value="META-INF/sql/data.sql" />
             <property name="javax.persistence.validation.mode" value="none"/>
+
         </properties>
     </persistence-unit>
 </persistence>

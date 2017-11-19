@@ -51,7 +51,7 @@ public class JpaVoteRepositoryImpl implements JpaVoteRepository {
 		Vote chosenvote = null;
 		List<Vote> lisOfVote = query.getResultList();
 		if (lisOfVote.isEmpty()) {
-			throw new NoResultException("Vote is not exist");
+			return null;
 		}
 		return lisOfVote.get(0);
 	}

@@ -105,6 +105,17 @@ public class EventServiceTest {
         verify(eventRepo,never()).getByCity(not(eq(city)));
     }
     @Test
+    public void shouldChangeToUnsignedIntegerWhenDistanceIsLessThanNull() throws Exception{
+        int distance=-100;
+        int unsignedDistance=100;
+        List listOfEvents=mock(List.class);
+        eventService=spy(new EventService(eventRepo));
+        when(eventRepo.getAll()).thenReturn(listOfEvents);
+        eventService.getEventByPosition(10.0, 20.0, distance);
+        verify(eventService).getListOfEventInsideDistanceBufor(10.0,20.0,unsignedDistance,listOfEvents);
+
+    }
+    @Test
     public void shouldExecuteMethodGetListOfEventInsideDistanceBuffor() throws Exception {
         eventService=spy(new EventService(eventRepo));
         when(eventRepo.getAll()).thenReturn(new ArrayList<Event>());

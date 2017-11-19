@@ -70,7 +70,6 @@ public class EventEndPoint {
     @Path("/{id}")
     @Consumes(MediaType.APPLICATION_JSON)
     public void removeEvent(@PathParam("id") long id){
-        //Event event=eventservice.getEvent(id);
         eventservice.removeEventById(id);
     }
 }

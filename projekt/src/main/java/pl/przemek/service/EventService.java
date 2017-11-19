@@ -48,6 +48,9 @@ public class EventService {
     }
 
     public List<Event> getEventByPosition(double latCoordinate, double lngCoordinate, int distance){
+        if(distance<0){
+            distance=distance*(-1);
+        }
         List<Event> lisOfEvents=eventRepo.getAll();
         return getListOfEventInsideDistanceBufor(latCoordinate,lngCoordinate,distance,lisOfEvents);
     }

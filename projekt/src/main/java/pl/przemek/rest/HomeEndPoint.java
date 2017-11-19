@@ -21,13 +21,15 @@ import java.util.Set;
 public class HomeEndPoint {
 private final static String loginPath= "/projekt/api/login";
 private final static String logoutPath= "/projekt/api/logout";
-private JSONObject json;
 
-@GET
+@Context
+private  HttpServletRequest request;
+
+	@GET
 @Path("/check")
 @Produces(MediaType.APPLICATION_JSON)
-public JSONObject loginStatus (@Context HttpServletRequest request){
-	json=new JSONObject();
+public JSONObject loginStatus (){
+		JSONObject json = new JSONObject();
 	if(request.getUserPrincipal() != null) {
 		User user = (User) request.getSession().getAttribute("user");
 		json.put("name", "Logout");

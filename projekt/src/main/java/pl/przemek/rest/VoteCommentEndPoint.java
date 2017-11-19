@@ -15,11 +15,11 @@ public class VoteCommentEndPoint {
 
 
     VoteCommentService votecommentservice;
-    @Inject
     HttpServletRequest request;
     @Inject
-    public VoteCommentEndPoint(VoteCommentService votecommentservice){
+    public VoteCommentEndPoint(VoteCommentService votecommentservice,HttpServletRequest request){
         this.votecommentservice=votecommentservice;
+        this.request=request;
     }
     public VoteCommentEndPoint(){}
     @GET
@@ -27,8 +27,7 @@ public class VoteCommentEndPoint {
         User loggedUser=(User)request.getSession().getAttribute("user");
         if(loggedUser!=null){
             VoteType votetype=VoteType.valueOf(vote);
-            System.out.println(votetype);
-            Long user_id=loggedUser.getId();
+            Long userId=loggedUser.getId();
             votecommentservice.updateVote(loggedUser.getId(),commentId,votetype);
         }
     }
