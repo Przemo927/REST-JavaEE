@@ -37,13 +37,13 @@ public class LoginFilter implements Filter {
 	        }
 	        chain.doFilter(request, response);
 	    }
-	    private void LogoutIfInActiveStatus(User user,HttpServletRequest request,HttpServletResponse response) throws IOException {
+	    void LogoutIfInActiveStatus(User user,HttpServletRequest request,HttpServletResponse response) throws IOException {
 			if(!user.isActive()){
 				request.getSession().invalidate();
 				response.sendRedirect("http://localhost:8080/projekt/index.html#/");
 			}
 		}
-	    private void saveUserInSession(HttpServletRequest request,User user) {
+	    void saveUserInSession(HttpServletRequest request,User user) {
 
 	        request.getSession(true).setAttribute("user", user);
 	    }

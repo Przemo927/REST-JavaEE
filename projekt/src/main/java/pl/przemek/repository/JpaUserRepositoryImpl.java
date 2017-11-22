@@ -28,9 +28,22 @@ public void remove(User user) {
 
 @RolesAllowed("admin")
 public User update(User user) {
+    TypedQuery<User> queryUpdateUser=em.createNamedQuery("User.editUser",User.class);
+    queryUpdateUser.executeUpdate();
 	User updateUser=em.merge(user);
 	return updateUser;
 }
+
+@RolesAllowed("admin")
+public Integer updateWithoutPassword(User user) {
+    Query queryUpdateUser = em.createNamedQuery("User.editUser");
+    queryUpdateUser.setParameter("username", user.getUsername());
+    queryUpdateUser.setParameter("email", user.getEmail());
+    queryUpdateUser.setParameter("active", user.isActive());
+    queryUpdateUser.setParameter("id", user.getId());
+    return queryUpdateUser.executeUpdate();
+}
+
 @RolesAllowed({"admin","user"})
 public User get(Long id) {
     User user = em.find(User.class, id);

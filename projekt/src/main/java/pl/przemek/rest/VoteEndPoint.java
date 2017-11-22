@@ -28,21 +28,21 @@ public class VoteEndPoint {
 
 private VoteService voteService;
 
-@Inject
 HttpServletRequest request;
 @Inject
-public VoteEndPoint(VoteService voteService){
+public VoteEndPoint(VoteService voteService,HttpServletRequest request){
 	this.voteService=voteService;
+	this.request=request;
 }
 public VoteEndPoint(){}
 @GET
-public Response Voting(@QueryParam("vote") String vote, @QueryParam("discovery_id") Long discovery_id) throws URISyntaxException {
+public Response voting(@QueryParam("vote") String vote, @QueryParam("discoveryId") Long discoveryId) throws URISyntaxException {
 	User loggedUser = (User) request.getSession().getAttribute("user");
 
 	if(loggedUser!=null){
 		VoteType votetype=VoteType.valueOf(vote);
-		Long user_id=loggedUser.getId();
-		voteService.updateVote(user_id,discovery_id,votetype);
+		Long userId=loggedUser.getId();
+		voteService.updateVote(userId,discoveryId,votetype);
 
 	}
 	return Response.seeOther(new URI("http://localhost:8080/projekt/index.html#/")).build();
@@ -51,16 +51,14 @@ public Response Voting(@QueryParam("vote") String vote, @QueryParam("discovery_i
 @Produces(MediaType.APPLICATION_JSON)
 @Path("/{id}")
 public Vote get(@PathParam("id") long id){
-	Vote vote=voteService.getById(id);
-	return vote;
+	return voteService.getById(id);
 	
 }
 @GET
 @Produces(MediaType.APPLICATION_JSON)
 @Path("/{id}/{id1}")
-public Vote get(@PathParam("id") long userId,@PathParam("id1") long discoveryId){
-	Vote vote=voteService.getByUserIdDiscoveryId(userId,discoveryId);
-	return vote;
+public Vote getVoteByUserIdDiscoveryId(@PathParam("id") long userId,@PathParam("id1") long discoveryId){
+	return voteService.getByUserIdDiscoveryId(userId,discoveryId);
 	
 }
 }

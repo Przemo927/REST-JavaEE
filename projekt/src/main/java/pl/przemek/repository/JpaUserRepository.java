@@ -9,6 +9,7 @@ public interface JpaUserRepository {
     public void add(User user);
     public void remove(User user);
     public User update(User user);
+    public Integer updateWithoutPassword(User user);
     public User get(Long id);
     public List<User> getAll();
     public List<User> getUserByUsername(String name);

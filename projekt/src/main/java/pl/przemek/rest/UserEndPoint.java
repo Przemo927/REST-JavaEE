@@ -30,6 +30,7 @@ public class UserEndPoint {
         this.mailService=mailService;
     }
     public UserEndPoint(){}
+
     @Path("/{id}")
     @Consumes(MediaType.APPLICATION_JSON)
     @DELETE
@@ -47,7 +48,7 @@ public class UserEndPoint {
     @PUT
     @Consumes(MediaType.APPLICATION_JSON)
     public void updateUser(User user){
-        userservice.updateUser(user);
+        userservice.updateUserWithoutPassword(user);
     }
 
     @GET

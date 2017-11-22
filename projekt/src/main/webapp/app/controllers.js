@@ -170,19 +170,23 @@ app
         var vm = this;
         vm.id=$routeParams.id;
         function getUserById(id){
-            vm.getuser=UserEndPoint.get({parameter:id});
-        }
+            UserEndPoint.get({parameter:id},function success(data){
+                console.log(data);
+                vm.user=data;
+            console.log(vm.user);
+        })}
         getUserById(vm.id);
-        vm.updateUser=function(user){
-            if(user.username!=null){
-            vm.getuser.username=user.username;
 
-            if(user.email!=null) {
-                vm.getuser.email = user.email;
+        vm.updateUser=function(editeduser){
+            if(editeduser.username!==null && editeduser.username!==""){
+            vm.user.username=editeduser.username;
+
+            if(editeduser.email!==null && editeduser.username!=="") {
+                vm.user.email = editeduser.email;
             }
-                vm.getuser.active=user.active;
-            console.log(user.active);
-        updateUserEndPoint.update(vm.getuser);
+                vm.user.active=editeduser.active;
+            console.log(editeduser.active);
+        UpdateUserEndPoint.update(vm.user);
             }
     }})
 

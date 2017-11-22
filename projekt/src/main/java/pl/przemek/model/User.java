@@ -16,7 +16,9 @@ import pl.przemek.validation.UsernameUnique;
 
 @NamedQueries({
     @NamedQuery(name = "User.findAll", query = "SELECT p FROM User p"),
-    @NamedQuery(name = "User.findByUsername", query = "SELECT p FROM User p WHERE p.username=:username")
+    @NamedQuery(name = "User.findByUsername", query = "SELECT p FROM User p WHERE p.username=:username"),
+    @NamedQuery(name = "User.editUser", query = "UPDATE User p SET p.username=:username, p.email=:email, p.active=:active " +
+            "WHERE p.id=:id")
     })
 @Entity
 public class User implements Serializable {

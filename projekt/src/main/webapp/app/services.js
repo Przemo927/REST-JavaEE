@@ -6,7 +6,7 @@ app
         return $resource('api/user/:parameter');
     })
     .factory('UpdateUserEndPoint', function($resource) {
-        return $resource('api/user/:parameter',null,{
+        return $resource('api/user',null,{
             'update': { method:'PUT' }
         });
     })

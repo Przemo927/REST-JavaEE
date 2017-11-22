@@ -63,6 +63,11 @@ public class UserService {
     public void updateUser(User user){
         userRepo.update(user);
     }
+
+    public void updateUserWithoutPassword(User user){
+        userRepo.updateWithoutPassword(user);
+    }
+
     public List<User> getAllUsers(){
         return userRepo.getAll();
     }
