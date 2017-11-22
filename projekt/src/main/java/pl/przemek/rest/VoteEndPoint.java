@@ -28,7 +28,8 @@ public class VoteEndPoint {
 
 private VoteService voteService;
 
-HttpServletRequest request;
+private HttpServletRequest request;
+
 @Inject
 public VoteEndPoint(VoteService voteService,HttpServletRequest request){
 	this.voteService=voteService;

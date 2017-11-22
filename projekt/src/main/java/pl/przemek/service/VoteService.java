@@ -50,20 +50,21 @@ public class VoteService {
         return newDiscovery;
     }
 
-    public void updateVote(long userId, long discovery_id, VoteType newVoteType) {
+    public void updateVote(long userId, long discoveryId, VoteType newVoteType) {
         Vote updateVote = null;
         Vote existingVote = null;
-        existingVote = votRepo.getVoteByUserIdDiscoveryId(userId, discovery_id);
+        existingVote = votRepo.getVoteByUserIdDiscoveryId(userId, discoveryId);
+        System.out.println(existingVote);
         if (existingVote == null) {
-            updateVote = createVote(userId, discovery_id, newVoteType);
+            updateVote = createVote(userId, discoveryId, newVoteType);
             votRepo.add(updateVote);
-            updateDiscovery(discovery_id,null,updateVote);
+            updateDiscovery(discoveryId,null,updateVote);
         } else {
             updateVote = createVote(existingVote);
             updateVote.setVoteType(newVoteType);
             if (!updateVote.equals(existingVote)) {
                 votRepo.update(updateVote);
-                updateDiscovery(discovery_id, existingVote, updateVote);
+                updateDiscovery(discoveryId, existingVote, updateVote);
             }
         }
 

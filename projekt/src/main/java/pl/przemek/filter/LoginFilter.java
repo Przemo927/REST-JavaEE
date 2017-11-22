@@ -21,8 +21,16 @@ import pl.przemek.repository.JpaUserRepository;
 @WebFilter("/*")
 public class LoginFilter implements Filter {
 	
+
+	private JpaUserRepository userrep;
+
 	@Inject
-	JpaUserRepository userrep;
+	public LoginFilter(JpaUserRepository userrep){
+		this.userrep=userrep;
+	}
+
+	public LoginFilter(){
+	}
 
 	  @Override
 	    public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain) throws IOException, ServletException {
