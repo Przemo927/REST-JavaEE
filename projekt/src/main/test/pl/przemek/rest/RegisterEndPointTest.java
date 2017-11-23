@@ -1,19 +1,15 @@
 package pl.przemek.rest;
 
-import com.sun.xml.internal.ws.client.sei.ResponseBuilder;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.mockito.junit.MockitoJUnitRunner;
 import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.junit4.PowerMockRunner;
-import org.powermock.tests.utils.impl.PowerMockIgnorePackagesExtractorImpl;
 import pl.przemek.Message.MailService;
 import pl.przemek.Message.MessageWrapper;
 import pl.przemek.model.User;
 import pl.przemek.service.UserService;
 
-import static org.junit.Assert.*;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 import javax.ws.rs.core.Response;

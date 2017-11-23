@@ -33,7 +33,7 @@ public class JpaVoteRepositoryImplTest {
     @Rule
     public ExpectedException thrown=ExpectedException.none();
 
-    @Test
+    /**@Test
     public void getVoteByUserIdDiscoveryId() throws Exception {
         TypedQuery<Vote> query=mock(TypedQuery.class);
         List<Vote> voteList=new ArrayList<>();
@@ -43,7 +43,7 @@ public class JpaVoteRepositoryImplTest {
         thrown.expect(NoResultException.class);
         thrown.expectMessage("Vote is not exist");
         jpaVoteRepository.getVoteByUserIdDiscoveryId(anyLong(),anyLong());
-    }
+    }*/
 
     @Test
     public void removeByDiscoveryId() throws Exception {
