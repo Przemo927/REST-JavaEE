@@ -3,7 +3,7 @@
     <form class="form-signin events" method="post">
         <input ng-model="eventCtrl.event.name" type="text" class="form-control" placeholder="Name" required autofocus />
         <input ng-model="eventCtrl.event.nameOfCity" type="text" name="City" class="form-control" placeholder="City" required autofocus />
-        <input type="text" ng-model="eventCtrl.date" class="form-control" placeholder="Date eg. dd-mm-yyyy"/>
+        <input type="text" ng-model="eventCtrl.date" class="form-control" placeholder="Date eg. yyyy-mm-dd"/>
         <input type="text" ng-model="eventCtrl.time" class="form-control" placeholder="Hour eg. hh:mm"/>
         <button ng-click="eventCtrl.addEvent(eventCtrl.event)" class="btn btn-lg btn-primary btn-block" type="submit" >Register</button>
     </form>

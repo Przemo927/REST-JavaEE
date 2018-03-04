@@ -1,0 +1,22 @@
+<div class="container">
+
+    <div class="row">
+        <div [ngClass]="formClass">
+            <h2 id="title" class="text-center">Add Event</h2>
+    <form *ngIf="event" style="margin-top:10px" class="form-login" method="post">
+        <a style="font-size:20px"><span (click)="showMap()" class="glyphicon glyphicon-globe pull-right" style="margin:5px"></span></a>
+        <input [(ngModel)]="event.name" name="name" type="text" class="form-control" placeholder="Name" required autofocus />
+        <input [(ngModel)]="event.nameOfCity" name="nameOfCity" type="text" name="City" class="form-control" placeholder="City" required autofocus />
+        <input type="text" [(ngModel)]="date" name="date" class="form-control" placeholder="Date eg. yyyy-mm-dd"/>
+        <input type="text" [(ngModel)]="time" name="date" class="form-control" placeholder="Hour eg. hh:mm"/>
+        <button (click)="addEvent(event,date,time)" class="btn btn-lg btn-primary btn-block" >Save Event</button>
+    </form>
+        </div>
+        <div class="col-md-6">
+            <h2 id="title" class="text-center" [ngStyle]="displayMap">Mark position of event</h2>
+            <div id="mapa" style="height: 220px;border: 1px solid black;" [ngStyle]="displayMap" class="img-rounded"></div>
+    </div>
+</div>
+</div>
+
+

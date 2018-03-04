@@ -1,0 +1,42 @@
+<div class="panel-body">
+  <div class="col col-md-3 col-sm-4">
+    Sort by:
+    <button class="btn btn-default btn-pressure btn-sensitive" >Time</button>
+    <button class="btn btn-default btn-pressure btn-sensitive" >Popularity</button>
+  </div>
+  <div class="col col-md-6 col-sm-4 text-center">
+    <a routerLink="/users" *ngIf="adminRole==true"><button type="button" class="btn btn-default" >List of users</button></a>
+  </div>
+  <div class="col col-md-3 col-sm-4">
+    <form class="navbar-form navbar-right">
+      <div class="form-group">
+        Find: <input type="text" class="form-control"  placeholder="Search">
+      </div>
+      <button type="submit" class="btn btn-deafult">Search</button>
+    </form>
+  </div>
+</div>
+<div class="container">
+  <ul class="list-unstyled">
+    <li *ngFor="let discovery of discoveries">
+      <div class="row bs-callout bs-callout-primary">
+        <div class="col col-md-1 col-sm-1" >
+
+          <span style="width:50px" (click)="addVote(VOTE_UP,discovery.id)" class="glyphicon glyphicon-thumbs-up btn btn-success"></span>
+          <div style="width:50px" class="well well-sm centered pull-left">{{discovery.upVote-discovery.downVote}}</div>
+          <span style="width:50px" (click)="addVote(VOTE_DOWN,discovery.id)" class="glyphicon glyphicon-thumbs-down btn btn-warning"></span>
+        </div>
+        <div>
+          <div class="col col-md-10 col-sm-10">
+
+            <a routerLink="/discovery/{{discovery.id}}"><p>{{discovery.name}}</p></a>
+            <a href="{{discovery.url}}"><button class="btn btn-default btn-xs">Source</button></a>
+          </div>
+          <div class="col col-md-1 col-sm-1" >
+            <a routerLink="/editdiscovery/{{discovery.id}}" *ngIf="adminRole==true"><button type="button" class="btn btn-warning push-right">Edit</button></a>
+          </div>
+        </div>
+      </div>
+    </li>
+  </ul>
+</div>

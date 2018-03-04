@@ -1,0 +1,56 @@
+    <div class="row" style="margin-top:10px">
+    <div class="pull-left container-fluid">
+    <button (click)="enableFindByPosition()" class="btn btn-primary">Find By Position</button>
+    <button (click)="enableFindByCity()" class="btn btn-success">Find By City</button>
+    <button (click)="enableShowAllEvents()" class="btn btn-success">Show All Events</button>
+    </div>
+</div>
+
+    <div clas="row">
+    <div class="container">
+     
+    <div *ngIf="position" class="col-md-6 col-md-offset-3">
+        <h2 class="text-center" style="margin-bottom:40px">Find By Position</h2>
+        Distance From Your Position [km]: <input class="text-center" type="text" maxlength="4" size="6" [(ngModel)]="distance" name="distance"/>
+        <div style="height: 300px;margin-top:10px;" id="findByPosition" class="img-rounded" [ngModel]="addLayerToMap()" ngDefaultControl></div>
+    <button style="margin-top:10px" (click)="getEventsByPosition(distance)" class="btn btn-lg btn-primary btn-block">Search</button>
+    </div>
+        <div *ngIf="city" class="col-md-6 col-md-offset-3">
+
+            <h2 class="text-center" style="margin-bottom:40px">Find By City</h2>
+            <input [(ngModel)]="nameOfCity" name=nameOfCity type="text" class="form-control" placeholder="Name of City"/>
+            <button style="margin-top:10px" type="submit" (click)="getEventsByNameOfCity(nameOfCity)" class="btn btn-lg btn-primary btn-block">Search</button>
+            </div>
+        </div>
+        </div>
+
+<div *ngIf="events" class="container">
+        <div class="col-md-8 col-md-offset-2 col-sm-offset-1">
+            <h2 class="text-center" style="margin-bottom:40px">Events</h2>
+	<ul class="event-list" (rowClicked)='onRowClicked($event)'>
+     <li *ngFor="let event of events" style="display: block">
+         <div id="divRow" style="box-shadow: 0px 0px 5px rgba(51, 51, 51, 0.7)" [ngStyle]="styles" class="row">
+						<time id="time" datetime="2014-07-20">
+							<span class="day">{{event.timestamp.getDate()}}</span>
+							<span class="month">{{monthNames[event.timestamp.getMonth()]}}</span>
+							<span class="year">{{event.timestamp.getFullYear()}}</span>
+							<span class="time">{{event.timestamp.getHours()}}:{{event.timestamp.getMinutes()}}</span>
+						</time>
+             <label id="label"><h2 style="margin-top: 5px;margin-bottom: 0px;">{{event.name}}</h2><h6 style="margin-top: 0px">Localization: {{event.nameOfCity}}</h6></label>
+             <div *ngIf="event.eventPosition[0]" id="map" style="height: 120px;width: 200px;"
+                leaflet 
+                  [leafletOptions]="addOptionsToMap(event.eventPosition)"></div>
+             <div id="rightSmall" style="text-align: center">
+                     <a id="showMap" style="font-size:20px"><span class="glyphicon glyphicon-globe" style="top: 20px;left:5px;position:absolute"></span></a>
+                 <a style="font-size:20px"><span class="fab fa-facebook-square" style="bottom: 20px;left:6px;position: absolute"></span></a>
+             </div>
+         </div>
+      </li>
+    </ul>
+    </div>
+    </div>
+
+
+
+
+    
