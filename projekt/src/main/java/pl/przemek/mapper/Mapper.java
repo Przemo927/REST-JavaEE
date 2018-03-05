@@ -15,23 +15,20 @@ import org.json.simple.JSONObject;
 
 @Provider
 public class Mapper implements ExceptionMapper<ValidationException> {
-	
-JSONObject json;
-Map<String,String> map;
 
     @Override
     public Response toResponse(ValidationException e) {
-    	json=new JSONObject();
-    	map=new HashMap<>();
+        JSONObject json = new JSONObject();
+        Map<String, String> map = new HashMap<>();
     	if(e instanceof ResteasyViolationException) {
             ResteasyViolationException re = (ResteasyViolationException) e;
             Set<ConstraintViolation<?>> violations = re.getConstraintViolations();
             for (ConstraintViolation<?> v : violations) {
                 String[] strings = (v.getPropertyPath() + "").split("\\.");
                 map.put(strings[2],v.getMessage());
-        json.put("InvalidFieldList",map);
+        json.put("InvalidFieldList", map);
         }
-            return Response.status(Status.BAD_REQUEST).entity(json).type(MediaType.APPLICATION_JSON).build();
+            return Response.ok().entity(json).type(MediaType.APPLICATION_JSON).header("Access-Control-Allow-Origin","*").build();
     	}
 		return Response.status(Status.BAD_REQUEST).entity("sorry").type(MediaType.APPLICATION_JSON).build();
         
