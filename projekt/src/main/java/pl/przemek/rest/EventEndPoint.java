@@ -37,7 +37,7 @@ public class EventEndPoint {
     public Response getEvent(@PathParam("id") long id) {
         Event event=eventservice.getEvent(id);
         if(event==null){
-            return Response.ok(mw.wrappMessage("Event wasn't found")).status(404).build();
+            return Response.status(Response.Status.NO_CONTENT).build();
         }
         return Response.ok(event).build();
     }
@@ -52,7 +52,7 @@ public class EventEndPoint {
         }else
             listOfEvents=eventservice.getEventsByCity(city);
         if(listOfEvents.isEmpty())
-            return Response.ok(mw.wrappMessage("Events wasn't found")).status(404).build();
+            return Response.status(Response.Status.NO_CONTENT).build();
         return Response.ok(listOfEvents).build();
     }
 
@@ -62,7 +62,7 @@ public class EventEndPoint {
     public Response getEventsByPosition(@QueryParam("x") double x, @QueryParam("y") double y,@QueryParam("distance") int distance ) {
         List<Event> listOfEventsGetByPosition=eventservice.getEventByPosition(x,y,distance);
         if(listOfEventsGetByPosition.isEmpty())
-            Response.ok(mw.wrappMessage("Events wasn't found near this position")).status(404).build();
+            Response.status(Response.Status.NO_CONTENT).build();
         return Response.ok(listOfEventsGetByPosition).build();
     }
 
@@ -81,7 +81,7 @@ public class EventEndPoint {
     @Consumes(MediaType.APPLICATION_JSON)
     public Response updateEvent(Event event){
         eventservice.updateEvent(event);
-        return Response.ok().build();
+        return Response.ok(mw.wrappMessage("Event was updated")).build();
     }
 
     @DELETE
@@ -89,7 +89,7 @@ public class EventEndPoint {
     @Consumes(MediaType.APPLICATION_JSON)
     public Response removeEvent(@PathParam("id") long id){
         eventservice.removeEventById(id);
-        return Response.ok().build();
+        return Response.ok(mw.wrappMessage("Event was removed")).build();
     }
 
     @GET
@@ -98,7 +98,7 @@ public class EventEndPoint {
     public Response getCitiesFromAllEvents(){
         List<String> listOfCities=eventservice.getCitiesFromAllEvents();
         if(listOfCities.isEmpty())
-            return Response.ok(mw.wrappMessage("Cities weren't found")).build();
+            return Response.status(Response.Status.NO_CONTENT).build();
         return Response.ok(listOfCities).build();
     }
 

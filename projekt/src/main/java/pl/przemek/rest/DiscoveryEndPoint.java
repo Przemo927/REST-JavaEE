@@ -50,7 +50,7 @@ public class DiscoveryEndPoint {
 	public Response getById(@PathParam("id") long id) {
 		Discovery discovery=discoveryService.getById(id);
 		if(discovery==null){
-			return Response.ok(mw.wrappMessage("Discovery wasn't found")).build();
+			return Response.status(Response.Status.NO_CONTENT).build();
 		}
 		return Response.ok(discovery).build();
 	}
@@ -59,7 +59,7 @@ public class DiscoveryEndPoint {
     @Path("/{id}")
     public Response removeById(@PathParam("id") long id) {
         discoveryService.removeDiscoveryById(id);
-		return Response.ok("Discovery was removed").header("Access-Control-Allow-Origin","*").build();
+		return Response.ok("Discovery was removed").build();
 
     }
 
@@ -68,7 +68,7 @@ public class DiscoveryEndPoint {
 	public Response getALL(@QueryParam("orderBy") @DefaultValue("popular") String order) {
 		List<Discovery> allDiscoveries = discoveryService.getAll(order);
 	if(allDiscoveries.isEmpty()){
-		return Response.ok(mw.wrappMessage("Discoveries weren't found")).build();
+		return Response.status(Response.Status.NO_CONTENT).build();
 	}
 		return Response.ok(allDiscoveries).build();
 	}

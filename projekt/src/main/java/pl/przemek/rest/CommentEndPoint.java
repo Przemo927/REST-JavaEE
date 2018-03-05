@@ -35,7 +35,7 @@ public class CommentEndPoint {
     public Response getAllComment() {
         List<Comment> listOfComments=commentservice.getAllComment();
         if(listOfComments.isEmpty())
-            return Response.ok(mw.wrappMessage("Comments wasn't found")).status(404).build();
+            return Response.status(Response.Status.NO_CONTENT).build();
         return Response.ok(listOfComments).build();
     }
 
@@ -49,9 +49,9 @@ public class CommentEndPoint {
         if(user!=null) {
             comment.setUser(user);
             commentservice.addComment(comment, discoveryId);
-            return Response.ok(mw.wrappMessage("Comment wasn't added")).status(404).build();
+            return Response.ok().build();
         }
-        return Response.ok().build();
+        return Response.status(Response.Status.NO_CONTENT).build();
     }
 
     @GET
@@ -60,7 +60,7 @@ public class CommentEndPoint {
     public Response getByDiscoveryId(@PathParam("id") long id) {
         List<Comment> listWithComment=commentservice.getByDiscoveryId(id);
         if(listWithComment.isEmpty())
-            return Response.ok(mw.wrappMessage("Comment wasn't found")).status(404).build();
+            return Response.status(Response.Status.NO_CONTENT).build();
         return Response.ok(listWithComment).build();
     }
 

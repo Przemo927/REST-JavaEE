@@ -55,7 +55,7 @@ public void voting(@QueryParam("vote") String vote, @QueryParam("discoveryId") L
 public Response get(@PathParam("id") long id){
 	Vote vote=voteService.getById(id);
 	if(vote==null)
-		return Response.ok(mw.wrappMessage("Vote wasn't find")).build();
+		return Response.status(Response.Status.NO_CONTENT).build();
 	return Response.ok(vote).build();
 }
 @GET
@@ -64,7 +64,7 @@ public Response get(@PathParam("id") long id){
 public Response getVoteByUserIdDiscoveryId(@PathParam("id") long userId, @PathParam("id1") long discoveryId){
 	Vote vote=voteService.getByUserIdDiscoveryId(userId,discoveryId);
 	if(vote==null)
-		return Response.ok(mw.wrappMessage("Vote wasn't found")).status(404).build();
+		return Response.status(Response.Status.NO_CONTENT).build();
 	return Response.ok(vote).build();
 	
 }

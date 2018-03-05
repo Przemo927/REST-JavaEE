@@ -41,7 +41,7 @@ public class UserEndPoint {
     @DELETE
     public Response removeByUserName(@PathParam("id") long id) {
         userservice.removeByUserId(id);
-        return Response.ok().build();
+        return Response.ok(mw.wrappMessage("User was removed")).build();
     }
 
     @GET
@@ -50,7 +50,7 @@ public class UserEndPoint {
     public Response getUserById(@PathParam("id") Long id){
         User user=userservice.getUserById(id);
         if(user==null){
-            return Response.ok(mw.wrappMessage("User wasn't found")).build();
+            return Response.status(Response.Status.NO_CONTENT).build();
         }
         return Response.ok(user).build();
     }
@@ -59,7 +59,7 @@ public class UserEndPoint {
     @Consumes(MediaType.APPLICATION_JSON)
     public Response updateUser(User user){
         userservice.updateUserWithoutPassword(user);
-        return Response.ok().build();
+        return Response.ok("User was updated").build();
     }
 
     @GET
@@ -67,7 +67,7 @@ public class UserEndPoint {
     public Response getAllUsers(){
         List<User> listOfUsers=userservice.getAllUsers();
         if(listOfUsers.isEmpty())
-            return Response.ok(mw.wrappMessage("Users weren't found")).build();
+            return Response.status(Response.Status.NO_CONTENT).build();
        return Response.ok(listOfUsers).build();
     }
 

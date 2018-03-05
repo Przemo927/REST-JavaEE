@@ -28,6 +28,6 @@ public class EventPositionEndPoint {
     @Consumes(MediaType.APPLICATION_JSON)
     public Response addEventPosition(EventPosition position){
         eventPositionService.addEventPosition(position);
-        return Response.ok().build();
+        return Response.ok(mw.wrappMessage("Event position was added")).build();
     }
 }
