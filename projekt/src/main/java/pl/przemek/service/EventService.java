@@ -73,4 +73,8 @@ public class EventService {
     double formulaToComputeDistance(double latCoordinateGivenByUser, double lngCoordinateGivenByUser,double latCoordinateOfEvent, double lngCoordinateOfEvent){
         return Math.sqrt(Math.pow(latCoordinateGivenByUser-latCoordinateOfEvent,2)+Math.pow(Math.cos((latCoordinateGivenByUser*Math.PI)/180)*(lngCoordinateOfEvent-lngCoordinateGivenByUser),2))*40075.704/360;
     }
+
+    public List<String> getCitiesFromAllEvents(){
+         return eventRepo.getCitiesFromAllEvents();
+    }
 }
