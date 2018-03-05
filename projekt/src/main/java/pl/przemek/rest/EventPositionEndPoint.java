@@ -2,18 +2,21 @@ package pl.przemek.rest;
 
 import pl.przemek.model.EventPosition;
 import pl.przemek.service.EventPositionService;
+import pl.przemek.wrapper.ResponseMessageWrapper;
 
 import javax.inject.Inject;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;
 import javax.ws.rs.core.MediaType;
+import javax.ws.rs.core.Response;
 import java.awt.*;
 
-@Path("/position")
+@Path("/eventPosition")
 public class EventPositionEndPoint {
 
     private EventPositionService eventPositionService;
+    private final static ResponseMessageWrapper mw=new ResponseMessageWrapper();
 
     public EventPositionEndPoint(){}
 
@@ -23,7 +26,8 @@ public class EventPositionEndPoint {
     }
     @POST
     @Consumes(MediaType.APPLICATION_JSON)
-    public void addEventPosition(EventPosition position){
+    public Response addEventPosition(EventPosition position){
         eventPositionService.addEventPosition(position);
+        return Response.ok().build();
     }
 }

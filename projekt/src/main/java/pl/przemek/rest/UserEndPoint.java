@@ -1,10 +1,12 @@
 package pl.przemek.rest;
 
+import com.sun.org.apache.regexp.internal.RE;
 import pl.przemek.Message.MailService;
 import pl.przemek.Message.MessageWrapper;
 import pl.przemek.model.User;
 import pl.przemek.repository.JpaUserRepository;
 import pl.przemek.service.UserService;
+import pl.przemek.wrapper.ResponseMessageWrapper;
 
 import javax.inject.Inject;
 import javax.mail.*;
@@ -13,6 +15,7 @@ import javax.mail.internet.InternetAddress;
 import javax.mail.internet.MimeMessage;
 import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
+import javax.ws.rs.core.Response;
 import java.util.List;
 import java.util.Properties;
 
@@ -23,6 +26,8 @@ public class UserEndPoint {
     private UserService userservice;
     private JpaUserRepository userrepo;
     private MailService mailService;
+    private final static ResponseMessageWrapper mw=new ResponseMessageWrapper();
+
     @Inject
     public UserEndPoint(UserService userService,JpaUserRepository userRepository,MailService mailService){
         this.userservice=userService;
@@ -34,27 +39,36 @@ public class UserEndPoint {
     @Path("/{id}")
     @Consumes(MediaType.APPLICATION_JSON)
     @DELETE
-    public void removeByUserName(@PathParam("id") long id) {
+    public Response removeByUserName(@PathParam("id") long id) {
         userservice.removeByUserId(id);
+        return Response.ok().build();
     }
 
     @GET
     @Path("/{id}")
     @Produces(MediaType.APPLICATION_JSON)
-    public User getUserById(@PathParam("id") Long id){
-        return userservice.getUserById(id);
+    public Response getUserById(@PathParam("id") Long id){
+        User user=userservice.getUserById(id);
+        if(user==null){
+            return Response.ok(mw.wrappMessage("User wasn't found")).build();
+        }
+        return Response.ok(user).build();
     }
 
     @PUT
     @Consumes(MediaType.APPLICATION_JSON)
-    public void updateUser(User user){
+    public Response updateUser(User user){
         userservice.updateUserWithoutPassword(user);
+        return Response.ok().build();
     }
 
     @GET
     @Produces(MediaType.APPLICATION_JSON)
-    public List<User> getAllUsers(){
-       return userservice.getAllUsers();
+    public Response getAllUsers(){
+        List<User> listOfUsers=userservice.getAllUsers();
+        if(listOfUsers.isEmpty())
+            return Response.ok(mw.wrappMessage("Users weren't found")).build();
+       return Response.ok(listOfUsers).build();
     }
 
 }

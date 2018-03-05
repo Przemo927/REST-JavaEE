@@ -22,6 +22,7 @@ import pl.przemek.model.User;
 import pl.przemek.model.Vote;
 import pl.przemek.model.VoteType;
 import pl.przemek.service.VoteService;
+import pl.przemek.wrapper.ResponseMessageWrapper;
 
 @Path("/vote")
 public class VoteEndPoint {
@@ -29,6 +30,8 @@ public class VoteEndPoint {
 private VoteService voteService;
 
 private HttpServletRequest request;
+	private final static ResponseMessageWrapper mw=new ResponseMessageWrapper();
+
 
 @Inject
 public VoteEndPoint(VoteService voteService,HttpServletRequest request){
@@ -37,29 +40,32 @@ public VoteEndPoint(VoteService voteService,HttpServletRequest request){
 }
 public VoteEndPoint(){}
 @GET
-public Response voting(@QueryParam("vote") String vote, @QueryParam("discoveryId") Long discoveryId) throws URISyntaxException {
+public void voting(@QueryParam("vote") String vote, @QueryParam("discoveryId") Long discoveryId) throws URISyntaxException {
 	User loggedUser = (User) request.getSession().getAttribute("user");
 
 	if(loggedUser!=null){
 		VoteType votetype=VoteType.valueOf(vote);
 		Long userId=loggedUser.getId();
 		voteService.updateVote(userId,discoveryId,votetype);
-
 	}
-	return Response.seeOther(new URI("http://localhost:8080/projekt/index.html#/")).build();
 }
 @GET
 @Produces(MediaType.APPLICATION_JSON)
 @Path("/{id}")
-public Vote get(@PathParam("id") long id){
-	return voteService.getById(id);
-	
+public Response get(@PathParam("id") long id){
+	Vote vote=voteService.getById(id);
+	if(vote==null)
+		return Response.ok(mw.wrappMessage("Vote wasn't find")).build();
+	return Response.ok(vote).build();
 }
 @GET
 @Produces(MediaType.APPLICATION_JSON)
 @Path("/{id}/{id1}")
-public Vote getVoteByUserIdDiscoveryId(@PathParam("id") long userId,@PathParam("id1") long discoveryId){
-	return voteService.getByUserIdDiscoveryId(userId,discoveryId);
+public Response getVoteByUserIdDiscoveryId(@PathParam("id") long userId, @PathParam("id1") long discoveryId){
+	Vote vote=voteService.getByUserIdDiscoveryId(userId,discoveryId);
+	if(vote==null)
+		return Response.ok(mw.wrappMessage("Vote wasn't found")).status(404).build();
+	return Response.ok(vote).build();
 	
 }
 }

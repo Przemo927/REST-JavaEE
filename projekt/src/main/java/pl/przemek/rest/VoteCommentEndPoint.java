@@ -16,12 +16,14 @@ public class VoteCommentEndPoint {
 
     VoteCommentService votecommentservice;
     HttpServletRequest request;
+
     @Inject
     public VoteCommentEndPoint(VoteCommentService votecommentservice,HttpServletRequest request){
         this.votecommentservice=votecommentservice;
         this.request=request;
     }
     public VoteCommentEndPoint(){}
+
     @GET
     public void voting(@QueryParam("vote") String vote, @QueryParam("commentId") long commentId){
         User loggedUser=(User)request.getSession().getAttribute("user");
