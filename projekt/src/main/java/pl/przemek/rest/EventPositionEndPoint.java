@@ -8,15 +8,21 @@ import javax.inject.Inject;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;
+import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
+import javax.ws.rs.core.UriInfo;
 import java.awt.*;
+import java.net.URI;
 
 @Path("/eventPosition")
 public class EventPositionEndPoint {
 
     private EventPositionService eventPositionService;
     private final static ResponseMessageWrapper mw=new ResponseMessageWrapper();
+
+    @Context
+    UriInfo uriInfo;
 
     public EventPositionEndPoint(){}
 
@@ -28,6 +34,6 @@ public class EventPositionEndPoint {
     @Consumes(MediaType.APPLICATION_JSON)
     public Response addEventPosition(EventPosition position){
         eventPositionService.addEventPosition(position);
-        return Response.ok(mw.wrappMessage("Event position was added")).build();
+        return Response.created(URI.create(uriInfo.getAbsolutePath()+"/"+position.getId())).build();
     }
 }

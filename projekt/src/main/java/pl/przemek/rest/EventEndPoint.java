@@ -11,8 +11,11 @@ import javax.enterprise.context.RequestScoped;
 import javax.inject.Inject;
 import javax.servlet.http.HttpServletRequest;
 import javax.ws.rs.*;
+import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
+import javax.ws.rs.core.UriInfo;
+import java.net.URI;
 import java.util.List;
 
 @RequestScoped
@@ -22,6 +25,9 @@ public class EventEndPoint {
     private EventService eventservice;
     private HttpServletRequest request;
     private final static ResponseMessageWrapper mw=new ResponseMessageWrapper();
+
+    @Context
+    UriInfo uriInfo;
 
     public EventEndPoint() {
     }
@@ -73,7 +79,7 @@ public class EventEndPoint {
         if(user!=null) {
             event.setUser(user);
             eventservice.addEvent(event);
-            return Response.ok().build();
+            return Response.created(URI.create(uriInfo.getAbsolutePath()+"/"+event.getId())).build();
         }
         return Response.ok(mw.wrappMessage("User isn't logged")).build();
     }

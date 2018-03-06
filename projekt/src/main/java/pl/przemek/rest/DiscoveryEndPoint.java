@@ -2,6 +2,7 @@ package pl.przemek.rest;
 
 import java.io.IOException;
 
+import java.net.URI;
 import java.util.List;
 
 import javax.enterprise.context.RequestScoped;
@@ -10,8 +11,10 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 import javax.validation.Valid;
 import javax.ws.rs.*;
+import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
+import javax.ws.rs.core.UriInfo;
 
 import pl.przemek.model.Discovery;
 import pl.przemek.model.User;
@@ -25,6 +28,8 @@ public class DiscoveryEndPoint {
 	private DiscoveryService discoveryService;
 	private HttpServletRequest request;
 	private final static ResponseMessageWrapper mw=new ResponseMessageWrapper();
+	@Context
+	UriInfo uriInfo;
 
 	@Inject
 	public DiscoveryEndPoint(DiscoveryService discoveryService, HttpServletRequest request){
@@ -41,7 +46,7 @@ public class DiscoveryEndPoint {
 		User user = (User) session.getAttribute("user");
 		discovery.setUser(user);
 		discoveryService.addDiscovery(discovery);
-		return Response.ok(mw.wrappMessage("Discovery was added")).build();
+		return Response.created(URI.create(uriInfo.getAbsolutePath()+"/"+discovery.getId())).build();
 	}
 
 	@GET
@@ -52,6 +57,7 @@ public class DiscoveryEndPoint {
 		if(discovery==null){
 			return Response.status(Response.Status.NO_CONTENT).build();
 		}
+		System.out.println(uriInfo.getAbsolutePath());
 		return Response.ok(discovery).build();
 	}
 
