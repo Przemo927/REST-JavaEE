@@ -54,6 +54,10 @@ public class DiscoveryService {
             }
     }
 
+    public List<Discovery> getWithLimit(int begin,int end){
+        return discRepo.getWithLimit(begin,end);
+    }
+
     public void removeDiscoveryById(long id){
         Discovery discovery=discRepo.get(id);
         voteRepo.removeByDiscoveryId(id);

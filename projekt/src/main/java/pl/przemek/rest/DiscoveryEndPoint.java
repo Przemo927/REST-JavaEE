@@ -71,8 +71,15 @@ public class DiscoveryEndPoint {
 
 	@GET
 	@Produces(MediaType.APPLICATION_JSON)
-	public Response getALL(@QueryParam("orderBy") @DefaultValue("popular") String order) {
-		List<Discovery> allDiscoveries = discoveryService.getAll(order);
+	public Response getALL(@QueryParam("orderBy") @DefaultValue("popular") String order,@QueryParam("beginWith") Integer begin,
+						   @QueryParam("endWith") Integer end) {
+		List<Discovery> allDiscoveries;
+	if(begin!=null && !(begin<0) && end!=null && !(end<0)){
+		allDiscoveries=discoveryService.getWithLimit(begin,end);
+		}
+	else {
+		allDiscoveries = discoveryService.getAll(order);
+	}
 	if(allDiscoveries.isEmpty()){
 		return Response.status(Response.Status.NO_CONTENT).build();
 	}
@@ -85,5 +92,6 @@ public class DiscoveryEndPoint {
 		discoveryService.updateDiscovery(discovery);
 		return Response.ok(mw.wrappMessage("Discovery was updated")).build();
 	}
+
 
 }

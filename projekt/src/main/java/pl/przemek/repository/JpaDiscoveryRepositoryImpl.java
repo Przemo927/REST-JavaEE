@@ -10,7 +10,6 @@ import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.persistence.Query;
 import javax.persistence.TypedQuery;
-import javax.validation.constraints.Null;
 
 import pl.przemek.model.Discovery;
 
@@ -26,6 +25,8 @@ public class JpaDiscoveryRepositoryImpl implements JpaDiscoveryRepository {
 	public void add(Discovery discovery) {
 	    em.persist(discovery);
 	}
+
+
 
 	@RolesAllowed("admin")
     @Override
@@ -54,6 +55,7 @@ public class JpaDiscoveryRepositoryImpl implements JpaDiscoveryRepository {
 	    return discovery;
 	}
 
+
 	@RolesAllowed({"admin","user"})
     @Override
 	public List<Discovery> getAll(Comparator<Discovery> comparator) {
@@ -63,7 +65,15 @@ public class JpaDiscoveryRepositoryImpl implements JpaDiscoveryRepository {
             discovery.sort(comparator);
         }
         return discovery;
-		
+
+	}
+	@PermitAll
+	@Override
+	public List<Discovery> getWithLimit(int begin,int end) {
+		TypedQuery<Discovery> getAllQueryWithLimit=em.createNamedQuery("Discovery.findAllWithLimit",Discovery.class);
+		getAllQueryWithLimit.setParameter("begin",begin);
+		getAllQueryWithLimit.setParameter("end",end);
+		return getAllQueryWithLimit.getResultList();
 	}
 
 	@RolesAllowed({"admin","user"})

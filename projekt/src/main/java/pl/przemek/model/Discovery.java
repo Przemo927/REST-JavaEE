@@ -15,6 +15,7 @@ import javax.validation.constraints.Size;
 @NamedQueries({
     @NamedQuery(name = "Discovery.findAll", query = "SELECT p FROM Discovery p"),
     @NamedQuery(name = "Discovery.search", query = "SELECT p FROM Discovery p WHERE p.name=:name")})
+@NamedNativeQuery(name = "Discovery.findAllWithLimit",query = "SELECT * FROM discovery limit :begin,:end",resultClass = Discovery.class)
 public class Discovery implements Serializable {
 	private static final long serialVersionUID = 1L;
 	
