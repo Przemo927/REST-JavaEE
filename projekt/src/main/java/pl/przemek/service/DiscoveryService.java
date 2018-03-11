@@ -45,19 +45,13 @@ public class DiscoveryService {
     }
 
     public List<Discovery> getAll(String order){
-        List<Discovery> discoveries = null;
-        try {
-            if (order.equals("popular")) {
-                discoveries = discRepo.getAll(new PopularComparator());
-            } else if (order.equals("time")) {
-                discoveries = discRepo.getAll(new TimeComparator());
+            if ("popular".equals(order)) {
+                return discRepo.getAll(new PopularComparator());
+            } else if ("time".equals(order)) {
+                return discRepo.getAll(new TimeComparator());
             } else {
-                discoveries = discRepo.getAll();
+                return discRepo.getAll();
             }
-        }catch(NullPointerException e){
-            discoveries = discRepo.getAll();
-        }
-        return discoveries;
     }
 
     public void removeDiscoveryById(long id){
