@@ -67,7 +67,7 @@ public class JpaDiscoveryRepositoryImpl implements JpaDiscoveryRepository {
         return discovery;
 
 	}
-	@PermitAll
+	@RolesAllowed({"admin","user"})
 	@Override
 	public List<Discovery> getWithLimit(int begin,int end) {
 		TypedQuery<Discovery> getAllQueryWithLimit=em.createNamedQuery("Discovery.findAllWithLimit",Discovery.class);
