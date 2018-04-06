@@ -33,21 +33,38 @@ public class EventServiceTest {
     @Before
     public void setUp(){
         eventRepo=mock(JpaEventRepository.class);
+        eventService=new EventService(eventRepo);
     }
     @Test
     public void shouldExecuteMethodAdd() throws Exception {
-        eventService=new EventService(eventRepo);
         Event event=mock(Event.class);
         eventService.addEvent(event);
-        verify(eventRepo).add(event);
+        verify(eventRepo,times(1)).add(event);
+    }
+
+    @Test
+    public void shouldUseTheSameEventObject() throws Exception {
+        Event event1=mock(Event.class);
+        Event event2=mock(Event.class);
+        eventService.addEvent(event1);
+        verify(eventRepo,times(1)).add(event1);
+        verify(eventRepo,never()).add(event2);
     }
 
     @Test
     public void shouldExecuteMethodUpdate() throws Exception {
-        eventService=new EventService(eventRepo);
         Event event=mock(Event.class);
         eventService.updateEvent(event);
         verify(eventRepo).update(event);
+    }
+
+    @Test
+    public void shouldUseTheSameEventObjectDuringUpdate() throws Exception {
+        Event event1=mock(Event.class);
+        Event event2=mock(Event.class);
+        eventService.updateEvent(event1);
+        verify(eventRepo,times(1)).update(event1);
+        verify(eventRepo,never()).update(event2);
     }
 
     @Test
@@ -59,12 +76,15 @@ public class EventServiceTest {
         verify(eventRepo).remove(event);
     }
 
+    public Object[] eventId(){
+        return $(12,10000,123456);
+    }
     @Test
-    public void shouldUseTheSameValueOfId() throws Exception {
+    @Parameters(method = "eventId")
+    public void shouldUseTheSameValueOfId(long id) throws Exception {
         eventService=new EventService(eventRepo);
-        long id=12345;
         eventService.removeEventById(id);
-        verify(eventRepo).get(id);
+        verify(eventRepo,times(1)).get(id);
         verify(eventRepo,never()).get(not(eq(id)));
     }
 
@@ -76,10 +96,11 @@ public class EventServiceTest {
     }
 
     @Test
-    public void shouldUseTheSameValueOfIdMethodGetEvent() throws Exception {
+    @Parameters(method = "eventId")
+    public void shouldUseTheSameValueOfIdMethodGetEvent(long id) throws Exception {
         eventService=new EventService(eventRepo);
-        long id=12345;
         eventService.getEvent(id);
+        verify(eventRepo,times(1)).get(id);
         verify(eventRepo,never()).get(not(eq(id)));
     }
 
@@ -96,12 +117,17 @@ public class EventServiceTest {
         eventService.getEventsByCity(anyString());
         verify(eventRepo).getByCity(anyString());
     }
+
+    public Object[] nameOfCity(){
+        return $("miasto","miasto1","miastomiasto");
+    }
     @Test
-    public void shouldUseTheSameNameOfCity() throws Exception {
+    @Parameters(method = "nameOfCity")
+    public void shouldUseTheSameNameOfCity(String city) throws Exception {
         eventService=new EventService(eventRepo);
-        String city="City";
         eventService.getEventsByCity(city);
-        verify(eventRepo).getByCity(city);
+        verify(eventRepo,times(1)).getByCity(city);
+        verify(eventRepo,never()).getByCity(city.toUpperCase());
         verify(eventRepo,never()).getByCity(not(eq(city)));
     }
     @Test
@@ -120,7 +146,7 @@ public class EventServiceTest {
         eventService=spy(new EventService(eventRepo));
         when(eventRepo.getAll()).thenReturn(new ArrayList<Event>());
         eventService.getEventByPosition(anyDouble(), anyDouble(), anyInt());
-        verify(eventService).getListOfEventInsideDistanceBufor(anyDouble(),anyDouble(),anyInt(),anyList());
+        verify(eventService,times(1)).getListOfEventInsideDistanceBufor(anyDouble(),anyDouble(),anyInt(),anyList());
     }
 
     @Test

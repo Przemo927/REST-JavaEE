@@ -5,7 +5,10 @@ import junitparams.Parameters;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import pl.przemek.model.*;
+import pl.przemek.model.Comment;
+import pl.przemek.model.User;
+import pl.przemek.model.VoteComment;
+import pl.przemek.model.VoteType;
 import pl.przemek.repository.JpaCommentRepository;
 import pl.przemek.repository.JpaUserRepository;
 import pl.przemek.repository.JpaVoteCommentRepository;
@@ -16,6 +19,7 @@ import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.ArgumentMatchers.isA;
 import static org.mockito.Mockito.*;
 
+@RunWith(JUnitParamsRunner.class)
 public class VoteCommentServiceTest {
 
     private JpaUserRepository userRepo;
@@ -38,14 +42,32 @@ public class VoteCommentServiceTest {
 
         when(userRepo.get(anyLong())).thenReturn(user);
         when(commentRepo.get(anyLong())).thenReturn(comment);
-        VoteComment voteComment=voteCommentService.createVote(1,1, VoteType.VOTE_UP);
+        VoteComment voteComment=voteCommentService.createVote(1,2, VoteType.VOTE_UP);
 
         assertEquals(user, voteComment.getUser());
         assertEquals(comment,voteComment.getComment());
         assertEquals(VoteType.VOTE_UP,voteComment.getVoteType());
+        assertFalse(VoteType.VOTE_DOWN==voteComment.getVoteType());
     }
 
+    public Object[] commentUserAndVote(){
+        return $(new Object[]{new Comment(),null, VoteType.VOTE_DOWN},new Object[]{null,new User(), VoteType.VOTE_UP},new Object[]{null,null, VoteType.VOTE_UP});
+    }
     @Test
+    @Parameters(method = "commentUserAndVote")
+    public void shouldReturnNullIfCommentOrUserAreNull(Comment comment, User user, VoteType voteType) throws Exception{
+        voteCommentService=new VoteCommentService(userRepo,commentRepo,voteCommentRepo);
+
+        when(userRepo.get(anyLong())).thenReturn(user);
+        when(commentRepo.get(anyLong())).thenReturn(comment);
+        assertEquals(null,voteCommentService.createVote(1,1, voteType));
+    }
+
+    public Object[] elements(){
+        return $(new Object[]{1,2, VoteType.VOTE_UP},new Object[]{0,0, VoteType.VOTE_DOWN});
+    }
+    @Test
+    @Parameters(method = "elements")
     public void shouldAddNewVoteAndUpdateCommentWhenOldVoteIsNotExist(int userId,int commentId,VoteType voteType) throws Exception {
         VoteComment vote=mock(VoteComment.class);
         VoteCommentService voteCommentService=spy(new VoteCommentService(userRepo,commentRepo,voteCommentRepo));
@@ -60,16 +82,15 @@ public class VoteCommentServiceTest {
     }
 
     @Test
-    public void shouldNotUpdateVoteAndCommentWhenOldVoteAndNewVoteIsEqual() throws Exception{
+    public void shouldNotUpdateVoteAndCommentWhenOldVoteAndNewVoteAreEqual() throws Exception{
         VoteCommentService voteCommentService=spy(new VoteCommentService(userRepo,commentRepo,voteCommentRepo));
         VoteComment existingVote=new VoteComment();
         existingVote.setVoteType(VoteType.VOTE_UP);
         VoteComment updateVote=new VoteComment();
 
         when(voteCommentRepo.getVoteByUserIdCommentId(anyLong(),anyLong())).thenReturn(existingVote);
-        when(voteCommentService.createVote(existingVote)).thenReturn(updateVote);
-        doNothing().when(voteCommentService).updateComment(anyLong(),isA(VoteComment.class),isA(VoteComment.class));
-        voteCommentService.updateVote(1,2,VoteType.VOTE_UP);
+        when(voteCommentService.createVoteFromExistingVote(existingVote)).thenReturn(updateVote);
+        voteCommentService.updateVote(1,2, VoteType.VOTE_UP);
 
         assertTrue(existingVote.equals(updateVote));
         verify(voteCommentRepo,never()).update(isA(VoteComment.class));
@@ -77,20 +98,20 @@ public class VoteCommentServiceTest {
     }
 
     @Test
-    public void shouldUpdateVoteAndCommentWhenOldVoteAndNewVoteIsNotEqual() throws Exception{
+    public void shouldUpdateVoteAndCommentWhenOldVoteAndNewVoteAreNotEqual() throws Exception{
         VoteCommentService voteCommentService=spy(new VoteCommentService(userRepo,commentRepo,voteCommentRepo));
         VoteComment existingVote=new VoteComment();
         existingVote.setVoteType(VoteType.VOTE_DOWN);
         VoteComment updateVote=new VoteComment();
 
         when(voteCommentRepo.getVoteByUserIdCommentId(anyLong(),anyLong())).thenReturn(existingVote);
-        when(voteCommentService.createVote(existingVote)).thenReturn(updateVote);
+        when(voteCommentService.createVoteFromExistingVote(existingVote)).thenReturn(updateVote);
         doNothing().when(voteCommentService).updateComment(anyLong(),isA(VoteComment.class),isA(VoteComment.class));
-        voteCommentService.updateVote(1,2,VoteType.VOTE_UP);
+        voteCommentService.updateVote(1,2, VoteType.VOTE_UP);
 
         assertTrue(!existingVote.equals(updateVote));
-        verify(voteCommentRepo).update(updateVote);
-        verify(voteCommentService).updateComment(2,existingVote,updateVote);
+        verify(voteCommentRepo,times(1)).update(updateVote);
+        verify(voteCommentService,times(1)).updateComment(2,existingVote,updateVote);
     }
 
     @Test
@@ -144,43 +165,47 @@ public class VoteCommentServiceTest {
     }
     @Test
     public void shouldReturnCommentWithValueOfVoteUpPlusOneWhenNewVoteIsVoteUp(){
+        voteCommentService=new VoteCommentService(userRepo,commentRepo,voteCommentRepo);
         int valueOfVoteUp=0;
         Comment comment=new Comment();
         comment.setUpVote(valueOfVoteUp);
 
-        Comment comment1=voteCommentService.addCommentVote(comment,VoteType.VOTE_UP);
+        Comment comment1=voteCommentService.addCommentVote(comment, VoteType.VOTE_UP);
 
         assertEquals(valueOfVoteUp+1,comment1.getUpVote());
 
     }
     @Test
     public void shouldReturnCommentWithValueOfVoteDownPlusOneWhenNewVoteIsVoteDown() throws Exception{
+        voteCommentService=new VoteCommentService(userRepo,commentRepo,voteCommentRepo);
         int valueOfVoteDown=0;
         Comment comment=new Comment();
         comment.setDownVote(valueOfVoteDown);
 
-        Comment comment1=voteCommentService.addCommentVote(comment,VoteType.VOTE_DOWN);
+        Comment comment1=voteCommentService.addCommentVote(comment, VoteType.VOTE_DOWN);
 
         assertEquals(valueOfVoteDown+1,comment1.getDownVote());
 
     }
     @Test
     public void shouldReturnCommentWithValueOfVoteUpMinusOneWhenVoteTypeIsUp() throws Exception {
+        voteCommentService=new VoteCommentService(userRepo,commentRepo,voteCommentRepo);
         int valueOfVoteUp=1;
         Comment comment=new Comment();
         comment.setUpVote(valueOfVoteUp);
 
-        Comment comment1=voteCommentService.removeCommentVote(comment,VoteType.VOTE_UP);
+        Comment comment1=voteCommentService.removeCommentVote(comment, VoteType.VOTE_UP);
 
         assertEquals(valueOfVoteUp-1,comment1.getUpVote());
 
     }
     @Test
     public void shouldReturnCommentWithValueOfVoteDownMinusOneWhenVoteTypeIDown() throws Exception {
+        voteCommentService=new VoteCommentService(userRepo,commentRepo,voteCommentRepo);
         int valueOfVoteDown=1;
         Comment comment=new Comment();
         comment.setDownVote(valueOfVoteDown);
-        Comment comment1=voteCommentService.removeCommentVote(comment,VoteType.VOTE_DOWN);
+        Comment comment1=voteCommentService.removeCommentVote(comment, VoteType.VOTE_DOWN);
         assertEquals(valueOfVoteDown-1,comment1.getDownVote());
 
     }

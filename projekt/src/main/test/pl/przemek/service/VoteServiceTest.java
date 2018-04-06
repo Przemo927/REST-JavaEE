@@ -1,7 +1,10 @@
 package pl.przemek.service;
 
+import junitparams.JUnitParamsRunner;
+import junitparams.Parameters;
 import org.junit.Before;
 import org.junit.Test;
+import org.junit.runner.RunWith;
 import pl.przemek.model.Discovery;
 import pl.przemek.model.User;
 import pl.przemek.model.Vote;
@@ -10,12 +13,12 @@ import pl.przemek.repository.JpaDiscoveryRepository;
 import pl.przemek.repository.JpaUserRepository;
 import pl.przemek.repository.JpaVoteRepository;
 
-import java.sql.Timestamp;
-
-import static org.junit.Assert.*;
+import static junitparams.JUnitParamsRunner.$;
+import static org.junit.Assert.assertEquals;
 import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.Mockito.*;
 
+@RunWith(JUnitParamsRunner.class)
 public class VoteServiceTest {
 
     private JpaUserRepository userRepo;
@@ -32,15 +35,29 @@ public class VoteServiceTest {
 
     @Test
     public void shouldReturnVoteWithAssignVoteTypeAndUserAndComment() throws Exception {
-        voteService=new VoteService(voteRepo,discRepo,userRepo);
         User user=mock(User.class);
         Discovery discovery=mock(Discovery.class);
+
         when(discRepo.get(anyLong())).thenReturn(discovery);
         when(userRepo.get(anyLong())).thenReturn(user);
         Vote vote=voteService.createVote(1,2, VoteType.VOTE_UP);
+
         assertEquals(user, vote.getUser());
         assertEquals(discovery,vote.getDiscovery());
         assertEquals(VoteType.VOTE_UP,vote.getVoteType());
+    }
+
+    public Object[] discoveryUserAndVote(){
+        return $(new Object[]{new Discovery(),null, VoteType.VOTE_DOWN},new Object[]{null,new User(), VoteType.VOTE_UP},new Object[]{null,null, VoteType.VOTE_UP});
+    }
+    @Test
+    @Parameters(method = "discoveryUserAndVote")
+    public void shouldReturnNullIfCommentOrUserAreNull(Discovery discovery, User user, VoteType voteType) throws Exception{
+
+
+        when(userRepo.get(anyLong())).thenReturn(user);
+        when(discRepo.get(anyLong())).thenReturn(discovery);
+        assertEquals(null,voteService.createVote(1,2, voteType));
     }
 
     @Test
@@ -51,7 +68,7 @@ public class VoteServiceTest {
         when(voteRepo.getVoteByUserIdDiscoveryId(anyLong(),anyLong())).thenReturn(null);
         doReturn(updateVote).when(voteService).createVote(anyLong(),anyLong(),isA(VoteType.class));
         doNothing().when(voteService).updateDiscovery(anyLong(),eq(null),isA(Vote.class));
-        voteService.updateVote(1,2,VoteType.VOTE_UP);
+        voteService.updateVote(1,2, VoteType.VOTE_UP);
 
         verify(voteRepo).add(updateVote);
         verify(voteService).updateDiscovery(2,null,updateVote);
@@ -67,7 +84,7 @@ public class VoteServiceTest {
 
         when(voteRepo.getVoteByUserIdDiscoveryId(anyLong(),anyLong())).thenReturn(existingVote);
         doReturn(updateVote).when(voteService).createVote(existingVote);
-        voteService.updateVote(1,2,VoteType.VOTE_UP);
+        voteService.updateVote(1,2, VoteType.VOTE_UP);
 
         verify(voteRepo,never()).update(updateVote);
         assertEquals(VoteType.VOTE_UP,updateVote.getVoteType());
@@ -75,7 +92,7 @@ public class VoteServiceTest {
     }
 
     @Test
-    public void shouldExecuteMethodUpdateAndUpdateDiscoveryWhenOldVoteAndNewVoteIsNotEqual() throws Exception {
+    public void shouldExecuteMethodUpdateAndUpdateDiscoveryWhenOldVoteAndNewVoteAreNotEqual() throws Exception {
         voteService=spy(new VoteService(voteRepo,discRepo,userRepo));
         Vote updateVote=new Vote();
         Vote existingVote=new Vote();
@@ -84,7 +101,7 @@ public class VoteServiceTest {
         when(voteRepo.getVoteByUserIdDiscoveryId(anyLong(),anyLong())).thenReturn(existingVote);
         doNothing().when(voteService).updateDiscovery(anyLong(),isA(Vote.class),isA(Vote.class));
         doReturn(updateVote).when(voteService).createVote(existingVote);
-        voteService.updateVote(1,2,VoteType.VOTE_DOWN);
+        voteService.updateVote(1,2, VoteType.VOTE_DOWN);
 
         verify(voteRepo).update(updateVote);
         assertEquals(VoteType.VOTE_DOWN,updateVote.getVoteType());
@@ -140,7 +157,7 @@ public class VoteServiceTest {
         discovery.setUpVote(valueOfVoteup);
 
         doReturn(discovery).when(voteService).createDicovery(isA(Discovery.class));
-        Discovery discovery1=voteService.addDiscoveryVote(discovery,VoteType.VOTE_UP);
+        Discovery discovery1=voteService.addDiscoveryVote(discovery, VoteType.VOTE_UP);
 
         assertEquals(valueOfVoteup+1,discovery1.getUpVote());
 
@@ -153,7 +170,7 @@ public class VoteServiceTest {
         discovery.setDownVote(valueOfVoteDown);
 
         doReturn(discovery).when(voteService).createDicovery(isA(Discovery.class));
-        Discovery discovery1=voteService.addDiscoveryVote(discovery,VoteType.VOTE_DOWN);
+        Discovery discovery1=voteService.addDiscoveryVote(discovery, VoteType.VOTE_DOWN);
 
         assertEquals(valueOfVoteDown+1,discovery1.getDownVote());
 
@@ -166,7 +183,7 @@ public class VoteServiceTest {
         discovery.setUpVote(valueOfVoteUp);
 
         doReturn(discovery).when(voteService).createDicovery(isA(Discovery.class));
-        Discovery discovery1=voteService.removeDiscoveryVote(discovery,VoteType.VOTE_UP);
+        Discovery discovery1=voteService.removeDiscoveryVote(discovery, VoteType.VOTE_UP);
 
         assertEquals(valueOfVoteUp-1,discovery1.getUpVote());
 
@@ -179,7 +196,7 @@ public class VoteServiceTest {
         discovery.setDownVote(valueOfVoteDown);
 
         doReturn(discovery).when(voteService).createDicovery(isA(Discovery.class));
-        Discovery discovery1=voteService.removeDiscoveryVote(discovery,VoteType.VOTE_DOWN);
+        Discovery discovery1=voteService.removeDiscoveryVote(discovery, VoteType.VOTE_DOWN);
 
         assertEquals(valueOfVoteDown-1,discovery1.getDownVote());
 

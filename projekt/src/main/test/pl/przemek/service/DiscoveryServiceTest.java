@@ -12,14 +12,18 @@ import pl.przemek.repository.JpaDiscoveryRepository;
 import pl.przemek.repository.JpaVoteRepository;
 
 import java.sql.Timestamp;
-import java.util.*;
+import java.util.Arrays;
+import java.util.Comparator;
+import java.util.List;
 
 import static junitparams.JUnitParamsRunner.$;
-import static org.junit.Assert.*;
-import static org.mockito.AdditionalMatchers.and;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
 import static org.mockito.AdditionalMatchers.not;
-import static org.mockito.AdditionalMatchers.or;
-import static org.mockito.ArgumentMatchers.*;
+import static org.mockito.ArgumentMatchers.anyLong;
+import static org.mockito.ArgumentMatchers.anyString;
+import static org.mockito.ArgumentMatchers.eq;
+import static org.mockito.ArgumentMatchers.isA;
 import static org.mockito.Mockito.*;
 
 @RunWith(JUnitParamsRunner.class)
@@ -46,44 +50,79 @@ public class DiscoveryServiceTest {
     public void shouldExecuteMethodAddOfDiscoveryRepository() throws Exception {
         Discovery discovery=mock(Discovery.class);
         discoveryService.addDiscovery(discovery);
-        verify(discRepo).add(discovery);
+        verify(discovery,times(1)).setDownVote(0);
+        verify(discovery,times(1)).setUpVote(0);
+        verify(discovery,times(1)).setTimestamp(isA(Timestamp.class));
+        verify(discRepo,times(1)).add(discovery);
     }
 
 
     @Test
-    public void shouldThrowNullPointerException() throws Exception {
-        thrown.expect(NullPointerException.class);
-        thrown.expectMessage("Comment is null");
+    public void shouldDoNothingWhenDiscoveryIsNull() throws Exception {
         discoveryService.addDiscovery(null);
+        verify(discRepo,never()).add(null);
+        verify(discRepo,never()).add(isA(Discovery.class));
+    }
 
+    public Object[] beginAndQuantity(){
+        return $(new Integer[]{1,2},new Integer[]{11,22},new Integer[]{0,12345});
+    }
+
+    @Test
+    @Parameters(method="beginAndQuantity")
+    public void shouldUseTheSameValues(int begin, int quantity){
+        discoveryService.getWithLimit(begin,quantity);
+        verify(discRepo,times(1)).getWithLimit(begin,quantity);
+        verify(discRepo,never()).getWithLimit(quantity,begin);
+        verify(discRepo,never()).getWithLimit(0,0);
     }
 
     @Test
     public void shouldExecuteGetMethodOfDiscoveryRepository() throws Exception {
         discoveryService.getById(anyLong());
         verify(discRepo).get(anyLong());
-
     }
 
-    @Test
-    public void shouldUseTheSameLong() throws Exception {
-        long id=12345;
-        discoveryService.getById(id);
-        verify(discRepo).get(id);
-        verify(discRepo,never()).get(not(eq(id)));
+    public Object[] name(){
+        return $("Przemek","01010","null");
     }
-
     @Test
-    public void shouldExecuteGetByNameMethodOfDiscoveryRepository() throws Exception {
-        discoveryService.getByName(anyString());
-        verify(discRepo).getByName(anyString());
-    }
-
-    @Test
-    public void shouldUseTheSameString() throws Exception {
-        String name="Name";
+    @Parameters(method="name")
+    public void shouldUseTheSameName(String name){
         discoveryService.getByName(name);
+        verify(discRepo,times(1)).getByName(name);
         verify(discRepo,never()).getByName(not(eq(name)));
+        verify(discRepo,never()).getByName(null);
+    }
+
+    @Test
+    public void shouldDoNothingAndReturnNullIfNameIsNull(){
+        discoveryService.getByName(null);
+        verify(discRepo,never()).getByName(null);
+        verify(discRepo,never()).getByName(anyString());
+        assertEquals(null,discoveryService.getByName(null));
+    }
+
+    @Test
+    public void shouldDoNothingAndReturnNullIfNameIsEmptyWord() throws Exception {
+        String name="";
+        discoveryService.getByName(name);
+        verify(discRepo,never()).getByName(null);
+        verify(discRepo,never()).getByName(name);
+        verify(discRepo,never()).getByName(anyString());
+        assertEquals(null,discoveryService.getByName(name));
+    }
+
+    public Object[] discoveryId(){
+        return $(1,1000,123456,987654321);
+    }
+
+    @Test
+    @Parameters(method = "discoveryId")
+    public void shouldUseTheSameLong(long id) throws Exception {
+        discoveryService.getById(id);
+        verify(discRepo,times(1)).get(id);
+        verify(discRepo,never()).get(not(eq(id)));
     }
 
     public Object[] validNamesOfComparators() {
@@ -94,7 +133,7 @@ public class DiscoveryServiceTest {
     @Parameters(method ="validNamesOfComparators")
     public void ShouldExecuteGetMethodWithValidComparator(String names) throws Exception {
         discoveryService.getAll(names);
-        verify(discRepo).getAll(isA(Comparator.class));
+        verify(discRepo,times(1)).getAll(isA(Comparator.class));
     }
 
     public Object[] invalidNamesOfComparators() {
@@ -105,6 +144,7 @@ public class DiscoveryServiceTest {
     @Parameters(method ="invalidNamesOfComparators")
     public void ShouldExecuteMethodWithoutComparatorWhenNameOfComparatorIsInvalid(String names) throws Exception{
         discoveryService.getAll(names);
+        verify(discRepo,never()).getAll(isA(Comparator.class));
         verify(discRepo).getAll();
     }
 
@@ -169,13 +209,19 @@ public class DiscoveryServiceTest {
 
     }
 
+    public Object[] discoveryIdRemove(){
+        return $(12345,1,0,987654321);
+    }
+
     @Test
-    public void methodsShouldUseTheSameValueOfId() throws Exception {
-        long id=12345;
+    @Parameters(method = "discoveryIdRemove")
+    public void methodsShouldUseTheSameValueOfId(long id) throws Exception {
         discoveryService.removeDiscoveryById(id);
+        verify(discRepo,never()).remove(isA(Discovery.class));
         verify(discRepo,never()).get(not(eq(id)));
         verify(voteRepo,never()).removeByDiscoveryId(not(eq(id)));
-
+        verify(discRepo,times(1)).get(eq(id));
+        verify(voteRepo,times(1)).removeByDiscoveryId(eq(id));
     }
     @Test
     public void shouldExecuteMethodUpdate() throws Exception {

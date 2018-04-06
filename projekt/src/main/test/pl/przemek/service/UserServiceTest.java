@@ -12,15 +12,12 @@ import pl.przemek.model.User;
 import pl.przemek.repository.JpaRoleRepository;
 import pl.przemek.repository.JpaUserRepository;
 
-import javax.jws.soap.SOAPBinding;
-import java.security.MessageDigest;
 import java.util.ArrayList;
 import java.util.List;
 
 import static junitparams.JUnitParamsRunner.$;
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
 import static org.mockito.AdditionalMatchers.not;
-import static org.mockito.ArgumentMatchers.anyBoolean;
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.*;
 
@@ -49,11 +46,8 @@ public class UserServiceTest {
     }
 
     @Test
-    public void shouldThrowNullPointerExceptionWhenUserIsNull() throws Exception {
-        thrown.expect(NullPointerException.class);
-        thrown.expectMessage("User is null");
-        userService.addUser(null);
-
+    public void shouldReturnNullWhenUserIsNull() throws Exception {
+        assertEquals(null,userService.addUser(null));
     }
 
     @Test
@@ -88,7 +82,7 @@ public class UserServiceTest {
         when(rolRepo.getRoles(anyString())).thenReturn(roleList);
         userService.addRole(user);
 
-        verify(rolRepo).update(isA(Role.class),isA(User.class));
+        verify(rolRepo,times(1)).update(isA(Role.class),isA(User.class));
     }
 
     @Test
@@ -97,23 +91,15 @@ public class UserServiceTest {
             verify(userRepo).get(anyLong());
     }
 
+    public Object[] userId(){
+        return $(1,123456,654321,0);
+    }
     @Test
-    public void shoudlUseTheSameValueOfId() throws Exception{
-        long id=12345;
+    @Parameters(method = "userId")
+    public void shoudlUseTheSameValueOfId(long id) throws Exception{
         userService.getUserById(id);
-        verify(userRepo).get(id);
+        verify(userRepo,times(1)).get(id);
         verify(userRepo,never()).get(not(eq(id)));
-    }
-    public Object[] invalidValuesOfId(){
-        return $(-1,1,0,1234,12344,12346);
-    }
-
-    @Test
-    @Parameters(method = "invalidValuesOfId")
-    public void shouldNotUseOtherValuesOfId(long value) throws Exception{
-       long id=12345;
-       userService.getUserById(id);
-       verify(userRepo,never()).get(value);
     }
 
     @Test
@@ -125,11 +111,18 @@ public class UserServiceTest {
     }
 
     @Test
-    public void shouldUseTheSameValueOfId() throws Exception{
-        long id=1234;
+    @Parameters(method = "userId")
+    public void shouldUseTheSameValueOfId(long id) throws Exception{
         userService.removeByUserId(id);
         verify(userRepo).get(id);
         verify(userRepo,never()).get(not(eq(id)));
+    }
+
+    @Test
+    public void shouldDoNotExecuteRemoveMethodWhenUserWasNotFound() throws Exception {
+        when(userRepo.get(anyLong())).thenReturn(null);
+        userService.removeByUserId(anyLong());
+        verify(userRepo,never()).remove(isA(User.class));
     }
 
     @Test

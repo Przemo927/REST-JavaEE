@@ -2,7 +2,6 @@ package pl.przemek.repository;
 
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.mockito.ArgumentMatchers;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnitRunner;
@@ -11,13 +10,12 @@ import pl.przemek.model.Discovery;
 import javax.persistence.EntityManager;
 import javax.persistence.Query;
 import javax.persistence.TypedQuery;
-
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
 
-
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.ArgumentMatchers.isA;
@@ -79,24 +77,24 @@ public class JpaDiscoveryRepositoryImplTest {
     }
     @Test
     public void shouldReturnTrueWhenListOfDiscoveriesIsEmpty() throws Exception {
-        List<Discovery> discoveryList=new ArrayList<>();
+        List list=new ArrayList<>();
         String url="url";
         Query query=mock(Query.class);
 
         when(em.createNativeQuery(anyString())).thenReturn(query);
-        when(query.getResultList()).thenReturn(discoveryList);
+        when(query.getResultList()).thenReturn(list);
 
         assertTrue(jpaDiscoveryRepository.checkPresenceDiscveryByUrl(url));
 
     }@Test
     public void shouldReturnFalseWhenListOfDiscoveriesIsNotEmpty() throws Exception {
-        List<Discovery> discoveryList=new ArrayList<>();
-        discoveryList.add(new Discovery());
+        List list=new ArrayList<>();
+        list.add(new Discovery());
         String url="url";
         Query query=mock(Query.class);
 
         when(em.createNativeQuery(anyString())).thenReturn(query);
-        when(query.getResultList()).thenReturn(discoveryList);
+        when(query.getResultList()).thenReturn(list);
 
         assertFalse(jpaDiscoveryRepository.checkPresenceDiscveryByUrl(url));
 

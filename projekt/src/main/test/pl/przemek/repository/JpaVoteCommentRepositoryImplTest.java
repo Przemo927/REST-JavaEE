@@ -1,50 +1,56 @@
 package pl.przemek.repository;
 
-import org.junit.Rule;
 import org.junit.Test;
-import org.junit.rules.ExpectedException;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnitRunner;
 import pl.przemek.model.VoteComment;
 
-import javax.enterprise.inject.Typed;
 import javax.persistence.EntityManager;
-import javax.persistence.NoResultException;
 import javax.persistence.TypedQuery;
-
 import java.util.ArrayList;
 import java.util.List;
 
-import static org.junit.Assert.*;
-import static org.mockito.ArgumentMatchers.anyLong;
-import static org.mockito.ArgumentMatchers.anyString;
-import static org.mockito.ArgumentMatchers.eq;
-import static org.mockito.Mockito.doThrow;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotEquals;
+import static org.mockito.ArgumentMatchers.*;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
 @RunWith(MockitoJUnitRunner.class)
 public class JpaVoteCommentRepositoryImplTest {
 
-    /**@Mock
+    @Mock
     private EntityManager em;
     @InjectMocks
     private JpaVoteCommentRepositoryImpl jpaVoteCommentRepository;
 
-    @Rule
-    public ExpectedException thrown=ExpectedException.none();
     @Test
-    public void throwNoResultExceptionWhenListOfCommentsVoteIsNotExist() throws Exception {
+    public void shouldReturnNullWhenListOfCommentsVoteIsNotExist() throws Exception {
         TypedQuery<VoteComment> query=mock(TypedQuery.class);
         List<VoteComment> voteCommentList=new ArrayList<>();
 
         when(em.createNamedQuery(anyString(),eq(VoteComment.class))).thenReturn(query);
         when(query.getResultList()).thenReturn(voteCommentList);
-        thrown.expect(NoResultException.class);
-        thrown.expectMessage("Vote of comment is not exist");
-        jpaVoteCommentRepository.getVoteByUserIdCommentId(anyLong(),anyLong());
-    }*/
 
+        assertEquals(null,jpaVoteCommentRepository.getVoteByUserIdCommentId(anyLong(),anyLong()));
+    }
+
+    @Test
+    public void shouldReturnCommentVoteWhenCommentsVoteIsExist() throws Exception{
+        VoteComment vote1=mock(VoteComment.class);
+        VoteComment vote2=mock(VoteComment.class);
+        TypedQuery<VoteComment> query=mock(TypedQuery.class);
+        List<VoteComment> voteCommentList=new ArrayList<>();
+        voteCommentList.add(vote1);
+        voteCommentList.add(vote2);
+
+        when(em.createNamedQuery(anyString(),eq(VoteComment.class))).thenReturn(query);
+        when(query.getResultList()).thenReturn(voteCommentList);
+
+        assertNotEquals(null,jpaVoteCommentRepository.getVoteByUserIdCommentId(anyLong(),anyLong()));
+        assertEquals(vote1,jpaVoteCommentRepository.getVoteByUserIdCommentId(anyLong(),anyLong()));
+        assertNotEquals(vote2,jpaVoteCommentRepository.getVoteByUserIdCommentId(anyLong(),anyLong()));
+    }
 }
