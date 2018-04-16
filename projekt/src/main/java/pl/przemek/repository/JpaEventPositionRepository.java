@@ -1,7 +1,6 @@
 package pl.przemek.repository;
 
 
-import pl.przemek.model.Comment;
 import pl.przemek.model.EventPosition;
 
 import java.util.List;

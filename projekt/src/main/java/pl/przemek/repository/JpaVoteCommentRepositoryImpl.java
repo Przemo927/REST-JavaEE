@@ -4,10 +4,8 @@ import pl.przemek.model.VoteComment;
 
 import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
-import javax.persistence.NoResultException;
 import javax.persistence.PersistenceContext;
 import javax.persistence.TypedQuery;
-import javax.validation.constraints.Null;
 import java.util.List;
 
 @Stateless
