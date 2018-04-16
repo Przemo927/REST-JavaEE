@@ -2,6 +2,7 @@ package pl.przemek.rest;
 
 import java.io.IOException;
 
+import java.math.BigInteger;
 import java.net.URI;
 import java.util.List;
 
@@ -16,6 +17,7 @@ import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.UriInfo;
 
+import org.json.simple.JSONObject;
 import pl.przemek.model.Discovery;
 import pl.przemek.model.User;
 import pl.przemek.service.DiscoveryService;
@@ -72,10 +74,10 @@ public class DiscoveryEndPoint {
 	@GET
 	@Produces(MediaType.APPLICATION_JSON)
 	public Response getALL(@QueryParam("orderBy") @DefaultValue("popular") String order,@QueryParam("beginWith") Integer begin,
-						   @QueryParam("endWith") Integer end) {
+						   @QueryParam("quantity") Integer quantity) {
 		List<Discovery> allDiscoveries;
-	if(begin!=null && !(begin<0) && end!=null && !(end<0)){
-		allDiscoveries=discoveryService.getWithLimit(begin,end);
+	if(begin!=null && !(begin<0) && quantity!=null && !(quantity<0)){
+		allDiscoveries=discoveryService.getWithLimit(begin,quantity);
 		}
 	else {
 		allDiscoveries = discoveryService.getAll(order);
@@ -91,6 +93,19 @@ public class DiscoveryEndPoint {
 	public Response updateDiscovery(Discovery discovery) {
 		discoveryService.updateDiscovery(discovery);
 		return Response.ok(mw.wrappMessage("Discovery was updated")).build();
+	}
+	@GET
+	@Path("quantity")
+	@Produces(MediaType.APPLICATION_JSON)
+	public Response getQuantityOfDiscoveries(){
+		BigInteger quantityOfDiscoveries=discoveryService.getQuantityOfDiscoveries();
+		JSONObject jsonObject=wrappMessage(String.valueOf(quantityOfDiscoveries));
+		return Response.ok(jsonObject).header("Access-Control-Allow-Origin","*").build();
+	}
+	private JSONObject wrappMessage(String message){
+		JSONObject jsonObject=new JSONObject();
+		jsonObject.put("Message",message);
+		return jsonObject;
 	}
 
 

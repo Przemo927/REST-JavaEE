@@ -5,6 +5,7 @@ import pl.przemek.repository.JpaDiscoveryRepository;
 import pl.przemek.repository.JpaVoteRepository;
 
 import javax.inject.Inject;
+import java.math.BigInteger;
 import java.sql.Timestamp;
 import java.util.Comparator;
 import java.util.Date;
@@ -16,7 +17,7 @@ public class DiscoveryService {
     private JpaVoteRepository voteRepo;
 
     @Inject
-    public DiscoveryService(JpaDiscoveryRepository discRepo,JpaVoteRepository voteRepo){
+    public DiscoveryService(JpaDiscoveryRepository discRepo, JpaVoteRepository voteRepo){
         this.discRepo=discRepo;
         this.voteRepo=voteRepo;
     }
@@ -31,31 +32,39 @@ public class DiscoveryService {
             discovery.setTimestamp(new Timestamp(new Date().getTime()));
             discRepo.add(discovery);
         }
-        else{
-            throw new NullPointerException("Comment is null");
-        }
-        }
+    }
+
+    public List<Discovery> getWithLimit(int begin, int quantity){
+        return discRepo.getWithLimit(begin,quantity);
+    }
 
     public List<Discovery> getByName(String name){
-        return discRepo.getByName(name);
-
+        if(name!=null && !"".equals(name))
+            return discRepo.getByName(name);
+        return null;
     }
     public Discovery getById(long id){
         return discRepo.get(id);
     }
 
     public List<Discovery> getAll(String order){
-            if ("popular".equals(order)) {
-                return discRepo.getAll(new PopularComparator());
-            } else if ("time".equals(order)) {
-                return discRepo.getAll(new TimeComparator());
+        List<Discovery> discoveries = null;
+        try {
+            if (order.equals("popular")) {
+                discoveries = discRepo.getAll(new PopularComparator());
+            } else if (order.equals("time")) {
+                discoveries = discRepo.getAll(new TimeComparator());
             } else {
-                return discRepo.getAll();
+                discoveries = discRepo.getAll();
             }
+        }catch(NullPointerException e){
+            discoveries = discRepo.getAll();
+        }
+        return discoveries;
     }
 
-    public List<Discovery> getWithLimit(int begin,int end){
-        return discRepo.getWithLimit(begin,end);
+    public List<Discovery> getAllInOneQuery(){
+        return discRepo.getAllInOneQuery();
     }
 
     public void removeDiscoveryById(long id){
@@ -87,5 +96,9 @@ public class DiscoveryService {
             public int compare(Discovery d1, Discovery d2) {
                 return d1.getTimestamp().compareTo(d2.getTimestamp());
             }
+        }
+
+        public BigInteger getQuantityOfDiscoveries(){
+            return discRepo.getQuantityOfDiscoveries();
         }
     }

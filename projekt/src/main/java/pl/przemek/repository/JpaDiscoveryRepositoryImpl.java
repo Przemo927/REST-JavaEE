@@ -1,7 +1,6 @@
 package pl.przemek.repository;
 
-import java.util.Comparator;
-import java.util.List;
+import pl.przemek.model.Discovery;
 
 import javax.annotation.security.PermitAll;
 import javax.annotation.security.RolesAllowed;
@@ -10,8 +9,9 @@ import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.persistence.Query;
 import javax.persistence.TypedQuery;
-
-import pl.przemek.model.Discovery;
+import java.math.BigInteger;
+import java.util.Comparator;
+import java.util.List;
 
 @Stateless
 public class JpaDiscoveryRepositoryImpl implements JpaDiscoveryRepository {
@@ -25,8 +25,6 @@ public class JpaDiscoveryRepositoryImpl implements JpaDiscoveryRepository {
 	public void add(Discovery discovery) {
 	    em.persist(discovery);
 	}
-
-
 
 	@RolesAllowed("admin")
     @Override
@@ -49,12 +47,27 @@ public class JpaDiscoveryRepositoryImpl implements JpaDiscoveryRepository {
 	}
 
 	@RolesAllowed({"admin","user"})
+	@Override
+	public List<Discovery> getWithLimit(int begin, int quantity) {
+		TypedQuery<Discovery> getAllQueryWithLimit=em.createNamedQuery("Discovery.findAllWithLimit",Discovery.class);
+		getAllQueryWithLimit.setParameter("begin",begin);
+		getAllQueryWithLimit.setParameter("quantity",quantity);
+		return getAllQueryWithLimit.getResultList();
+	}
+
+	@RolesAllowed({"admin","user"})
     @Override
 	public List<Discovery> getAll() {
 		 List<Discovery> discovery = getAll(null);
 	    return discovery;
 	}
 
+	@RolesAllowed({"admin","user"})
+	@Override
+	public List<Discovery> getAllInOneQuery() {
+		TypedQuery<Discovery> getAllInOneQuery= em.createQuery("SELECT p FROM Discovery p LEFT JOIN FETCH p.user",Discovery.class);
+		return getAllInOneQuery.getResultList();
+	}
 
 	@RolesAllowed({"admin","user"})
     @Override
@@ -66,14 +79,6 @@ public class JpaDiscoveryRepositoryImpl implements JpaDiscoveryRepository {
         }
         return discovery;
 
-	}
-	@RolesAllowed({"admin","user"})
-	@Override
-	public List<Discovery> getWithLimit(int begin,int end) {
-		TypedQuery<Discovery> getAllQueryWithLimit=em.createNamedQuery("Discovery.findAllWithLimit",Discovery.class);
-		getAllQueryWithLimit.setParameter("begin",begin);
-		getAllQueryWithLimit.setParameter("end",end);
-		return getAllQueryWithLimit.getResultList();
 	}
 
 	@RolesAllowed({"admin","user"})
@@ -95,6 +100,12 @@ public class JpaDiscoveryRepositoryImpl implements JpaDiscoveryRepository {
 			return false;
 		}
 		return true;
+	}
+	@RolesAllowed({"admin","user"})
+	@Override
+	public BigInteger getQuantityOfDiscoveries() {
+		Query query=em.createNativeQuery("SELECT count(*) FROM discovery");
+		return (BigInteger)query.getSingleResult();
 	}
 
 }
