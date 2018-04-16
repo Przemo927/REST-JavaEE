@@ -27,7 +27,7 @@ import static javax.ws.rs.core.HttpHeaders.LOCATION;
 @Provider
 public class LoginFilter implements ContainerRequestFilter {
 
-    @Inject
+    @Context
     private HttpServletRequest request;
     @Context
     private HttpServletResponse response;
@@ -40,30 +40,33 @@ public class LoginFilter implements ContainerRequestFilter {
     @Inject
     private AuthenticationDataStore userDataStore;
 
+    private JwtsRepository jwtsRepository=new JwtsRepository();
+
     @Override
     public void filter(ContainerRequestContext requestContext) throws IOException {
-    	if(request.getSession()!=null){
+    	if(request.getSession(false)!=null){
     	if(request.getSession(false).getAttribute("user")!=null){
-        	System.out.println(request.getSession().getCreationTime()+" 2");
+    	    String encryptedPassword=userDataStore.getEncryptedPassword();
+    	    String userName=userDataStore.getUsername();
         	String token=requestContext.getHeaderString(AUTHORIZATION);
-            checkToken(token,userDataStore.getEncryptedPassword());
-			saveToken(userDataStore.getUsername(),userDataStore.getEncryptedPassword());
+            checkToken(token,encryptedPassword);
+			saveToken(userName,encryptedPassword);
         }
 
-    	//if(request.getSession()!=null){
-        if(requestContext.getSecurityContext().getUserPrincipal() != null && request.getSession(false).getAttribute("user") == null) {
-        	System.out.println(request.getSession().getCreationTime()+" 1");
+        else if(requestContext.getSecurityContext().getUserPrincipal() != null && request.getSession(false).getAttribute("user") == null) {
             String username = requestContext.getSecurityContext().getUserPrincipal().getName();
             List<User> listUserByUsername = userrep.getUserByUsername(username);
-            User userByUsername=listUserByUsername.get(0);
-            saveToken(userByUsername.getUsername(),userByUsername.getPassword());
-            saveUserData(userByUsername);
-            try {
-                LogoutIfInActiveStatus(userByUsername,request);
-            } catch (URISyntaxException e) {
-                e.printStackTrace();
+            if(!listUserByUsername.isEmpty()) {
+                User userByUsername=listUserByUsername.get(0);
+                saveToken(userByUsername.getUsername(), userByUsername.getPassword());
+                saveUserData(userByUsername);
+                try {
+                    LogoutIfInActiveStatus(userByUsername, request);
+                } catch (URISyntaxException e) {
+                    e.printStackTrace();
+                }
+                saveUserInSession(request, userByUsername);
             }
-            saveUserInSession(request,userByUsername);
 
         }
     	}
@@ -82,7 +85,6 @@ public class LoginFilter implements ContainerRequestFilter {
     void saveToken(String username,String password){
     	String token=tokenService.generateToken(username, password);
         tokenStore.setToken(token);
-        System.out.println("Generated new token "+token);
     }
     void saveUserData(User user){
     	userDataStore.setUsername(user.getUsername());
@@ -92,7 +94,8 @@ public class LoginFilter implements ContainerRequestFilter {
 
         try {
             Key key=tokenService.generateKey(encryptedPassword);
-            Jwts.parser().setSigningKey(key).parseClaimsJws(token);
+            //Jwts.parser().setSigningKey(key).parseClaimsJws(token);
+            jwtsRepository.checkToken(key,token);
         } catch (Exception e) {
             System.out.println("Exception");
             try {

@@ -31,12 +31,6 @@ public class TokenPreMatchingRequestFilter implements ContainerRequestFilter {
     private TokenStore tokenStore;
     @Inject
     private Logger logger;
-    @Inject
-    HttpServletRequest request;
-    @Inject
-    private TokenService tokenService;
-    @Inject
-    private AuthenticationDataStore userDataStore;
 
     @Override
     public void filter(ContainerRequestContext requestContext) throws IOException {
