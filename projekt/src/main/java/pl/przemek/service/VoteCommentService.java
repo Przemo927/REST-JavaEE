@@ -12,7 +12,6 @@ import pl.przemek.repository.JpaVoteCommentRepository;
 import javax.inject.Inject;
 import java.sql.Timestamp;
 import java.util.Date;
-import java.util.List;
 
 public class VoteCommentService {
 
@@ -21,7 +20,7 @@ public class VoteCommentService {
     private JpaVoteCommentRepository voteCommentRepo;
 
     @Inject
-    public VoteCommentService(JpaUserRepository userRepo,JpaCommentRepository commentRepo,JpaVoteCommentRepository voteCommentRepo){
+    public VoteCommentService(JpaUserRepository userRepo, JpaCommentRepository commentRepo, JpaVoteCommentRepository voteCommentRepo){
         this.userRepo=userRepo;
         this.commentRepo=commentRepo;
         this.voteCommentRepo=voteCommentRepo;
@@ -36,14 +35,17 @@ public class VoteCommentService {
     VoteComment createVote(long userId, long commentId, VoteType voteType) {
         User user = userRepo.get(userId);
         Comment comment = commentRepo.get(commentId);
-        VoteComment vote = new VoteComment();
-        vote.setComment(comment);
-        vote.setDate(new Timestamp(new Date().getTime()));
-        vote.setUser(user);
-        vote.setVoteType(voteType);
-        return vote;
+        if(user!=null && comment!=null) {
+            VoteComment vote = new VoteComment();
+            vote.setComment(comment);
+            vote.setDate(new Timestamp(new Date().getTime()));
+            vote.setUser(user);
+            vote.setVoteType(voteType);
+            return vote;
+        }
+        return null;
     }
-    VoteComment createVote(VoteComment voteComment) {
+    VoteComment createVoteFromExistingVote(VoteComment voteComment) {
         VoteComment vote=new VoteComment(voteComment);
         return vote;
     }
@@ -61,7 +63,7 @@ public class VoteCommentService {
             voteCommentRepo.add(updateVote);
             updateComment(commentId,null,updateVote);
         } else {
-            updateVote = createVote(existingVote);
+            updateVote = createVoteFromExistingVote(existingVote);
             updateVote.setVoteType(newVoteType);
             if (!existingVote.equals(updateVote)) {
                 voteCommentRepo.update(updateVote);

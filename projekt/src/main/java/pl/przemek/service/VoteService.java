@@ -20,7 +20,7 @@ public class VoteService {
     private JpaUserRepository userRepo;
 
     @Inject
-    public VoteService(JpaVoteRepository votRepo,JpaDiscoveryRepository disRepo,JpaUserRepository userRepo){
+    public VoteService(JpaVoteRepository votRepo, JpaDiscoveryRepository disRepo, JpaUserRepository userRepo){
         this.votRepo=votRepo;
         this.disRepo=disRepo;
         this.userRepo=userRepo;
@@ -34,12 +34,15 @@ public class VoteService {
     Vote createVote(long userId, long discoveryId, VoteType votetype) {
         User user = userRepo.get(userId);
         Discovery discovery = disRepo.get(discoveryId);
-        Vote vote = new Vote();
-        vote.setUser(user);
-        vote.setDiscovery(discovery);
-        vote.setDate(new Timestamp(new Date().getTime()));
-        vote.setVoteType(votetype);
-        return vote;
+        if(discovery!=null && user!=null) {
+            Vote vote = new Vote();
+            vote.setUser(user);
+            vote.setDiscovery(discovery);
+            vote.setDate(new Timestamp(new Date().getTime()));
+            vote.setVoteType(votetype);
+            return vote;
+        }
+        return null;
     }
     Vote createVote(Vote vote){
         Vote newVote=new Vote(vote);
@@ -54,7 +57,6 @@ public class VoteService {
         Vote updateVote = null;
         Vote existingVote = null;
         existingVote = votRepo.getVoteByUserIdDiscoveryId(userId, discoveryId);
-        System.out.println(existingVote);
         if (existingVote == null) {
             updateVote = createVote(userId, discoveryId, newVoteType);
             votRepo.add(updateVote);

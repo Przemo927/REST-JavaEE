@@ -6,7 +6,6 @@ import pl.przemek.model.EventPosition;
 import pl.przemek.repository.JpaEventRepository;
 
 import javax.inject.Inject;
-import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -54,7 +53,7 @@ public class EventService {
         List<Event> lisOfEvents=eventRepo.getAll();
         return getListOfEventInsideDistanceBufor(latCoordinate,lngCoordinate,distance,lisOfEvents);
     }
-    List<Event> getListOfEventInsideDistanceBufor(double latCoordinate, double lngCoordinate,int distance, List<Event> listOfEvent){
+    List<Event> getListOfEventInsideDistanceBufor(double latCoordinate, double lngCoordinate, int distance, List<Event> listOfEvent){
         List<Event> listOfEventAfterChecking=listOfEvent.stream().parallel().filter(event->checkingDistance(latCoordinate,lngCoordinate,distance,event.getEventPosition()))
         .collect(Collectors.toList());
         return listOfEventAfterChecking;

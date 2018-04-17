@@ -16,7 +16,7 @@ public class UserService {
     private JpaUserRepository userRepo;
     private JpaRoleRepository rolRepo;
     @Inject
-    public UserService(JpaUserRepository userRepo,JpaRoleRepository rolRepo){
+    public UserService(JpaUserRepository userRepo, JpaRoleRepository rolRepo){
         this.userRepo=userRepo;
         this.rolRepo=rolRepo;
     }
@@ -34,19 +34,14 @@ public class UserService {
             user.setPassword(md5Pass);
             userRepo.add(user);
             addRole(user);
+            return user;
         }
-         else{
-                throw new NullPointerException("User is null");
-            }
-        return user;
+        return null;
     }
 
     void addRole(User user) throws Exception {
         List<Role> listOfRoles=rolRepo.getRoles("user");
-        if(listOfRoles.isEmpty()){
-
-        }
-        else {
+        if(!listOfRoles.isEmpty()){
             Role role = listOfRoles.get(0);
             rolRepo.update(role, user);
         }
@@ -57,7 +52,8 @@ public class UserService {
 
     public void removeByUserId(long id) {
         User user=userRepo.get(id);
-        userRepo.remove(user);
+        if(user!=null)
+            userRepo.remove(user);
     }
 
     public void updateUser(User user){
@@ -72,7 +68,7 @@ public class UserService {
         return userRepo.getAll();
     }
 
-    String encryptPassword(String password) {
+    public String encryptPassword(String password) {
         MessageDigest digest = null;
         try {
             digest = MessageDigest.getInstance("MD5");
