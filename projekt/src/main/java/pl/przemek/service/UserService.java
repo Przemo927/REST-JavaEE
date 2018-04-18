@@ -47,11 +47,11 @@ public class UserService {
         }
     }
     public User getUserById(long id){
-        return userRepo.get(id);
+        return userRepo.get(User.class,id);
     }
 
     public void removeByUserId(long id) {
-        User user=userRepo.get(id);
+        User user=userRepo.get(User.class,id);
         if(user!=null)
             userRepo.remove(user);
     }
@@ -65,7 +65,7 @@ public class UserService {
     }
 
     public List<User> getAllUsers(){
-        return userRepo.getAll();
+        return userRepo.getAll("User.findAll", User.class);
     }
 
     public String encryptPassword(String password) {

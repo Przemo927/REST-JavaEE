@@ -32,8 +32,8 @@ public class VoteService {
     }
 
     Vote createVote(long userId, long discoveryId, VoteType votetype) {
-        User user = userRepo.get(userId);
-        Discovery discovery = disRepo.get(discoveryId);
+        User user = userRepo.get(User.class,userId);
+        Discovery discovery = disRepo.get(Discovery.class,discoveryId);
         if(discovery!=null && user!=null) {
             Vote vote = new Vote();
             vote.setUser(user);
@@ -73,7 +73,7 @@ public class VoteService {
     }
 
     void updateDiscovery(long discoveryId, Vote oldVote, Vote updateVote) {
-        Discovery discovery = disRepo.get(discoveryId);
+        Discovery discovery = disRepo.get(Discovery.class,discoveryId);
         Discovery updateDiscovery=null;
         if (oldVote == null && updateVote != null) {
             updateDiscovery = addDiscoveryVote(discovery, updateVote.getVoteType());
@@ -107,7 +107,7 @@ public class VoteService {
     }
 
     public Vote getById(Long id) {
-        Vote vote = votRepo.get(id);
+        Vote vote = votRepo.get(Vote.class,id);
         return vote;
     }
 

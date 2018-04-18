@@ -31,15 +31,15 @@ public class EventService {
     }
 
     public void removeEventById(long id){
-        Event event=eventRepo.get(id);
+        Event event=eventRepo.get(Event.class,id);
         eventRepo.remove(event);
     }
     public Event getEvent(long id){
-        return eventRepo.get(id);
+        return eventRepo.get(Event.class,id);
     }
 
     public List<Event> getAllEvents(){
-        return eventRepo.getAll();
+        return eventRepo.getAll("Event.findAll",Event.class);
     }
 
     public List<Event> getEventsByCity(String city){
@@ -50,7 +50,7 @@ public class EventService {
         if(distance<0){
             distance=distance*(-1);
         }
-        List<Event> lisOfEvents=eventRepo.getAll();
+        List<Event> lisOfEvents=eventRepo.getAll("Event.findAll",Event.class);
         return getListOfEventInsideDistanceBufor(latCoordinate,lngCoordinate,distance,lisOfEvents);
     }
     List<Event> getListOfEventInsideDistanceBufor(double latCoordinate, double lngCoordinate, int distance, List<Event> listOfEvent){

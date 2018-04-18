@@ -44,7 +44,7 @@ public class DiscoveryService {
         return null;
     }
     public Discovery getById(long id){
-        return discRepo.get(id);
+        return discRepo.get(Discovery.class,id);
     }
 
     public List<Discovery> getAll(String order){
@@ -55,10 +55,10 @@ public class DiscoveryService {
             } else if (order.equals("time")) {
                 discoveries = discRepo.getAll(new TimeComparator());
             } else {
-                discoveries = discRepo.getAll();
+                discoveries = discRepo.getAll("Discovery.findAll",Discovery.class);
             }
         }catch(NullPointerException e){
-            discoveries = discRepo.getAll();
+            discoveries = discRepo.getAll("Discovery.findAll",Discovery.class);
         }
         return discoveries;
     }
@@ -68,7 +68,7 @@ public class DiscoveryService {
     }
 
     public void removeDiscoveryById(long id){
-        Discovery discovery=discRepo.get(id);
+        Discovery discovery=discRepo.get(Discovery.class,id);
         voteRepo.removeByDiscoveryId(id);
         discRepo.remove(discovery);
     }

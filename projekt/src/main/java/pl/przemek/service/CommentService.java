@@ -25,14 +25,14 @@ public class CommentService {
     }
 
     public void addComment(Comment comment, long discoveryId){
-        Discovery discovery=discRepo.get(discoveryId);
+        Discovery discovery=discRepo.get(Discovery.class,discoveryId);
         if(comment!=null && discovery!=null) {
             comment.setDiscvovery(discovery);
             commentRepo.add(comment);
         }
     }
     public List<Comment> getAllComment(){
-        return commentRepo.getAll();
+        return commentRepo.getAll("Comment.findAll",Comment.class);
     }
 
     public List<Comment> getByDiscoveryName(String name){

@@ -33,8 +33,8 @@ public class VoteCommentService {
 
 
     VoteComment createVote(long userId, long commentId, VoteType voteType) {
-        User user = userRepo.get(userId);
-        Comment comment = commentRepo.get(commentId);
+        User user = userRepo.get(User.class,userId);
+        Comment comment = commentRepo.get(Comment.class,commentId);
         if(user!=null && comment!=null) {
             VoteComment vote = new VoteComment();
             vote.setComment(comment);
@@ -72,7 +72,7 @@ public class VoteCommentService {
        }
     }
     void updateComment(long commentId, VoteComment oldVote, VoteComment updateVote) {
-        Comment comment = commentRepo.get(commentId);
+        Comment comment = commentRepo.get(Comment.class,commentId);
         Comment updateComment=null;
         if (oldVote == null && updateVote!=null) {
             updateComment = addCommentVote(comment, updateVote.getVoteType());
