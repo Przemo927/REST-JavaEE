@@ -9,9 +9,9 @@ public interface JpaEventRepository {
     public void add(Event event);
     public void remove(Event event);
     public Event update(Event comment);
-    public List<Event> getAll();
+    public List<Event> getAll(String nameOfQuery,Class<Event> clazz);
     public List<Event> getAllAndGroupBy();
-    public Event get(long id);
+    public Event get(Class<Event> clazz,long id);
     public List<Event> getByCity(String city);
     public List<String> getCitiesFromAllEvents();
 }

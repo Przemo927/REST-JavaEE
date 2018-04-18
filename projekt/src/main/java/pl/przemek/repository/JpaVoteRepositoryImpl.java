@@ -10,37 +10,8 @@ import javax.persistence.TypedQuery;
 import java.util.List;
 
 @Stateless
-public class JpaVoteRepositoryImpl implements JpaVoteRepository {
+public class JpaVoteRepositoryImpl extends JpaRepository<Vote> implements JpaVoteRepository {
 
-	@PersistenceContext
-	private EntityManager em;
-
-	@RolesAllowed({"admin","user"})
-	public void add(Vote vote) {
-	    em.persist(vote);
-	}
-
-	@RolesAllowed("admin")
-	public void remove(Vote vote) {
-	    em.remove(em.merge(vote));
-	}
-
-	@RolesAllowed({"admin","user"})
-	public Vote update(Vote vote) {
-		em.merge(vote);
-		return vote;
-	}
-
-	@RolesAllowed({"admin","user"})
-	public Vote get(Long id) {
-	    Vote vote = em.find(Vote.class, id);
-	    return vote;
-	}
-
-	@RolesAllowed({"admin","user"})
-	public List<Vote> getAll() {
-	    return null;
-	}
 
 	@RolesAllowed({"admin","user"})
 	public Vote getVoteByUserIdDiscoveryId(Long UserId, Long DiscoveryId) {

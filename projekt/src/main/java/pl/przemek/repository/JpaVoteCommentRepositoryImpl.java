@@ -9,31 +9,7 @@ import javax.persistence.TypedQuery;
 import java.util.List;
 
 @Stateless
-public class JpaVoteCommentRepositoryImpl implements JpaVoteCommentRepository {
-
-    @PersistenceContext
-    private EntityManager em;
-
-    @Override
-    public void add(VoteComment vote) {
-        em.persist(vote);
-    }
-
-    @Override
-    public VoteComment update(VoteComment vote) {
-        return em.merge(vote);
-    }
-
-    @Override
-    public void remove(VoteComment vote) {
-        em.remove(em.merge(vote));
-
-    }
-
-    @Override
-    public VoteComment get(Long id) {
-        return em.find(VoteComment.class,id);
-    }
+public class JpaVoteCommentRepositoryImpl extends JpaRepository<VoteComment> implements JpaVoteCommentRepository {
 
     @Override
     public VoteComment getVoteByUserIdCommentId(Long UserId, Long CommentId) {

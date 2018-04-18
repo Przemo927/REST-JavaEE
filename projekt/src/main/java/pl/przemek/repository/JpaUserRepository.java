@@ -2,7 +2,6 @@ package pl.przemek.repository;
 
 import pl.przemek.model.User;
 
-import javax.annotation.security.RolesAllowed;
 import java.util.List;
 
 public interface JpaUserRepository {
@@ -10,8 +9,8 @@ public interface JpaUserRepository {
     public void remove(User user);
     public User update(User user);
     public Integer updateWithoutPassword(User user);
-    public User get(Long id);
-    public List<User> getAll();
+    public User get(Class<User> clazz,Long id);
+    public List<User> getAll(String nameOfQuery,Class<User> clazz);
     public List<User> getUserByUsername(String name);
     public boolean checkPresenceOfUserByUsername(String username);
     public boolean checkPresenceOfEmail(String email);

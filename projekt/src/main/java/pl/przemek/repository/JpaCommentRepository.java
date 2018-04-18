@@ -9,8 +9,8 @@ public interface JpaCommentRepository {
     public void add(Comment commment);
     public void remove(Comment comment);
     public Comment update(Comment comment);
-    public List<Comment> getAll();
+    public List<Comment> getAll(String nameOfQuery, Class<Comment> clazz);
     public List<Comment> getByDiscoveryName(String name);
     public List<Comment> getByDiscoveryId(long id);
-    public Comment get(long id);
+    public Comment get(Class<Comment> clazz,long id);
 }

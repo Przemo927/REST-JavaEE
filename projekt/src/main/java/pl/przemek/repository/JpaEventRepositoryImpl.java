@@ -11,7 +11,7 @@ import java.util.Comparator;
 import java.util.List;
 
 @Stateless
-public class JpaEventRepositoryImpl implements JpaEventRepository {
+public class JpaEventRepositoryImpl extends JpaRepository<Event> implements JpaEventRepository {
 
     @PersistenceContext
     EntityManager em;
@@ -35,24 +35,11 @@ public class JpaEventRepositoryImpl implements JpaEventRepository {
         return em.merge(event);
     }
 
-    @RolesAllowed({"admin","user"})
-    @Override
-    public List<Event> getAll() {
-        TypedQuery<Event> getAllEvents=em.createNamedQuery("Event.findAll",Event.class);
-        return getAllEvents.getResultList();
-    }
-
     @Override
     public List<Event> getAllAndGroupBy() {
         return null;
     }
 
-    @RolesAllowed({"admin","user"})
-    @Override
-    public Event get(long id) {
-        Event event=em.find(Event.class,id);
-        return event;
-    }
 
     @RolesAllowed({"admin","user"})
     @Override

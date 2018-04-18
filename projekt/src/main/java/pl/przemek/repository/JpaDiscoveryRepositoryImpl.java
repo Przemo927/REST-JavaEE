@@ -14,37 +14,7 @@ import java.util.Comparator;
 import java.util.List;
 
 @Stateless
-public class JpaDiscoveryRepositoryImpl implements JpaDiscoveryRepository {
-	
-	
-	@PersistenceContext
-	private EntityManager em;
-
-	@RolesAllowed({"admin","user"})
-    @Override
-	public void add(Discovery discovery) {
-	    em.persist(discovery);
-	}
-
-	@RolesAllowed("admin")
-    @Override
-	public void remove(Discovery discovery) {
-	    em.remove(em.merge(discovery));
-	}
-
-	@RolesAllowed({"admin","user"})
-    @Override
-	public Discovery update(Discovery discovery) {
-		Discovery updateDiscovery=em.merge(discovery);
-		return updateDiscovery;
-	}
-
-	@RolesAllowed({"admin","user"})
-	@Override
-	public Discovery get(long id) {
-		Discovery discovery = em.find(Discovery.class, id);
-		return discovery;
-	}
+public class JpaDiscoveryRepositoryImpl extends JpaRepository<Discovery> implements JpaDiscoveryRepository {
 
 	@RolesAllowed({"admin","user"})
 	@Override
@@ -53,13 +23,6 @@ public class JpaDiscoveryRepositoryImpl implements JpaDiscoveryRepository {
 		getAllQueryWithLimit.setParameter("begin",begin);
 		getAllQueryWithLimit.setParameter("quantity",quantity);
 		return getAllQueryWithLimit.getResultList();
-	}
-
-	@RolesAllowed({"admin","user"})
-    @Override
-	public List<Discovery> getAll() {
-		 List<Discovery> discovery = getAll(null);
-	    return discovery;
 	}
 
 	@RolesAllowed({"admin","user"})

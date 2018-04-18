@@ -3,6 +3,7 @@ package pl.przemek.repository;
 
 import pl.przemek.model.Comment;
 
+import javax.annotation.security.RolesAllowed;
 import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
@@ -10,33 +11,9 @@ import javax.persistence.TypedQuery;
 import java.util.List;
 
 @Stateless
-public class JpaCommentRepositoryImpl implements JpaCommentRepository {
+public class JpaCommentRepositoryImpl extends JpaRepository<Comment> implements JpaCommentRepository{
 
-    @PersistenceContext
-    private EntityManager em;
-
-    @Override
-    public void add(Comment comment) {
-        em.persist(comment);
-    }
-
-    @Override
-    public void remove(Comment comment) {
-    em.remove(em.merge(comment));
-    }
-
-    @Override
-    public Comment update(Comment comment) {
-        Comment updatedComment=em.merge(comment);
-        return updatedComment;
-    }
-
-    @Override
-    public List<Comment> getAll() {
-        TypedQuery<Comment> query=em.createNamedQuery("Comment.findAll",Comment.class);
-        return query.getResultList();
-    }
-
+    @RolesAllowed({"admin","user"})
     @Override
     public List<Comment> getByDiscoveryName(String name) {
         TypedQuery<Comment> query=em.createNamedQuery("Comment.findByDiscoveryName",Comment.class);
@@ -44,6 +21,7 @@ public class JpaCommentRepositoryImpl implements JpaCommentRepository {
         return query.getResultList();
     }
 
+    @RolesAllowed({"admin","user"})
     @Override
     public List<Comment> getByDiscoveryId(long id) {
         TypedQuery<Comment> query=em.createNamedQuery("Comment.findByDiscoveryId",Comment.class);
@@ -51,8 +29,4 @@ public class JpaCommentRepositoryImpl implements JpaCommentRepository {
         return query.getResultList();
     }
 
-    @Override
-    public Comment get(long id) {
-        return em.find(Comment.class,id);
-    }
 }
