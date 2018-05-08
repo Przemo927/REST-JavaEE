@@ -9,28 +9,28 @@ import { Discovery } from '../discovery';
 })
 export class AdddiscoveryComponent implements OnInit {
 
-  private discovery=new Object();
-  private invalidFieldList:InvalidFieldList={};
-  
-  
-  constructor(private discoveryService:DiscoveryService) { }
+  private discovery= new Object();
+  private invalidFieldList: InvalidFieldList= {};
+
+
+  constructor(private discoveryService: DiscoveryService) { }
 
   ngOnInit() {
   }
-  
-  
-  addDiscovery(discovery:Discovery) {
-    this.discoveryService.addDiscovery(discovery).subscribe((res)=> {
-    if(res.InvalidFieldList!=null){
-        this.invalidFieldList=res.InvalidFieldList;
+
+
+  addDiscovery(discovery: Discovery) {
+    this.discoveryService.addDiscovery(discovery).subscribe((res) => {
+    if (res.InvalidFieldList != null){
+        this.invalidFieldList = res.InvalidFieldList;
     }
   });
-  
+
 }
 }
 
 interface InvalidFieldList {
-    url?:string;
-    name?:string;
-    description?:string;
+    url?: string;
+    name?: string;
+    description?: string;
 }

@@ -29,8 +29,14 @@ import { BootstrapSwitchModule } from 'angular2-bootstrap-switch';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { EventpositionService } from './eventposition.service';
 import { CheckUserService } from './check-user.service';
-import { VoteService } from './vote.service'
-
+import { DiscoveryPageService } from './discoverypage.service';
+import { PageService } from './page.service';
+import { SearcheventbycityComponent } from './searcheventbycity/searcheventbycity.component';
+import { ListofeventsComponent } from './listofevents/listofevents.component';
+import { NameofcityService } from './nameofcity.service';
+import { ReactiveFormsModule} from '@angular/forms';
+import { SearchbypositionComponent } from './searchbyposition/searchbyposition.component';
+import { DataService } from './data.service';
 
 @NgModule({
   declarations: [
@@ -44,9 +50,13 @@ import { VoteService } from './vote.service'
     AdddiscoveryComponent,
     AddComponent,
     EventsComponent,
-    AddeventComponent
+    AddeventComponent,
+    SearcheventbycityComponent,
+    ListofeventsComponent,
+    SearchbypositionComponent,
   ],
   imports: [
+    ReactiveFormsModule,
     BrowserModule,
     FormsModule,
     BsDropdownModule.forRoot(),
@@ -58,7 +68,7 @@ import { VoteService } from './vote.service'
     BootstrapSwitchModule.forRoot(),
     BrowserAnimationsModule
   ],
-  providers: [DiscoveryService, UserService, CommentService, EventService, EventpositionService, CheckUserService, VoteService],
+  providers: [DiscoveryService, UserService, CommentService, EventService, EventpositionService, CheckUserService, DiscoveryPageService, PageService, NameofcityService, DataService],
   bootstrap: [AppComponent]
 })
 export class AppModule { }
