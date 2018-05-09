@@ -1,8 +1,8 @@
     <div class="row" style="margin-top:10px">
     <div class="pull-left container-fluid">
-    <button routerLink="searchByPosition" class="btn btn-primary">Find By Position</button>
-    <button routerLink="searchByCity" class="btn btn-warning">Find By City</button>
-    <button routerLink="listOfAllEvents" class="btn btn-success">Show All Events</button>
+    <button [ngStyle]="positionStyle" (click)="searchByPosition()" routerLink="searchByPosition" class="btn btn-primary">Find By Position</button>
+    <button [ngStyle]="cityStyle" (click)="searchByCity()" routerLink="searchByCity" class="btn btn-warning">Find By City</button>
+    <button [ngStyle]="allStyle" (click)="showAllEvents()" routerLink="listOfAllEvents" class="btn btn-success">Show All Events</button>
     </div>
 </div>
 
