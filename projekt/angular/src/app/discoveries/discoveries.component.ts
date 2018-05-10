@@ -43,32 +43,24 @@ constructor(private discoveryService: DiscoveryService, private checkUserService
   }
   ngOnInit() {
       this.checkUserService.getUserInformation().subscribe(
-          e => {
-            if (e['role'] === 'admin') {
+          information => {
+            if (information['role'] === 'admin') {
                 this.adminRole = true;
             }
 
       });
     this.givePreparedPagesDependsOfElementsOnOnePage(5);
-      Observable.fromEvent(document,'scroll')
-        //.filter(<UiEvent>(scroll)=>scroll.pageY>this.htmlCollectionAsArray[this.firstIndexOfHidden-1].offsetTop-300)
-        .subscribe(<UiEvent>(scroll)=> {
-          if(this.htmlCollectionAsArray!== undefined && this.firstIndexOfHidden<this.htmlCollectionAsArray.length && scroll.pageY>this.htmlCollectionAsArray[this.firstIndexOfHidden-1].offsetTop-200){
-            this.showFiveElements(this.firstIndexOfHidden);
-          }
-        });
+
+    Observable.fromEvent(document,'scroll')
+      .subscribe(<UiEvent>(scroll)=> {
+        if(this.htmlCollectionAsArray!== undefined && this.firstIndexOfHidden<this.htmlCollectionAsArray.length && scroll.pageY>this.htmlCollectionAsArray[this.firstIndexOfHidden-1].offsetTop-200){
+          this.showFiveElements(this.firstIndexOfHidden);
+        }
+      });
 
   }
 
-  showFiveElements(numberOfFirstElement:number){
-    for(let element of this.htmlCollectionAsArray.slice(numberOfFirstElement-1,numberOfFirstElement+5)){
-      element.style.display="";
-    }
-    this.firstIndexOfHidden+=5;
-  }
-
-
-  givePreparedPagesDependsOfElementsOnOnePage(quantityElementsOnOnePage: number) {
+  givePreparedPagesDependsOfElementsOnOnePage(quantityElementsOnOnePage: number):void {
     this.pageService.getQuantityOfAllElements().subscribe(q => {
             const quantityOfAllDiscoveries = q['Message'];
             this.preparedPages = this.pageService.preparePages(quantityElementsOnOnePage, quantityOfAllDiscoveries);
@@ -77,11 +69,10 @@ constructor(private discoveryService: DiscoveryService, private checkUserService
 
   }
 
-  chooseFirstPage(){
+  private chooseFirstPage():void{
     this.pageService.chooseFirstPage<Discovery>().subscribe((discoveries=>{
       this.discoveries=discoveries;
-      this.currentPage= document.getElementById('1');
-      this.currentPage.style.backgroundColor = "#ddd";
+      this.currentPage= this.pageService.markFirstPage();
     }));
   }
 
@@ -89,35 +80,15 @@ constructor(private discoveryService: DiscoveryService, private checkUserService
     this.discoveryService.getDiscoveries().subscribe(discoveries => this.discoveries = discoveries);
   }
 
-  addVote(voteType, id) {
+  addVote(voteType, id):void {
     window.location.href = 'http://localhost:8080/projekt/api/vote?vote=' + voteType + '&discoveryId=' + id;
     setTimeout(() =>
     this.getDiscoveries(), 500);
 
   }
 
-
-  changeBackGroundColorOfPage(event) {
-        if (event.target.classList.contains('glyphicon-chevron-left')) {
-            if (this.currentPage.id > 1) {
-                this.currentPage.style.backgroundColor = 'white';
-                this.currentPage = document.getElementById((+this.currentPage.id - 1).toString());
-                this.currentPage.style.backgroundColor = '#ddd';
-            }
-        } else if (event.target.classList.contains('glyphicon-chevron-right')) {
-            if (this.currentPage.id < this.preparedPages.length) {
-                this.currentPage.style.backgroundColor = 'white';
-                this.currentPage = document.getElementById((+this.currentPage.id + 1).toString());
-                this.currentPage.style.backgroundColor = '#ddd';
-            }
-        } else if (this.currentPage != null && this.currentPage !== event.target) {
-            this.currentPage.style.backgroundColor = 'white';
-            this.currentPage = event.target;
-            this.currentPage.style.backgroundColor = '#ddd';
-        }else {
-            this.currentPage = event.target;
-            this.currentPage.style.backgroundColor = '#ddd';
-        }
+  changeBackGroundColorOfPage(event):void {
+    this.currentPage=this.pageService.changeBackGroundColorOfPage(this.currentPage,event);
   }
 
   getDiscoveriesForActualPage(numberOfActualPage: number) {
@@ -127,7 +98,6 @@ constructor(private discoveryService: DiscoveryService, private checkUserService
             }
         });
   }
-
 
   nextPage() {
       this.pageService.increaseLimit<Discovery>().subscribe(discoveries => {
@@ -159,6 +129,12 @@ constructor(private discoveryService: DiscoveryService, private checkUserService
       pages.style.visibility="hidden";
     }
 
+  }
+  showFiveElements(numberOfFirstElement:number){
+    for(let element of this.htmlCollectionAsArray.slice(numberOfFirstElement-1,numberOfFirstElement+5)){
+      element.style.display="";
+    }
+    this.firstIndexOfHidden+=5;
   }
 
 }
