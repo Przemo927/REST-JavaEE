@@ -11,12 +11,20 @@ import { AddeventComponent } from './addevent/addevent.component';
 import { SearcheventbycityComponent } from './searcheventbycity/searcheventbycity.component';
 import { ListofeventsComponent } from './listofevents/listofevents.component';
 import { SearchbypositionComponent } from './searchbyposition/searchbyposition.component';
+import {PagesComponent} from "./pages/pages.component";
 
 
 
 const routes: Routes = [
   { path: 'users', component: UsersComponent },
-  { path: '', component: DiscoveriesComponent },
+  { path: '', component: DiscoveriesComponent,
+    children:[
+      {
+        path: '',
+        component: PagesComponent
+      }
+    ]
+  },
   { path: 'editdiscovery/:id', component: EditdiscoveryComponent },
   { path: 'discovery/:id', component: DiscoveryComponent },
   { path: 'adddiscovery', component: AdddiscoveryComponent },
@@ -46,6 +54,9 @@ const routes: Routes = [
             component: ListofeventsComponent
           }
         ]
+      },
+      {
+        path:'',redirectTo: 'searchByCity',pathMatch: 'full'
       }
     ]
   },

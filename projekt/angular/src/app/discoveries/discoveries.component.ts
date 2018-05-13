@@ -1,11 +1,13 @@
 ///<reference path="../check-user.service.ts"/>
-import {Component, Input, OnInit,DoCheck, IterableDiffers,IterableDiffer} from '@angular/core';
+import {
+  Component, Input, OnInit, DoCheck, IterableDiffers, IterableDiffer} from '@angular/core';
 import { DiscoveryService } from '../discovery.service';
 import { Discovery } from '../discovery';
 import { CheckUserService } from '../check-user.service';
 import { Page } from '../page';
 import { DiscoveryPageService } from '../discoverypage.service';
 import {Observable} from 'rxjs/Rx';
+import { DataService } from '../data.service';
 
 @Component({
   selector: 'app-discoveries',
@@ -16,7 +18,8 @@ export class DiscoveriesComponent implements OnInit, DoCheck {
 
 
 constructor(private discoveryService: DiscoveryService, private checkUserService: CheckUserService,
-            private pageService: DiscoveryPageService, private iterableDiffers:IterableDiffers) {
+            private pageService: DiscoveryPageService, private iterableDiffers:IterableDiffers,
+            private dataService:DataService<Discovery[]>) {
     this.iterableDiffer=iterableDiffers.find([]).create(null);
 }
 
@@ -30,7 +33,6 @@ constructor(private discoveryService: DiscoveryService, private checkUserService
   private htmlCollectionAsArray:Array<HTMLElement>;
   private firstIndexOfHidden=1;
 
-
   ngDoCheck() {
     let listOfElements=document.getElementById("discoveries").children;
     let htmlCollectionAsArray=[].slice.apply(listOfElements);
@@ -39,6 +41,9 @@ constructor(private discoveryService: DiscoveryService, private checkUserService
       this.firstIndexOfHidden=1;
       this.htmlCollectionAsArray=htmlCollectionAsArray;
       this.showFiveElements(this.firstIndexOfHidden);
+    }
+    if(this.dataService.currentData!==undefined) {
+      this.dataService.currentData.subscribe((discoveries) => this.discoveries = discoveries);
     }
   }
   ngOnInit() {
@@ -49,21 +54,17 @@ constructor(private discoveryService: DiscoveryService, private checkUserService
             }
 
       });
-    this.givePreparedPagesDependsOfElementsOnOnePage(5);
-
     Observable.fromEvent(document,'scroll')
       .subscribe(<UiEvent>(scroll)=> {
         if(this.htmlCollectionAsArray!== undefined && this.firstIndexOfHidden<this.htmlCollectionAsArray.length && scroll.pageY>this.htmlCollectionAsArray[this.firstIndexOfHidden-1].offsetTop-200){
           this.showFiveElements(this.firstIndexOfHidden);
         }
       });
-
   }
 
   givePreparedPagesDependsOfElementsOnOnePage(quantityElementsOnOnePage: number):void {
     this.pageService.getQuantityOfAllElements().subscribe(q => {
             const quantityOfAllDiscoveries = q['Message'];
-            this.preparedPages = this.pageService.preparePages(quantityElementsOnOnePage, quantityOfAllDiscoveries);
             this.chooseFirstPage();
     });
 
@@ -84,35 +85,6 @@ constructor(private discoveryService: DiscoveryService, private checkUserService
     window.location.href = 'http://localhost:8080/projekt/api/vote?vote=' + voteType + '&discoveryId=' + id;
     setTimeout(() =>
     this.getDiscoveries(), 500);
-
-  }
-
-  changeBackGroundColorOfPage(event):void {
-    this.currentPage=this.pageService.changeBackGroundColorOfPage(this.currentPage,event);
-  }
-
-  getDiscoveriesForActualPage(numberOfActualPage: number) {
-        this.pageService.getElementsForActualPage<Discovery>(numberOfActualPage).subscribe((discoveries) => {
-            if (discoveries != null) {
-            this.discoveries = discoveries;
-            }
-        });
-  }
-
-  nextPage() {
-      this.pageService.increaseLimit<Discovery>().subscribe(discoveries => {
-          if (discoveries != null) {
-            this.discoveries = discoveries;
-          }
-      });
-  }
-
-  previousPage() {
-      this.pageService.decreaseLimit<Discovery>().subscribe(discoveries => {
-          if (discoveries != null) {
-                this.discoveries = discoveries;
-           }
-      });
 
   }
 

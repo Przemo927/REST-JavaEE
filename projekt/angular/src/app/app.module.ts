@@ -37,6 +37,7 @@ import { NameofcityService } from './nameofcity.service';
 import { ReactiveFormsModule} from '@angular/forms';
 import { SearchbypositionComponent } from './searchbyposition/searchbyposition.component';
 import { DataService } from './data.service';
+import { PagesComponent } from './pages/pages.component';
 
 @NgModule({
   declarations: [
@@ -54,6 +55,7 @@ import { DataService } from './data.service';
     SearcheventbycityComponent,
     ListofeventsComponent,
     SearchbypositionComponent,
+    PagesComponent,
   ],
   imports: [
     ReactiveFormsModule,
