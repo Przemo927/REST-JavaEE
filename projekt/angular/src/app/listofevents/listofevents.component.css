@@ -1,0 +1,133 @@
+.event-list {
+  list-style: none;
+  font-family: 'Lato', sans-serif;
+  margin: 0px;
+  padding: 0px;
+}
+#rightSmall{
+  position:absolute;
+  width: 30px;
+  height: 120px;
+  top:0px;
+  right:0px;
+}
+#showMap {
+  display:none;
+}
+#map {
+  position:absolute;
+  width: 200px;
+  top:0px;
+  right:30px;
+}
+.event-list > li {
+  display: inline;
+  width: 100%;
+  padding: 0px;
+}
+.event-list > li > div {
+  position:relative;
+  height:120px;
+  box-shadow: 0px 0px 5px rgba(51, 51, 51, 0.7);
+  margin-bottom: 10px;
+}
+
+.event-list > li > div > time {
+  display: block;
+  color: rgb(255, 255, 255);
+  background-color: darkgray;
+  text-align: center;
+  text-transform: uppercase;
+  position: absolute;
+  left: 0px;
+  top: 0px;
+  display: inline;
+  width: 120px;
+  height: 120px;
+  padding: 0px;
+  margin: 0px;
+}
+/*nth-child(2n+0) tzn ze co drugi*/
+.event-list > li:nth-child(2n+0) > div > time {
+  color: black;
+  background-color: lightgray;
+}
+.event-list > li > div > label {
+  margin-left: 2px;
+  height: 120px;
+  width: calc(100% - 350px);
+  word-wrap: break-word;
+  position: absolute;
+  left: 120px;
+  top: 0px;
+}
+.event-list > li > div > time > span {
+}
+.event-list > li > div > time > .day {
+  display: block;
+  font-size: 56pt;
+  font-weight: 100;
+  line-height: 1;
+}
+.event-list > li > div > time > .month {
+  display: block;
+  font-size: 12pt;
+  font-weight: 900;
+  line-height: 1;
+}
+
+
+@media (max-width: 450px) {
+  .event-list > li > div {
+    display: block;
+    height: 360px !important;
+    margin-bottom: 20px;
+  }
+  .event-list > li > div > time {
+    width: calc(100% - 30px);
+  }
+  .event-list > li > div >label {
+    width: 100% !important;
+    left:0px;
+    top:120px;
+  }
+  #rightSmall{
+    box-shadow: 0px 0px 5px rgba(51, 51, 51, 0.7);
+  }
+  #map {
+    border: 1px solid black;
+    width: 100% !important;
+    top:240px !important;
+    left:0px;
+  }
+
+}
+@media (max-width: 630px) {
+  .event-list > li > div {
+    width: 100%;
+    display: block;
+    height: 240px;
+  }
+  .event-list > li > div > time {
+    width: calc(100% - 30px);
+  }
+  #map {
+    width: 150px;
+    top:120px;
+    right:0px;
+  }
+  .event-list > li > div > label {
+    width: calc(100% - 200px);
+    top:120px;
+    left:0px;
+  }
+  #showMap {
+    display:block;
+  }
+  #rightSmall{
+    box-shadow: 0px 0px 5px rgba(51, 51, 51, 0.7);
+  }
+}
+#mainDiv {
+  margin-top: 10px;
+}
