@@ -1,10 +1,7 @@
-import { Injectable } from '@angular/core';
-import { DiscoveryService } from './discovery.service';
-import { Page } from './page';
-import { Discovery } from './discovery';
-import { HttpClient, HttpHeaders } from '@angular/common/http';
-import {Observable} from 'rxjs/Rx';
-import { PageService } from './page.service';
+import {Injectable} from "@angular/core";
+import {Discovery} from "./discovery";
+import {HttpClient} from "@angular/common/http";
+import {PageService} from "./page.service";
 
 @Injectable()
 export class DiscoveryPageService extends PageService<Discovery> {
