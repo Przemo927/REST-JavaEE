@@ -1,16 +1,20 @@
 import { Injectable } from '@angular/core';
 import {Page} from './page';
 import {Observable} from 'rxjs/Rx';
-import {Discovery} from './discovery';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 
 @Injectable()
-export class PageService {
+export class PageService <T> {
   actualPage: Page= null;
   preparedPages: Page[];
   private url: string;
+
   constructor(public http: HttpClient, url: string) {
     this.url = url;
+  }
+
+  setUrl(url:string){
+    this.url=url;
   }
 
   preparePages(quantityOnOnePage: number, quantityOfAllElements: number): Page[] {
