@@ -19,7 +19,7 @@ export class ListofeventsComponent implements OnInit, DoCheck {
   private monthNames = ["January", "February", "March", "April", "May", "June","July", "August", "September", "October", "November", "December"];
 
 
-  constructor(private nameService:NameofcityService, private eventService:EventService,private router:Router,private dataService:DataService<Event[]>) {
+  constructor(private nameService:NameofcityService, private eventService:EventService,private router:Router,private dataService:DataService) {
   }
 
   ngOnInit() {

@@ -2,17 +2,17 @@ import { Injectable } from '@angular/core';
 import { BehaviorSubject } from 'rxjs/BehaviorSubject';
 
 @Injectable()
-export class DataService<T> {
+export class DataService {
 
   private dataSource$;
   public currentData;
   constructor() { }
 
-  addBehaviourSource(elements:T){
-    this.dataSource$= new BehaviorSubject<T>(elements);
+  addBehaviourSource(elements:any){
+    this.dataSource$= new BehaviorSubject<any>(elements);
     this.currentData=this.dataSource$.asObservable();
   }
-  changeData(elements:T){
+  changeData(elements:any){
     console.log(elements);
     this.dataSource$.next(elements);
   }

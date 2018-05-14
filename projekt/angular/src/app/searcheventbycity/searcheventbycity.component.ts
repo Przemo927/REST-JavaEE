@@ -16,7 +16,7 @@ export class SearcheventbycityComponent implements OnInit {
   private napis:string="";
 
   constructor(private eventService: EventService,private router: Router,private route: ActivatedRoute,private nameService:NameofcityService
-    ,private dataService:DataService<Event[]>) { }
+    ,private dataService:DataService) { }
 
   ngOnInit() {
     this.dataService.addBehaviourSource(this.events);

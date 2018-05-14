@@ -44,7 +44,7 @@ export class SearchbypositionComponent implements OnInit,DoCheck {
     );
 
   }
-  constructor(private eventService:EventService, private iterableDiffers:IterableDiffers, private dataService:DataService<Event[]>) {
+  constructor(private eventService:EventService, private iterableDiffers:IterableDiffers, private dataService:DataService) {
     this.iterableDiffer=iterableDiffers.find([]).create(null);
   }
 
