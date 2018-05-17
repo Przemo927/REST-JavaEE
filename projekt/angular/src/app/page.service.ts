@@ -43,35 +43,11 @@ export class PageService <T> {
     currentPage.style.backgroundColor = "#ddd";
     return currentPage;
   }
-  changeBackGroundColorOfPage(currentPage,event):any{
-    if (event.target.classList.contains('glyphicon-chevron-left')) {
-      if (currentPage.id > 1) {
-        currentPage.style.backgroundColor = 'white';
-        currentPage = document.getElementById((+currentPage.id - 1).toString());
-        currentPage.style.backgroundColor = '#ddd';
-      }
-    } else if (event.target.classList.contains('glyphicon-chevron-right')) {
-      if (currentPage.id < this.preparedPages.length) {
-        currentPage.style.backgroundColor = 'white';
-        currentPage = document.getElementById((+currentPage.id + 1).toString());
-        currentPage.style.backgroundColor = '#ddd';
-      }
-    } else if (currentPage != null && currentPage !== event.target) {
-      currentPage.style.backgroundColor = 'white';
-      currentPage = event.target;
-      currentPage.style.backgroundColor = '#ddd';
-    }else {
-      currentPage = event.target;
-      currentPage.style.backgroundColor = '#ddd';
-    }
-    return currentPage;
-  }
   getElementsWithLimit<T>(firstIndex: number, quantity: number): Observable<T[]> {
     return this.http.get<T[]>(this.url + '?beginWith=' + firstIndex + '&quantity=' + quantity);
   }
   chooseFirstPage<T>(): Observable<T[]> {
     this.giveActualPage(1);
-    console.log(this.actualPage.firstIndex, this.actualPage.quantity);
     return this.getElementsWithLimit<T>(this.actualPage.firstIndex, this.actualPage.quantity);
   }
 

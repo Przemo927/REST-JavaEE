@@ -4,9 +4,7 @@ import {DiscoveryService} from "../discovery.service";
 import {Discovery} from "../discovery";
 import {CheckUserService} from "../check-user.service";
 import {Page} from "../page";
-import {Observable} from "rxjs/Rx";
 import {DataService} from "../data.service";
-import {DiscoveryPageService} from "../discoverypage.service";
 
 @Component({
   selector: 'app-discoveries',
@@ -15,11 +13,10 @@ import {DiscoveryPageService} from "../discoverypage.service";
 })
 export class DiscoveriesComponent implements OnInit, DoCheck {
 
-
-constructor(private discoveryService: DiscoveryService, private checkUserService: CheckUserService, private iterableDiffers:IterableDiffers,
-            private dataService:DataService) {
+  constructor(private discoveryService: DiscoveryService, private checkUserService: CheckUserService, private iterableDiffers:IterableDiffers,
+              private dataService:DataService) {
     this.iterableDiffer=iterableDiffers.find([]).create(null);
-}
+  }
 
   discoveries: Discovery[]= [];
   private adminRole= false;
@@ -37,11 +34,11 @@ constructor(private discoveryService: DiscoveryService, private checkUserService
     }
   }
   ngOnInit() {
-      this.checkUserService.getUserInformation().subscribe(
-          information => {
-            if (information['role'] === 'admin') {
-                this.adminRole = true;
-            }
+    this.checkUserService.getUserInformation().subscribe(
+      information => {
+        if (information['role'] === 'admin') {
+          this.adminRole = true;
+        }
 
       });
   }
@@ -53,7 +50,7 @@ constructor(private discoveryService: DiscoveryService, private checkUserService
   addVote(voteType, id):void {
     window.location.href = 'http://localhost:8080/projekt/api/vote?vote=' + voteType + '&discoveryId=' + id;
     setTimeout(() =>
-    this.getDiscoveries(), 500);
+      this.getDiscoveries(), 500);
 
   }
 
