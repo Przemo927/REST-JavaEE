@@ -1,6 +1,6 @@
 <ul id="pages" class="pagination" style="display: table;margin-left: auto;margin-right: auto">
   <li (click)="previousPage()" class="page-item"><a style="top:0px" class="glyphicon glyphicon-chevron-left"></a></li>
-  <li *ngFor="let page of preparedPagesToShowOnScreen" (click)="getDiscoveriesForActualPage(page.numberPage)" class="page-item"><a id={{page.numberPage}} (click)="changePage(page.numberPage)"
+  <li *ngFor="let page of preparedPagesToShowOnScreen" (click)="getelementsForActualPage(page.numberPage)" class="page-item"><a id={{page.numberPage}} (click)="changePage(page.numberPage)"
   class="page-link"><div style="width: 20px;text-align: center">{{page.numberPage}}</div></a></li>
   <li (click)="nextPage()" class="page-item"><a style="top:0px" class="glyphicon glyphicon-chevron-right"></a></li>
 </ul>

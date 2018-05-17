@@ -90,5 +90,12 @@ export class PagesComponent implements OnInit, DoCheck {
     }));
   }
 
+  getelementsForActualPage(numberOfActualPage: number) {
+    this.pageService.getElementsForActualPage(numberOfActualPage).subscribe((elements) => {
+      if (elements != null) {
+        this.dataService.changeData(elements);
+      }
+    });
+  }
 
 }
