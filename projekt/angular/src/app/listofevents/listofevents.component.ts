@@ -6,6 +6,8 @@ import {EventService} from "../event.service";
 import * as L from "leaflet";
 import {EventPosition} from "../eventposition";
 import {DataService} from "../data.service";
+import { Observable } from 'rxjs/Rx';
+import 'rxjs/add/operator/map';
 
 
 @Component({
@@ -24,13 +26,15 @@ export class ListofeventsComponent implements OnInit, DoCheck {
 
   ngOnInit() {
     if(this.router.url.indexOf('searchByCity')!==-1 && this.nameService.observable!=null){
-      this.nameService.observable.subscribe((x) => {
-        console.log(x.target.value);
-        this.getEventByName(x.target.value);
+      this.nameService.observable.map((event)=>event=event.target.value).debounceTime(500)
+        .distinctUntilChanged()
+        .subscribe((value) => {
+        console.log(value);
+        this.getEventByName(value);
       });
     }
     else if(this.router.url.indexOf('searchByPosition')!==-1){
-      this.dataService.currentData.subscribe((events)=>this.events=events);
+      this.dataService.currentData.debounceTime(1000).distinctUntilChanged().subscribe((events)=>this.events=events);
     }
     else{
       this.getEvents();
