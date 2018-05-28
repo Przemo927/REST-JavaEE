@@ -11,7 +11,7 @@ import java.util.List;
 @NamedQueries({
         @NamedQuery(name="Event.findAll",query = "Select p From Event p"),
         @NamedQuery(name="Event.findAllAndGroupByTime",query="Select p From Event p GROUP BY p.timestamp"),
-        @NamedQuery(name="Event.findByCity",query = "Select p From Event p WHERE p.nameOfCity=:city"),
+        @NamedQuery(name="Event.findByCity",query = "Select p From Event p WHERE p.nameOfCity Like :city"),
         @NamedQuery(name="Event.selectAllCities",query = "Select p.nameOfCity From Event p")
 })
 public class Event implements Serializable {
