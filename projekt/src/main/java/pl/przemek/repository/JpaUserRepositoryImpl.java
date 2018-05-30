@@ -33,12 +33,6 @@ public Integer updateWithoutPassword(User user) {
     return queryUpdateUser.executeUpdate();
 }
 
-    @Override
-    public User get(Class<User> clazz, Long id) {
-        return null;
-    }
-
-
     @RolesAllowed({"admin","user"})
 public List<User> getUserByUsername(String username) {
 	TypedQuery<User> getAllQuery = em.createNamedQuery("User.findByUsername", User.class);
@@ -58,7 +52,7 @@ public boolean checkPresenceOfUserByUsername(String username){
     return true;
 }
     @PermitAll
-    public boolean checkPresenceOfEmail(String email){
+public boolean checkPresenceOfEmail(String email){
         Query query=em.createNativeQuery("SELECT 1 FROM User WHERE email=:email ");
         query.setParameter("email",email);
         List list=query.getResultList();
