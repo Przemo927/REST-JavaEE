@@ -27,7 +27,7 @@
           <div>
         <div class="col col-md-10 col-sm-10">
 
-            <a routerLink="/discovery/{{discovery.id}}"><p>{{discovery.name}}</p></a>
+            <a routerLink="/discovery/{{discovery.id}}"><p style="color: black">{{discovery.name}}</p></a>
           <a href="{{discovery.url}}"><button class="btn btn-default btn-xs">Source</button></a>
         </div>
           <div class="col col-md-1 col-sm-1" >
@@ -37,11 +37,5 @@
     </div>
       </li>
     </ul>
-
-    <!--<ul id="pages" class="pagination" style="display: table;margin-left: auto;margin-right: auto">
-    <li (click)="previousPage()" class="page-item"> <a (click)="changeBackGroundColorOfPage($event)" class="glyphicon glyphicon-chevron-left"></a></li>
-    <li *ngFor="let page of preparedPages" (click)="getDiscoveriesForActualPage(page.numberPage)" class="page-item"><a id={{page.numberPage}} (click)="changeBackGroundColorOfPage($event)" class="page-link">{{page.numberPage}}</a></li>
-    <li (click)="nextPage()" class="page-item"><a (click)="changeBackGroundColorOfPage($event)" class="glyphicon glyphicon-chevron-right"></a></li>
-  </ul>-->
         <router-outlet></router-outlet>
     </div>
