@@ -1,17 +1,10 @@
 package pl.przemek.rest;
 
 
-import pl.przemek.security.ClientResponseFilter;
 import pl.przemek.security.Login;
 import pl.przemek.security.TokenService;
 import pl.przemek.security.TokenStore;
 import pl.przemek.service.UserService;
-
-import java.io.IOException;
-import java.net.URI;
-import java.net.URISyntaxException;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 import javax.inject.Inject;
 import javax.servlet.http.HttpServletRequest;
@@ -22,7 +15,15 @@ import javax.ws.rs.client.Client;
 import javax.ws.rs.client.ClientBuilder;
 import javax.ws.rs.client.Entity;
 import javax.ws.rs.client.WebTarget;
-import javax.ws.rs.core.*;
+import javax.ws.rs.core.MediaType;
+import javax.ws.rs.core.MultivaluedHashMap;
+import javax.ws.rs.core.MultivaluedMap;
+import javax.ws.rs.core.Response;
+import java.io.IOException;
+import java.net.URISyntaxException;
+import java.security.NoSuchAlgorithmException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 import static javax.ws.rs.core.HttpHeaders.AUTHORIZATION;
 import static javax.ws.rs.core.HttpHeaders.LOCATION;
@@ -56,10 +57,10 @@ public class LoginEndPoint {
 
 @Login
 @POST
-public Response login(@FormParam("j_username") String username,@FormParam("j_password") String password) throws IOException, URISyntaxException {
+public Response login(@FormParam("j_username") String username,@FormParam("j_password") String password) throws IOException, URISyntaxException, NoSuchAlgorithmException {
 
-    String encryptedPassword=userService.encryptPassword(password);
-    String token=tokenService.generateToken(username,encryptedPassword);
+    String hashedPassword=userService.hashPassword(password);
+    String token=tokenService.generateToken(username,hashedPassword);
 
     logger.log(Level.INFO, "Generated token is {0}", token);
 

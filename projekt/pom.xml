@@ -129,7 +129,11 @@
             <version>2.0.0-beta.5</version>
             <scope>test</scope>
         </dependency>
-
+        <dependency>
+            <groupId>de.rtner</groupId>
+            <artifactId>PBKDF2</artifactId>
+            <version>1.1.2</version>
+        </dependency>
     </dependencies>
     
   <build>

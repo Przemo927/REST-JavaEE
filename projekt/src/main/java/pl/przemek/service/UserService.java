@@ -4,10 +4,9 @@ import pl.przemek.model.Role;
 import pl.przemek.model.User;
 import pl.przemek.repository.JpaRoleRepository;
 import pl.przemek.repository.JpaUserRepository;
+import pl.przemek.security.PasswordSecurity;
 
 import javax.inject.Inject;
-import java.math.BigInteger;
-import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.util.List;
 
@@ -30,8 +29,8 @@ public class UserService {
         if(user!=null) {
             user.setActive(true);
             String password = user.getPassword();
-            String md5Pass = encryptPassword(password);
-            user.setPassword(md5Pass);
+            String hashedPassword = hashPassword(password);
+            user.setPassword(hashedPassword);
             userRepo.add(user);
             addRole(user);
             return user;
@@ -68,16 +67,9 @@ public class UserService {
         return userRepo.getAll("User.findAll", User.class);
     }
 
-    public String encryptPassword(String password) {
-        MessageDigest digest = null;
-        try {
-            digest = MessageDigest.getInstance("MD5");
-        } catch (NoSuchAlgorithmException e) {
-            e.printStackTrace();
-        }
-        digest.update(password.getBytes());
-        String md5Password = new BigInteger(1, digest.digest()).toString(16);
-        return md5Password;
+    public String hashPassword(String password) throws NoSuchAlgorithmException {
+        PasswordSecurity security=new PasswordSecurity();
+        return security.hashPassword(password);
     }
 
 }
