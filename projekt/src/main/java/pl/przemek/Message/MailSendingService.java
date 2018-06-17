@@ -1,17 +1,20 @@
 package pl.przemek.Message;
 
-import pl.przemek.model.User;
-
+import javax.activation.DataHandler;
+import javax.activation.DataSource;
+import javax.activation.FileDataSource;
 import javax.ejb.ActivationConfigProperty;
 import javax.ejb.MessageDriven;
 import javax.jms.JMSException;
 import javax.jms.Message;
 import javax.jms.MessageListener;
-import javax.mail.MessagingException;
-import javax.mail.Session;
-import javax.mail.Transport;
+import javax.mail.*;
 import javax.mail.internet.InternetAddress;
+import javax.mail.internet.MimeBodyPart;
 import javax.mail.internet.MimeMessage;
+import javax.mail.internet.MimeMultipart;
+import java.io.File;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.Properties;
@@ -42,9 +45,9 @@ public class MailSendingService implements MessageListener {
             Session mailSession= createSession();
         try{
             MessageWrapper msg = message.getBody(MessageWrapper.class);
-            javax.mail.Message mailMessage=createMailMessage(mailSession,msg.getMessage(),msg.getUser());
+            javax.mail.Message mailMessage=createMailMessage(mailSession,msg);
             getTransportSMTPAndSendEmail(mailSession,mailMessage,username,password);
-        } catch (MessagingException | JMSException e) {
+        } catch (MessagingException | JMSException | IOException e) {
                 e.printStackTrace();
         }
     }
@@ -65,12 +68,13 @@ public class MailSendingService implements MessageListener {
         mailSession.setDebug(true);
         return mailSession;
     }
-    private javax.mail.Message createMailMessage(Session mailSession, String message,User user) throws MessagingException {
+    private javax.mail.Message createMailMessage(Session mailSession, MessageWrapper msg) throws MessagingException, IOException {
         javax.mail.Message mailMessage=new MimeMessage(mailSession);
         mailMessage.setFrom(new InternetAddress(fromEmail));
-        mailMessage.setRecipient(javax.mail.Message.RecipientType.TO,new InternetAddress(user.getEmail()));
-        mailMessage.setContent(message,"text/html");
+        mailMessage.setRecipient(javax.mail.Message.RecipientType.TO,new InternetAddress(msg.getUser().getEmail()));
+        //mailMessage.setContent(message,"text/html");
         mailMessage.setSubject("Email");
+        mailMessage.setContent(createBodyOfEmail(msg.getMessage(),msg.getPublicKey()));
         return mailMessage;
     }
     private void getTransportSMTPAndSendEmail(Session mailSession,javax.mail.Message mailMessage,String username,String password) throws MessagingException {
@@ -78,5 +82,31 @@ public class MailSendingService implements MessageListener {
         transport.connect("smtp.gmail.com",username,password);
         transport.sendMessage(mailMessage,mailMessage.getAllRecipients());
 
+    }
+    private Multipart createBodyOfEmail(String message, String publicKey) throws MessagingException, IOException {
+        Multipart multipart = new MimeMultipart();
+        BodyPart messageBodyPart = new MimeBodyPart();
+        BodyPart messageBodyPart1 = new MimeBodyPart();
+        messageBodyPart.setContent(message,"text/html");
+        File file=createFile(publicKey);
+        DataSource source = new FileDataSource(file);
+        messageBodyPart1.setDataHandler(new DataHandler(source));
+        messageBodyPart1.setFileName("File");
+        multipart.addBodyPart(messageBodyPart);
+        multipart.addBodyPart(messageBodyPart1);
+        return multipart;
+    }
+    private File createFile(String publicKey){
+        File file= null;
+        FileOutputStream outputStream= null;
+        try {
+            file = File.createTempFile("PublicKey",".txt");
+            outputStream = new FileOutputStream(file);
+            outputStream.write(publicKey.getBytes());
+            outputStream.flush();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return file;
     }
 }
