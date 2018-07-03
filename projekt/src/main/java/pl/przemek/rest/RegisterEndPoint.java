@@ -49,8 +49,7 @@ public class RegisterEndPoint {
     @POST
     @Consumes(MediaType.APPLICATION_JSON)
     public void sendMessageToRegistration(@Valid User user) throws NoSuchProviderException, NoSuchAlgorithmException {
-        EmailMessageTemplate template=new EmailMessageTemplate();
-        String message=template.getPreparedMessage(user.getUsername());
+        String message=EmailMessageTemplate.getPreparedMessage(user.getUsername());
         KeyPair keyPair=KeyUtils.generatePairOfKeys();
         String publicKeyAsString=KeyUtils.convertKeyToString(keyPair.getPublic());
         MessageWrapper msg = wrapMessage(message,user,publicKeyAsString);
