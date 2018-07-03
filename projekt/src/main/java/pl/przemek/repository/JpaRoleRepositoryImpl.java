@@ -10,11 +10,8 @@ import javax.persistence.TypedQuery;
 import pl.przemek.model.Role;
 import pl.przemek.model.User;
 @Stateless
-public class JpaRoleRepositoryImpl implements JpaRoleRepository {
+public class JpaRoleRepositoryImpl extends JpaRepository<Role> implements JpaRoleRepository {
 
-	 @PersistenceContext
-	private EntityManager em;
-	
 public void update(Role role,User user){
 	role.getUsers().add(user);
 	em.merge(role);

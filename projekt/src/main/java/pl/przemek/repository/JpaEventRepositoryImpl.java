@@ -13,33 +13,16 @@ import java.util.List;
 @Stateless
 public class JpaEventRepositoryImpl extends JpaRepository<Event> implements JpaEventRepository {
 
-    @PersistenceContext
-    EntityManager em;
-
-    @RolesAllowed({"admin","user"})
-    @Override
-    public void add(Event event)
-    {
-        em.persist(event);
-    }
-
     @RolesAllowed({"admin","user"})
     @Override
     public void remove(Event event) {
         em.remove(em.merge(event));
     }
 
-    @RolesAllowed({"admin","user"})
-    @Override
-    public Event update(Event event) {
-        return em.merge(event);
-    }
-
     @Override
     public List<Event> getAllAndGroupBy() {
         return null;
     }
-
 
     @RolesAllowed({"admin","user"})
     @Override
