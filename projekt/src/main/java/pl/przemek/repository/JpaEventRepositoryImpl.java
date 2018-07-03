@@ -45,7 +45,7 @@ public class JpaEventRepositoryImpl extends JpaRepository<Event> implements JpaE
     @Override
     public List<Event> getByCity(String city) {
         TypedQuery<Event> getEventByCity=em.createNamedQuery("Event.findByCity",Event.class);
-        getEventByCity.setParameter("city",city);
+        getEventByCity.setParameter("city",city+"%");
         return getEventByCity.getResultList();
     }
 
