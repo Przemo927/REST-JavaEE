@@ -54,14 +54,13 @@ public class EventService {
         return getListOfEventInsideDistanceBufor(latCoordinate,lngCoordinate,distance,lisOfEvents);
     }
     List<Event> getListOfEventInsideDistanceBufor(double latCoordinate, double lngCoordinate, int distance, List<Event> listOfEvent){
-        List<Event> listOfEventAfterChecking=listOfEvent.stream().parallel().filter(event->checkingDistance(latCoordinate,lngCoordinate,distance,event.getEventPosition()))
+        return listOfEvent.stream().parallel().filter(event->checkingDistance(latCoordinate,lngCoordinate,distance,event.getEventPosition()))
         .collect(Collectors.toList());
-        return listOfEventAfterChecking;
     }
     boolean checkingDistance(double latCoordinate, double lngCoordinate, double distance, List<EventPosition> listOfEventPosition){
         double computedDistance;
         for(int i=0;i<listOfEventPosition.size();i++){
-            computedDistance=formulaToComputeDistance(latCoordinate,lngCoordinate,listOfEventPosition.get(i).getxCoordinate(),listOfEventPosition.get(i).getyCoordinate());
+            computedDistance=computeDistance(latCoordinate,lngCoordinate,listOfEventPosition.get(i).getxCoordinate(),listOfEventPosition.get(i).getyCoordinate());
             if(distance>computedDistance){
                 return true;
             }
@@ -69,7 +68,7 @@ public class EventService {
 
         return false;
     }
-    double formulaToComputeDistance(double latCoordinateGivenByUser, double lngCoordinateGivenByUser,double latCoordinateOfEvent, double lngCoordinateOfEvent){
+    double computeDistance(double latCoordinateGivenByUser, double lngCoordinateGivenByUser,double latCoordinateOfEvent, double lngCoordinateOfEvent){
         return Math.sqrt(Math.pow(latCoordinateGivenByUser-latCoordinateOfEvent,2)+Math.pow(Math.cos((latCoordinateGivenByUser*Math.PI)/180)*(lngCoordinateOfEvent-lngCoordinateGivenByUser),2))*40075.704/360;
     }
 
