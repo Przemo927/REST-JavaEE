@@ -25,7 +25,7 @@ public class UserService {
     }
 
 
-    public User addUser(User user) throws Exception {
+    public void addUser(User user) throws Exception {
         if(user!=null) {
             user.setActive(true);
             String password = user.getPassword();
@@ -33,9 +33,7 @@ public class UserService {
             user.setPassword(hashedPassword);
             userRepo.add(user);
             addRole(user);
-            return user;
         }
-        return null;
     }
 
     void addRole(User user) throws Exception {
