@@ -2,8 +2,10 @@ package pl.przemek.model;
 
 
 public enum EnumRegex {
-    TWO_WORDS("\\S+\\s+\\S+"),
-    MINIMUM_ONE_WHITE_SPACE("//s+");
+    MINIMUM_TWO_WORDS("^(\\b[\\w]+\\b\\s?){2,}$"),
+    WHITE_SPACES("\\s+"),
+    NON_WORD_CHARACTER_INSIDE_WORD("[\\w]+(?=[^\\w\\s]).[\\w]+"),
+    NON_WORD_CHARACTER("(?=[^\\w\\s]).");
 
     private String regex;
 
