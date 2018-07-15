@@ -13,7 +13,7 @@ public class PropertiesFileUtilsTest {
     private String directoryTwo="InformationEmail.properties";
 
     @Test
-    public void getValue() throws Exception {
+    public void shouldReturnValueFromLoadedPropertiesFile() throws Exception {
         assertTrue("testtest".equals(PropertiesFileUtils.getValue(directoryOne,"pl.przemek.polish.signs")));
         assertTrue("smtp.gmail.com".equals(PropertiesFileUtils.getValue(directoryOne,"mail.smtp.host")));
         assertTrue("javax.net.ssl.SSLSocketFactory".equals(PropertiesFileUtils.getValue(directoryTwo,"mail.smtp.SocketFactory.class")));

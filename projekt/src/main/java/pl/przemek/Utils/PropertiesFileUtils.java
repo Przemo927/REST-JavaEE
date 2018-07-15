@@ -38,5 +38,18 @@ public class PropertiesFileUtils {
         }
         return value;
     }
+    public static Properties getProperties(String directory){
+        if(property==null)
+            property=new Properties();
+        ClassLoader loader = Thread.currentThread().getContextClassLoader();
+        try(InputStream resourceStream = loader.getResourceAsStream(directory)
+        ){
+            property.load(resourceStream);
+
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return property;
+    }
 
 }

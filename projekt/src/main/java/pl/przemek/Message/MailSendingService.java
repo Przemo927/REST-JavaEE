@@ -1,5 +1,7 @@
 package pl.przemek.Message;
 
+import pl.przemek.Utils.PropertiesFileUtils;
+
 import javax.activation.DataHandler;
 import javax.activation.DataSource;
 import javax.activation.FileDataSource;
@@ -31,16 +33,16 @@ public class MailSendingService implements MessageListener {
     private String username;
     private String password;
     private final String emailProperties= "/InformationEmail.properties";
-    private final String gmailProperties= "/loginInformationGmail.properties";
+    private final String informationSenderProperties= "/loginInformationGmail.properties";
     private Properties propsEmail;
-    private Properties propsGmail;
+    private Properties propsInformationSender;
     @Override
     public void onMessage(Message message) {
-            propsEmail=openPropertiesFile(emailProperties);
-            propsGmail=openPropertiesFile(gmailProperties);
-            fromEmail=propsGmail.getProperty("fromEmail");
-            username=propsGmail.getProperty("username");
-            password=propsGmail.getProperty("password");
+            propsEmail= PropertiesFileUtils.getProperties(emailProperties);
+            propsInformationSender=PropertiesFileUtils.getProperties(informationSenderProperties);
+            fromEmail=propsInformationSender.getProperty("fromEmail");
+            username=propsInformationSender.getProperty("username");
+            password=propsInformationSender.getProperty("password");
 
             Session mailSession= createSession();
         try{
@@ -51,18 +53,6 @@ public class MailSendingService implements MessageListener {
                 e.printStackTrace();
         }
     }
-    private Properties openPropertiesFile(String fileName){
-        Properties property=new Properties();
-        ClassLoader loader = Thread.currentThread().getContextClassLoader();
-        try(InputStream resourceStream = loader.getResourceAsStream(fileName)
-        ){property.load(resourceStream);
-
-
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-        return property;
-    }
     private Session createSession(){
         Session mailSession= Session.getInstance(propsEmail,null);
         mailSession.setDebug(true);
@@ -72,7 +62,6 @@ public class MailSendingService implements MessageListener {
         javax.mail.Message mailMessage=new MimeMessage(mailSession);
         mailMessage.setFrom(new InternetAddress(fromEmail));
         mailMessage.setRecipient(javax.mail.Message.RecipientType.TO,new InternetAddress(msg.getUser().getEmail()));
-        //mailMessage.setContent(message,"text/html");
         mailMessage.setSubject("Email");
         mailMessage.setContent(createBodyOfEmail(msg.getMessage(),msg.getPublicKey()));
         return mailMessage;
