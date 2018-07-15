@@ -1,7 +1,7 @@
 package pl.przemek.config;
 
 
-import pl.przemek.Store.ProhibitedWordsStore;
+import pl.przemek.Store.ForbiddenWordsStore;
 import pl.przemek.model.ForbiddenWords;
 
 import javax.annotation.PostConstruct;
@@ -20,7 +20,7 @@ public class LoadForbiddenWords {
     @PersistenceContext
     private EntityManager em;
     @Inject
-    private ProhibitedWordsStore store;
+    private ForbiddenWordsStore store;
 
     @PostConstruct
     public void loadWords(){
