@@ -1,5 +1,7 @@
 package pl.przemek.model;
 
+import pl.przemek.validation.ForbiddenWord;
+
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
@@ -16,7 +18,7 @@ public class Comment implements Serializable {
     @Column(name = "comment_id",nullable = false, unique = true)
     private long id;
 
-
+    @ForbiddenWord
     @Size(max=250)
     @NotNull
     @Column(nullable = false, length=250)

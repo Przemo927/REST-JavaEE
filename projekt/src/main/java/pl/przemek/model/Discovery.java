@@ -1,6 +1,7 @@
 package pl.przemek.model;
 
 import org.hibernate.validator.constraints.URL;
+import pl.przemek.validation.ForbiddenWord;
 import pl.przemek.validation.URLUnique;
 
 import java.io.Serializable;
@@ -29,6 +30,7 @@ public class Discovery implements Serializable {
     private String name;
 	@Size(max=250)
     @NotNull
+    @ForbiddenWord
 	@Column(nullable = false, length=250)
     private String description;
     @Size(max=200)

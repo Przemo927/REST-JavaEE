@@ -8,6 +8,7 @@ import pl.przemek.wrapper.ResponseMessageWrapper;
 import javax.inject.Inject;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
+import javax.validation.Valid;
 import javax.ws.rs.*;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
@@ -47,7 +48,7 @@ public class CommentEndPoint {
     @POST
     @Consumes(MediaType.APPLICATION_JSON)
     @Path("/{id}")
-    public Response addComment(Comment comment, @PathParam("id") long discoveryId) throws IOException {
+    public Response addComment(@Valid Comment comment, @PathParam("id") long discoveryId) throws IOException {
         request.setCharacterEncoding("UTF-8");
         HttpSession session = request.getSession(false);
         User user = (User) session.getAttribute("user");
