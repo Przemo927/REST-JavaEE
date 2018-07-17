@@ -2,7 +2,7 @@ package pl.przemek.model;
 
 
 public enum EnumRegex {
-    MINIMUM_TWO_WORDS("^(\\b[\\w]+\\b\\s?){2,}$"),
+    MINIMUM_TWO_WORDS("^(\\b[\\w]+\\b([,.?!]\\s)?\\s?){2,}$"),
     WHITE_SPACES("\\s+"),
     NON_WORD_CHARACTER_INSIDE_WORD("[\\w]+(?=[^\\w\\s]).[\\w]+"),
     NON_WORD_CHARACTER("(?=[^\\w\\s]).");
