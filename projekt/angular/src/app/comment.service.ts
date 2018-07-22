@@ -10,10 +10,10 @@ import { Comment } from './comment';
 export class CommentService {
 
   constructor(private http: HttpClient) { }
-  
+
   private commentUrl='http://localhost:8080/projekt/api/comment';
-  
-  
+
+
   private handleError<T> (operation = 'operation', result?: T) {
   return (error: any): Observable<T> => {
 
@@ -29,26 +29,26 @@ export class CommentService {
 }
 
 
-  
+
   getComments(): Observable<Comment[]> {
   return this.http.get<Comment[]>(this.commentUrl)
   .pipe(tap(comment => console.log(`fetched comments`)),
       catchError(this.handleError<Comment[]>('getComments',[]))
     );
   }
-  
+
   getCommentsById(id:number):Observable<Comment[]>{
     return this.http.get<Comment[]>(this.commentUrl+'/'+id)
     .pipe(tap(comment=>console.log('fetched comments for discovery id='+id)),
     catchError(this.handleError<Comment[]>('getCommentById',[]))
     );
   }
-  
-  
-   addComment (comment: Comment,id:number): Observable<Comment> {
-  return this.http.post<Comment>(this.commentUrl+'/'+id,comment).pipe(
+
+
+   addComment (comment: Comment,id:number): Observable<any> {
+  return this.http.post<any>(this.commentUrl+'/'+id,comment).pipe(
     tap(comment => console.log('Comment added')),
-    catchError(this.handleError<Comment>('addComment'))
+    catchError(this.handleError<any>('addComment'))
   );
 }
 }
