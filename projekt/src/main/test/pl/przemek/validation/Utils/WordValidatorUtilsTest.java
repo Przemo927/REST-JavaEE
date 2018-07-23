@@ -50,5 +50,17 @@ public class WordValidatorUtilsTest {
     public void shouldSplitContentByNonWordCharacter(String word, String[] afterSplit) throws Exception {
         assertEquals(Arrays.asList(afterSplit),WordValidatorUtils.splitWordByNonWordCharacter(word));
     }
+    public Object[] deleteLastCharacterIfIsNonWordCharacter(){
+        return $(new Object[]{"test.","test"},
+                new Object[]{"abcd","abcd"},
+                new Object[]{"abcd*","abcd"},
+                new Object[]{"test.","test"},
+                new Object[]{"abcd_","abcd_"});
+    }
+    @Test
+    @Parameters(method = "deleteLastCharacterIfIsNonWordCharacter")
+    public void shouldDeleteLastCharacterIfIsNonWordCharacter(String wordInpit, String wordOutput){
+        assertEquals(wordOutput,WordValidatorUtils.deleteLastCharcterIfIsNonWordCharacter(wordInpit));
+    }
 
 }
