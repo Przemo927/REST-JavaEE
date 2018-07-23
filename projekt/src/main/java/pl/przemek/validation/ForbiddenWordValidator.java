@@ -67,6 +67,7 @@ public class ForbiddenWordValidator implements ConstraintValidator<ForbiddenWord
         return false;
     }
     private void addWordToForbiddenList(String word){
+        word=WordValidatorUtils.deleteLastCharcterIfIsNonWordCharacter(word);
         if(!forbiddenWords.contains(word)) {
             if ("".equals(forbiddenWords))
                 forbiddenWords += word;

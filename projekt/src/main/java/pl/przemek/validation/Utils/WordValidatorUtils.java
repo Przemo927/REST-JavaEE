@@ -19,5 +19,11 @@ public class WordValidatorUtils {
     public static List<String> splitWordByNonWordCharacter(String word){
         return Arrays.asList(word.split(EnumRegex.NON_WORD_CHARACTER.getRegex()));
     }
+    public static String deleteLastCharcterIfIsNonWordCharacter(String word){
+        String lastCharacter= String.valueOf(word.charAt(word.length()-1));
+        if(lastCharacter.matches(EnumRegex.NON_WORD_CHARACTER.getRegex()))
+            word=word.substring(0,word.length()-1);
+        return word;
+    }
 
 }
