@@ -1,4 +1,4 @@
 <div [id]="idContainer">
-  <div style="order: 1"><input #input id="input" type="type" (click)="emit()" (keydown)="hideError()" (keyup)="emit()" [(ngModel)]="value" class="form-control" [placeholder]="placeholder" required autofocus/></div>
+  <div style="order: 1"><input #input id="input" type="type" (change)="emit();hideError()" [(ngModel)]="value" class="form-control" [placeholder]="placeholder" required autofocus/></div>
   <div style="order: 2"><span *ngIf="message" id="message">{{message}}</span></div>
 </div>

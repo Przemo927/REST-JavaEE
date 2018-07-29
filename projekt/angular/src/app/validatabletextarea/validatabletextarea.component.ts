@@ -42,5 +42,11 @@ export class ValidatabletextareaComponent implements OnInit, AfterViewInit {
  emit(){
    this.changeEvent.emit(this.value);
  }
+  hideError(){
+    if(this.textArea.classList.contains("highlight")) {
+      this.textArea.classList.remove("highlight");
+      this.message = undefined;
+    }
+  }
 
 }

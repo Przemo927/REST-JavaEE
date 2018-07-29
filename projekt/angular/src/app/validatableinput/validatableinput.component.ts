@@ -42,8 +42,10 @@ export class ValidatableinputComponent implements OnInit, AfterViewInit {
     this.message=message;
   }
   hideError(){
-    this.input.style.animation='empty';
-    this.message=undefined;
+    if(this.input.classList.contains("highlight")) {
+      this.input.classList.remove("highlight");
+      this.message = undefined;
+    }
   }
 
 }
