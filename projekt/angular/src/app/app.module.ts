@@ -38,6 +38,12 @@ import { ReactiveFormsModule} from '@angular/forms';
 import { SearchbypositionComponent } from './searchbyposition/searchbyposition.component';
 import { DataService } from './data.service';
 import { PagesComponent } from './pages/pages.component';
+import { ValidatabletextareaComponent } from './validatabletextarea/validatabletextarea.component';
+import {EncryptedService} from "./encrypted.service";
+import {DiscoveriesEncryptedComponent} from "./discoveries/discoveriesencrypted.component";
+import {EncryptedComponent} from "./encrypted/encrypted.component";
+import {KeyService} from "./key.service";
+import { ValidatableinputComponent } from './validatableinput/validatableinput.component';
 
 @NgModule({
   declarations: [
@@ -56,6 +62,10 @@ import { PagesComponent } from './pages/pages.component';
     ListofeventsComponent,
     SearchbypositionComponent,
     PagesComponent,
+    ValidatabletextareaComponent,
+    DiscoveriesEncryptedComponent,
+    EncryptedComponent,
+    ValidatableinputComponent,
   ],
   imports: [
     ReactiveFormsModule,
@@ -70,7 +80,7 @@ import { PagesComponent } from './pages/pages.component';
     BootstrapSwitchModule.forRoot(),
     BrowserAnimationsModule
   ],
-  providers: [DiscoveryService, UserService, CommentService, EventService, EventpositionService, CheckUserService, DiscoveryPageService, PageService, NameofcityService, DataService],
+  providers: [DiscoveryService, UserService, CommentService, EventService, EventpositionService, CheckUserService, DiscoveryPageService, PageService, NameofcityService, DataService, EncryptedService, KeyService],
   bootstrap: [AppComponent]
 })
 export class AppModule { }
