@@ -1,4 +1,4 @@
-<div id="container">
-<div style="order: 1"><textarea id="textArea" name="comment" (keyup)="emit()" [(ngModel)]="value" [rows]="rows" class="form-control" [placeholder]="placeholder" required autofocus></textarea></div>
+<div [id]="idContainer">
+<div style="order: 1"><textarea #textArea id="textArea" (keyup)="emit()" [(ngModel)]="value" [rows]="rows" class="form-control" [placeholder]="placeholder" required autofocus></textarea></div>
   <div style="order: 2"><span *ngIf="message" id="message">{{message}}</span></div>
 </div>
