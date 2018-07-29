@@ -24,16 +24,17 @@ public class Discovery implements Serializable {
 	@GeneratedValue(strategy=GenerationType.IDENTITY)
 	@Column(name = "discovery_id",nullable = false, unique = true)
 	private long id;
-	@Size(max=100)
+	@Size(min=1,max=100)
     @NotNull
 	@Column(nullable = false, length=100)
     private String name;
-	@Size(max=250)
+	@Size(min=1,max=250)
     @NotNull
     @ForbiddenWord
 	@Column(nullable = false, length=250)
     private String description;
-    @Size(max=200)
+    @Size(min=1,max=200)
+    @NotNull
     @URL
     @URLUnique
 	@Column(nullable = false, length=200, unique = true)
