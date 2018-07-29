@@ -1,0 +1,23 @@
+.highlight {
+  animation: highlight 2s infinite;
+}
+.highlight:focus{
+  animation: empty;
+}
+@keyframes empty {
+
+}
+@keyframes highlight{
+  from{
+
+  }
+  to{
+    border: 2px solid red;
+  }
+}
+#message {
+  font-size: 0.8em;
+  font-weight: bold;
+  color: red;
+}
+
