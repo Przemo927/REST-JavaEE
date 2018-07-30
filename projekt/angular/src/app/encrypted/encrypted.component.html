@@ -1,0 +1,8 @@
+
+<input name="publicKey" id="inputFile" type="file" (change)="changeEvent($event)"/>
+<div style="margin: auto" id="loadKey">
+  <p>Load key</p>
+  <input readonly="readonly" id="nameOfFile"/>
+  <span (click)="chooseFile()" style="cursor: pointer;" id="nameOfButton"><i class="fas fa-upload"></i>Choose Key</span>
+</div>
+
