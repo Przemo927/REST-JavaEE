@@ -1,11 +1,11 @@
 <nav class="navbar navbar-inverse navbar-fixed-top">
-          <div class="row">
+  <div style="" class="">
 
-        <div class="col-md-2 col-sm-2 col-xs-3 pull-left">
-        <a href="/" class="navbar-brand navbar-left">Aplikacja</a>
+        <div class="pull-left">
+          <a href="/" class="navbar-brand navbar-left">Aplikacja</a>
         </div>
 
-        <div class="col-md-8 col-sm-8 col-xs-7">
+    <div>
         <button id="top" class="navbar-toggle" data-toggle="collapse" data-target=".navHeaderCollapse" style="color:white">
             <span class="glyphicon glyphicon-list"></span>
         </button>
@@ -25,12 +25,13 @@
         </div>
 
      </div>
-              <div class="col-md-2 col-sm-2 col-xs-2 pull-left">
-                  <span id="reload" (click)="reloadCounter()" class="navbar-text glyphicon glyphicon-repeat"></span>
-                  <span style="color:white;margin-top:13px;display: inline-block">{{counter}}</span>
-              </div>
-
-          </div>
+     <div style="margin-left: auto;display: flex;align-items: center;" class="pull-right">
+       <div style="padding: 5px;box-shadow: 0px 0px 4px white;border-radius: 10px">
+         <span id="reload" (click)="reloadCounter()" class="glyphicon glyphicon-repeat"></span>
+         <span style="color:white;">{{counter}}</span>
+       </div>
+     </div>
+  </div>
 </nav>
 <router-outlet></router-outlet>
 <footer class="footer">
