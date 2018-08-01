@@ -6,7 +6,7 @@
         </div>
 
     <div>
-        <button id="top" class="navbar-toggle" data-toggle="collapse" data-target=".navHeaderCollapse" style="color:white">
+        <button (click)="changeWidth()" id="top" class="navbar-toggle" data-toggle="collapse" data-target=".navHeaderCollapse" style="color:white">
             <span class="glyphicon glyphicon-list"></span>
         </button>
         <div class="collapse navbar-collapse navHeaderCollapse">
@@ -33,7 +33,7 @@
      </div>
   </div>
 </nav>
-<router-outlet></router-outlet>
+<router-outlet id="router"></router-outlet>
 <footer class="footer">
     <div class="container">
         <p class="text-center">
