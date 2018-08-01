@@ -1,23 +1,24 @@
-<div class="panel-body">
-  <div style="margin-bottom: 30px">
-          <div class="col col-md-3 col-sm-4">
-            Sort by:
+<div id="main" class="panel-body">
+  <div style="margin-bottom: 30px;align-content:center">
+    <div style="display:inline-flex">
+       <div class="" style="display:inline-flex">
+            <div style="align-self:center;margin-right:5px;white-space:nowrap">Sort by:</div>
             <button class="btn btn-default btn-pressure btn-sensitive" >Time</button>
             <button class="btn btn-default btn-pressure btn-sensitive" >Popularity</button>
-          </div>
-          <div class="col col-md-4 col-sm-2 text-center">
-              <a routerLink="/users" *ngIf="adminRole==true"><button type="button" class="btn btn-default" >List of users</button></a>
-          </div>
-          <div class="col col-md-5 col-sm-6" style="text-align: end">
-             Find: <input type="text" style="display: inline-block;width: auto" class="form-control"  placeholder="Search">
-            <button type="submit" style="display: inline-block" class="btn btn-deafult">Search</button>
-            <button id="showAllDiscoveries" (click)="showAllDiscoveries()" type="submit">Show all discoveries</button>
+       </div>
+       <div class="text-center" style="display:inline-flex;margin-left:1em;margin-right:5em">
+              <a routerLink="/users" ><button *ngIf="adminRole==true" type="button" class="btn btn-default" >List of users</button></a>
+       </div>
+     </div>
+      <div style="text-align:end;display:inline-flex;margin-top:10px">
+            <div style="align-self:center;margin-right:5px">Find:</div> <input type="text" style="margin-right:5px;resize:none !important;border:1px solid #ccc;border-radius:5px;width:202px"  placeholder="Search">
+            <button type="submit" style="" class="btn btn-deafult">Search</button>
       </div>
   </div>
       <div class="container">
 	<ul id="discoveries" class="list-unstyled">
-      <li [style.display]="discoveries.length>5 ? 'none':null" *ngFor="let discovery of discoveries">
-      <div class="row bs-callout bs-callout-primary">
+      <li *ngFor="let discovery of discoveries">
+      <div style="min-width:300px" class="row bs-callout bs-callout-primary">
         <div class="col col-md-1 col-sm-1" >
 
         <span style="width:50px" (click)="addVote(VOTE_UP,discovery.id)" class="glyphicon glyphicon-thumbs-up btn btn-success"></span>
