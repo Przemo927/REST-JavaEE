@@ -21,11 +21,11 @@ export class AppComponent implements OnInit, DoCheck {
     --this.counter;
     if(this.counter==0){
         window.location.href='http://localhost:8080/projekt/api/logout';
-        
+
     }
-    
+
   }, 1000);
-  
+
   }
   changeWidth() {
     console.log(this.nav.offsetHeight);
@@ -41,7 +41,7 @@ export class AppComponent implements OnInit, DoCheck {
     }
     this.navHeight = document.getElementsByTagName("nav")[0].offsetHeight;
     if (this.panelBody !== undefined) {
-      this.panelBody.style.marginTop = this.navHeight;
+      this.panelBody.style.marginTop = this.navHeight-20;
     }
   }
 
@@ -54,5 +54,5 @@ export class AppComponent implements OnInit, DoCheck {
   reloadCounter(){
   this.counter=600;
   }
-  
+
 }
