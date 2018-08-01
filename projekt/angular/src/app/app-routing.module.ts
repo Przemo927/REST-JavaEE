@@ -12,6 +12,7 @@ import { SearcheventbycityComponent } from './searcheventbycity/searcheventbycit
 import { ListofeventsComponent } from './listofevents/listofevents.component';
 import { SearchbypositionComponent } from './searchbyposition/searchbyposition.component';
 import {PagesComponent} from "./pages/pages.component";
+import {DiscoveriesEncryptedComponent} from "./discoveries/discoveriesencrypted.component";
 
 
 
@@ -61,6 +62,10 @@ const routes: Routes = [
     ]
   },
   { path: 'addevent', component: AddeventComponent },
+  { path: 'encrypt', component: DiscoveriesEncryptedComponent,
+    children: [
+      { path: '', component: PagesComponent}
+    ]},
   { path: '', redirectTo: '', pathMatch: 'full' },
   { path: '**', redirectTo: '', pathMatch: 'full' },
 ];
