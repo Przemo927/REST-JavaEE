@@ -43,19 +43,12 @@ export class DiscoveryComponent implements OnInit {
       this.message='';
         this.getCommentsById();
         let textArea=document.getElementsByName("comment")[0];
-        textArea.classList.remove("highlight");
-        if(response!==null){
-          //need to reload keyframes
-          void textArea.offsetWidth;
-
-          if(response.InvalidFieldList!==undefined){
-            this.message=response.InvalidFieldList.comment;
-            this.messageRef.setWrong();
-            this.messageRef.setValidationMessage(this.message);
-          }
+        if(response!==null && response.InvalidFieldList!==undefined){
+          this.message=response.InvalidFieldList.comment;
+          this.messageRef.setWrong();
+          this.messageRef.setValidationMessage(this.message);
         }
-    }
-      );
+    });
   }
 
   addVote(voteType,id){

@@ -41,7 +41,7 @@
     <div class="col-md-8 col-md-offset-2" *ngIf="comment">
         <form class="form-signin">
           <h2 class="form-signin-heading">Add new comment</h2>
-          <app-validatabletextarea (changeEvent)="assignComment($event)" positionMessage="above" placeholder="Write comment" rows="5"></app-validatabletextarea>
+          <app-validatabletextarea name="comment" (changeEvent)="assignComment($event)" positionMessage="above" placeholder="Write comment" rows="5"></app-validatabletextarea>
           <button (click)="addComment()" class="btn btn-lg btn-primary btn-block" type="submit">Add</button>
         </form>
     </div>
