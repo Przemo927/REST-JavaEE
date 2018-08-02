@@ -4,6 +4,47 @@
   box-shadow:none;
   border-color:transparent;
 }
+#main > div:nth-child(1) {
+  margin-bottom: 30px;
+  align-content: center;
+}
+  #main > div:nth-child(1) > div:nth-child(1) {
+    display:inline-flex;
+  }
+#TextOne {
+  align-self: center;
+  margin-right: 5px;
+  white-space: nowrap;
+}
+#listOfUsers {
+  display: inline-flex;
+  margin-left: 1em;
+  margin-right: 3em;
+}
+#search {
+  text-align: end;
+  display: inline-flex;
+  margin-top: 10px;
+}
+  #search > div {
+    align-self: center;
+    margin-right: 5px;
+  }
+  #search > input {
+    margin-right: 5px;
+    resize: vertical;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    width: 100%;
+    min-width:100px;
+  }
+#button {
+  background-color: white;
+  border: 1px solid #ccc;
+}
+#button:hover{
+  background-color:#ccc;
+}
 
 
 

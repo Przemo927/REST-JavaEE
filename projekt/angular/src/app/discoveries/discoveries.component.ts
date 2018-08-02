@@ -38,7 +38,7 @@ export class DiscoveriesComponent implements OnInit, DoCheck {
         disc.id=i;
         disc.url='http://url'+i+'.pl';
         disc.description='spoko spoko spoko'+i;
-        disc.name='Name name'+i;
+    disc.name ='Name name name name name name name name Name name name name name name name name'+i;
         this.discoveries.push(disc);
       }
     this.checkUserService.getUserInformation().subscribe(
