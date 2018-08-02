@@ -1,6 +1,12 @@
-/*
-#findByPosition {
-  pointer-events: none;
-  opacity:0.5;
+@media (max-width: 750px) {
+  #findByPosition {
+    width: 90% !important;
+  }
 }
-*/
+#findByPosition {
+  height: 300px;
+  margin-top:10px !important;
+  text-align:center;
+  margin: 0 auto;
+  width: 760px;
+}

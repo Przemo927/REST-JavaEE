@@ -36,6 +36,7 @@ export class AppComponent implements OnInit, DoCheck {
       this.navHeight = this.nav.offsetHeight;
     }
     let panelBody = document.getElementById("main");
+    console.log(panelBody);
     if (this.panelBody === undefined && panelBody !== undefined && panelBody !== null) {
       this.panelBody=document.getElementById("main");
     }
