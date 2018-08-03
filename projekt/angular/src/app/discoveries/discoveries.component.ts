@@ -29,18 +29,11 @@ export class DiscoveriesComponent implements OnInit, DoCheck {
   private firstIndexOfHidden=1;
 
   ngDoCheck() {
-
+    if(this.dataService.currentData!==undefined) {
+      this.dataService.currentData.subscribe((discoveries) => this.discoveries = discoveries);
+    }
   }
   ngOnInit() {
-  let i=0;
-  for(i=0;i<10;i++){
-        let disc=new Discovery();
-        disc.id=i;
-        disc.url='http://url'+i+'.pl';
-        disc.description='spoko spoko spoko'+i;
-    disc.name ='Name name name name name name name name Name name name name name name name name'+i;
-        this.discoveries.push(disc);
-      }
     this.checkUserService.getUserInformation().subscribe(
       information => {
         if (information['role'] === 'admin') {
@@ -51,7 +44,7 @@ export class DiscoveriesComponent implements OnInit, DoCheck {
   }
 
   getDiscoveries(): void {
-    
+
     this.discoveryService.getDiscoveries().subscribe(discoveries => this.discoveries = discoveries);
   }
 
