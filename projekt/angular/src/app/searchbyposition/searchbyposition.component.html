@@ -1,6 +1,6 @@
-<div style="margin-bottom: 10px" class="">
-  <h2 class="text-center" style="margin-bottom:1em;white-space:nowrap;min-width:250px">Find By Position</h2>
-  <div style="width: 100%;text-align: center">Distance From Your Position [km]: <input (keydown)="maksimumValue()" class="text-center" type="text" min="0" value="0" maxlength="4" [(ngModel)]="distance" name="distance"/></div>
-  <div id="findByPosition" class="img-rounded" [ngModel]="addLayerToMap()" ngDefaultControl></div>
+<div style="margin-bottom: 10px">
+  <h2 class="text-center">Find By Position</h2>
+  <div id="findByPositionText">Distance From Your Position [km]: <input (keydown)="maksimumValue()" class="text-center" type="text" min="0" value="0" maxlength="4" [(ngModel)]="distance" name="distance"/></div>
+  <div id="findByPositionMap" class="img-rounded" [ngModel]="addLayerToMap()" ngDefaultControl></div>
 </div>
 <router-outlet></router-outlet>

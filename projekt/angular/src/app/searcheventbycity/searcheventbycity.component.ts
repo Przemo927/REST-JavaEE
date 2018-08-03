@@ -28,7 +28,6 @@ export class SearcheventbycityComponent implements OnInit {
   }
 
   public sendNameToComponent(nameOfCity:string){
-    console.log('Przemek');
     this.router.navigate([{outlets: {primary: 'searchByCity', events: nameOfCity}}],
       {relativeTo: this.route,skipLocationChange: true});
   }

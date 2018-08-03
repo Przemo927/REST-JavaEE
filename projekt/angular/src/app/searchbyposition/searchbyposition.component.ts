@@ -63,7 +63,7 @@ export class SearchbypositionComponent implements OnInit,DoCheck {
 
   addLayerToMap(){
     if(this.myMap==undefined){
-      this.myMap=L.map('findByPosition',{center: [52.00, 19.00],zoom: 5});
+      this.myMap=L.map('findByPositionMap',{center: [52.00, 19.00],zoom: 5});
       L.tileLayer('http://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', { maxZoom: 18, attribution: '...' }).addTo(this.myMap);
       this.myMap.on('click',(e)=> {
         this.addMarker(e);

@@ -1,14 +1,13 @@
-    <div id="main" class="row" style="margin-top:10px;min-width:250px">
+    <div id="main" style="margin-top:10px;min-width:250px">
     <div style="text-align:center" class="container-fluid">
-    <button style="margin-bottom:5px;width:130px" [ngStyle]="positionStyle" (click)="searchByPosition()" routerLink="searchByPosition" class="btn btn-primary">Find By Position</button>
-    <button style="margin-bottom:5px;width:130px" [ngStyle]="cityStyle" (click)="searchByCity()" routerLink="searchByCity" class="btn btn-warning">Find By City</button>
-    <button style="margin-bottom:5px;width:130px" [ngStyle]="allStyle" (click)="showAllEvents()" routerLink="listOfAllEvents" class="btn btn-success">Show All Events</button>
+    <button [ngStyle]="positionStyle" (click)="searchByPosition()" routerLink="searchByPosition" class="btn btn-primary">Find By Position</button>
+    <button [ngStyle]="cityStyle" (click)="searchByCity()" routerLink="searchByCity" class="btn btn-warning">Find By City</button>
+    <button [ngStyle]="allStyle" (click)="showAllEvents()" routerLink="listOfAllEvents" class="btn btn-success">Show All Events</button>
     </div>
 </div>
-
-    <div class="row">
+    <div>
       <router-outlet></router-outlet>
-        </div>
+    </div>
 
 
 

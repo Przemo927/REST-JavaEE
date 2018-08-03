@@ -1,0 +1,12 @@
+input[name="nameOfCity"] {
+  margin: auto;
+  min-width: 250px;
+  max-width: 400px;
+}
+@media (max-width: 420px) {
+  input[name="nameOfCity"] {
+    width: 90%;
+    margin: auto;
+  }
+
+}
