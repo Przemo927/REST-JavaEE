@@ -41,7 +41,7 @@ export class AppComponent implements OnInit, DoCheck {
     setInterval(() => {
       --this.counter;
       if (this.counter == 0) {
-        window.location.href = BaseUrl.development + EndPoint.logout;
+        window.location.href = window.location.protocol + "//" + BaseUrl.development + EndPoint.logout;
 
       }
 
