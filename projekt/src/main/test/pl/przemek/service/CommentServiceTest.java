@@ -11,9 +11,13 @@ import pl.przemek.model.Comment;
 import pl.przemek.model.Discovery;
 import pl.przemek.repository.JpaCommentRepository;
 import pl.przemek.repository.JpaDiscoveryRepository;
+import pl.przemek.repository.inMemoryRepository.JpaCommentRepositoryInMemoryImpl;
+import pl.przemek.repository.inMemoryRepository.JpaDiscoveryRepositoryInMemoryImpl;
+
+import java.util.List;
 
 import static junitparams.JUnitParamsRunner.$;
-import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
 import static org.mockito.AdditionalMatchers.not;
 import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.ArgumentMatchers.anyString;
@@ -36,26 +40,51 @@ public class CommentServiceTest {
     @Rule
     public ExpectedException thrown=ExpectedException.none();
 
+    private void createObjectOfCommentServiceWithInMemoryLayer(){
+        commentRepo=new JpaCommentRepositoryInMemoryImpl();
+        discRepo=new JpaDiscoveryRepositoryInMemoryImpl();
+        commentService=new CommentService(commentRepo,discRepo);
+    }
     @Test
-    public void shouldExecuteAddMethodOfCommentRepo() throws Exception {
+    public void shouldAddCommentWithParentDiscovery() throws Exception {
+        createObjectOfCommentServiceWithInMemoryLayer();
+        Comment comment=new Comment();
+        int amountOfDiscoveriesBeforeAdd=Integer.valueOf(String.valueOf(discRepo.getQuantityOfDiscoveries()));
+        Discovery discovery=new Discovery();
+        discovery.setId(123);
 
-        Comment comment=mock(Comment.class);
-        Discovery discovery=mock(Discovery.class);
-        when(discRepo.get(anyLong())).thenReturn(discovery);
-        commentService.addComment(comment,anyLong());
+        discRepo.add(discovery);
 
-        verify(commentRepo).add(comment);
+        commentService.addComment(comment,123);
+        assertTrue(comment.getDiscovery()!=null);
+        assertTrue(comment.getDiscovery().getId()==123);
+        assertTrue(commentRepo.getAll("",Comment.class).size()==amountOfDiscoveriesBeforeAdd+1);
+        assertTrue(commentRepo.getAll("",Comment.class).contains(comment));
     }
 
     public Object[] commentDiscovery(){
-        return $(new Object[]{mock(Comment.class),null},new Object[]{null,mock(Discovery.class)},new Object[]{null,null});
+        return $(new Object[]{new Comment(),1234},new Object[]{null,4321},new Object[]{null,1234});
     }
     @Test
     @Parameters(method = "commentDiscovery")
-    public void shouldNotAddCommentWhenCommentOrDiscoveryIsNull(Comment comment,Discovery discovery) throws Exception {
-        when(discRepo.get(anyLong())).thenReturn(discovery);
-        commentService.addComment(comment,anyLong());
-        verify(commentRepo,never()).add(comment);
+    public void shouldNotAddCommentWhenCommentIsNullOrAndDiscoveryDidNotFind(Comment comment,long discoveryId) throws Exception {
+        createObjectOfCommentServiceWithInMemoryLayer();
+        ((JpaDiscoveryRepositoryInMemoryImpl)discRepo).setListOfDiscoveries(removeDiscoveryById(1234,discRepo.getAll("",Discovery.class)));
+        Discovery disc=new Discovery();
+        disc.setId(4321);
+        discRepo.add(disc);
+
+        int amountOfComents=commentRepo.getAll(null,null).size();
+        commentService.addComment(comment,discoveryId);
+        assertTrue(commentRepo.getAll("",Comment.class).size()==amountOfComents);
+    }
+    private List<Discovery> removeDiscoveryById(long id, List<Discovery> list){
+        for(int i=0;i<list.size();i++){
+            Discovery disc=list.get(i);
+            if(disc.getId()==id)
+                list.remove(disc);
+        }
+        return list;
     }
 
     @Test
@@ -65,49 +94,14 @@ public class CommentServiceTest {
 
         commentService.addComment(comment,id);
 
-        verify(discRepo).get(id);
-        verify(discRepo,never()).get(not(eq(id)));
-    }
-
-    @Test
-    public void commentShouldHasAssignDiscovery() throws Exception{
-        Comment comment=new Comment();
-        Discovery discovery=mock(Discovery.class);
-
-        when(discRepo.get(anyLong())).thenReturn(discovery);
-        commentService.addComment(comment,anyLong());
-
-        assertEquals(discovery,comment.getDiscvovery());
-
-    }
-
-    @Test
-    public void shouldDoNothingWhenCommentIsNull() throws Exception{
-        commentService.addComment(null,1L);
-        verify(commentRepo,never()).add(isA(Comment.class));
-    }
-    @Test
-    public void shouldDoNothinWhenDiscoveryWasNotFound() throws Exception {
-        Comment comment=mock(Comment.class);
-
-        when(discRepo.get(anyLong())).thenReturn(null);
-        commentService.addComment(comment,1L);
-
-        verify(commentRepo,never()).add(isA(Comment.class));
-    }
-    @Test
-    public void shouldDoNothinWhenDiscoveryWasNotFoundAndCommentIsNull() throws Exception {
-        when(discRepo.get(anyLong())).thenReturn(null);
-
-        commentService.addComment(null,1L);
-
-        verify(commentRepo,never()).add(isA(Comment.class));
+        verify(discRepo).get(Discovery.class,id);
+        verify(discRepo,never()).get(eq(Discovery.class),not(eq(id)));
     }
 
     @Test
     public void shouldExecuteGetAllMethod() throws Exception{
         commentService.getAllComment();
-        verify(commentRepo).getAll();
+        verify(commentRepo).getAll(anyString(),eq(Comment.class));
     }
 
     public Object[] validNames() {
@@ -128,17 +122,6 @@ public class CommentServiceTest {
     }
 
     @Test
-    public void shoulUseTheSameValueOfId() throws Exception {
-        long id=12345;
-
-        commentService.getByDiscoveryId(id);
-
-        verify(commentRepo).getByDiscoveryId(id);
-        verify(commentRepo,never()).getByDiscoveryId(not(eq(id)));
-
-    }
-
-    @Test
     public void shouldExecuteGetByDiscoveryNameMethod() throws Exception {
         commentService.getByDiscoveryName(anyString());
         verify(commentRepo).getByDiscoveryName(anyString());
@@ -154,7 +137,6 @@ public class CommentServiceTest {
         commentService.getByDiscoveryId(id);
         verify(commentRepo,times(1)).getByDiscoveryId(id);
         verify(commentRepo,never()).getByDiscoveryId(not(eq(id)));
-
     }
 
 
