@@ -71,8 +71,8 @@ public class EventServiceTest {
     public void shouldExecuteMethodRemoveOfEventRepository() throws Exception {
         eventService=new EventService(eventRepo);
         Event event=mock(Event.class);
-        when(eventRepo.get(anyLong())).thenReturn(event);
-        eventService.removeEventById(anyLong());
+        when(eventRepo.get(eq(Event.class),anyLong())).thenReturn(event);
+        eventService.removeEventById(1);
         verify(eventRepo).remove(event);
     }
 
@@ -84,15 +84,15 @@ public class EventServiceTest {
     public void shouldUseTheSameValueOfId(long id) throws Exception {
         eventService=new EventService(eventRepo);
         eventService.removeEventById(id);
-        verify(eventRepo,times(1)).get(id);
-        verify(eventRepo,never()).get(not(eq(id)));
+        verify(eventRepo,times(1)).get(Event.class,id);
+        verify(eventRepo,never()).get(eq(Event.class),not(eq(id)));
     }
 
     @Test
     public void shouldExecuteGetMethod() throws Exception {
         eventService=new EventService(eventRepo);
-        eventService.getEvent(anyLong());
-        verify(eventRepo).get(anyLong());
+        eventService.getEvent(1);
+        verify(eventRepo).get(eq(Event.class),anyLong());
     }
 
     @Test
@@ -100,15 +100,15 @@ public class EventServiceTest {
     public void shouldUseTheSameValueOfIdMethodGetEvent(long id) throws Exception {
         eventService=new EventService(eventRepo);
         eventService.getEvent(id);
-        verify(eventRepo,times(1)).get(id);
-        verify(eventRepo,never()).get(not(eq(id)));
+        verify(eventRepo,times(1)).get(Event.class,id);
+        verify(eventRepo,never()).get(eq(Event.class),not(eq(id)));
     }
 
     @Test
     public void shouldExecuteMethodGetAll() throws Exception {
         eventService=new EventService(eventRepo);
         eventService.getAllEvents();
-        verify(eventRepo).getAll();
+        verify(eventRepo).getAll(anyString(),eq(Event.class));
     }
 
     @Test
@@ -131,12 +131,12 @@ public class EventServiceTest {
         verify(eventRepo,never()).getByCity(not(eq(city)));
     }
     @Test
-    public void shouldChangeToUnsignedIntegerWhenDistanceIsLessThanNull() throws Exception{
+    public void shouldChangeToUnsignedIntegerWhenDistanceIsLessThanZero() throws Exception{
         int distance=-100;
         int unsignedDistance=100;
         List listOfEvents=mock(List.class);
         eventService=spy(new EventService(eventRepo));
-        when(eventRepo.getAll()).thenReturn(listOfEvents);
+        when(eventRepo.getAll(anyString(),eq(Event.class))).thenReturn(listOfEvents);
         eventService.getEventByPosition(10.0, 20.0, distance);
         verify(eventService).getListOfEventInsideDistanceBufor(10.0,20.0,unsignedDistance,listOfEvents);
 
@@ -144,7 +144,7 @@ public class EventServiceTest {
     @Test
     public void shouldExecuteMethodGetListOfEventInsideDistanceBuffor() throws Exception {
         eventService=spy(new EventService(eventRepo));
-        when(eventRepo.getAll()).thenReturn(new ArrayList<Event>());
+        when(eventRepo.getAll(null,Event.class)).thenReturn(new ArrayList<Event>());
         eventService.getEventByPosition(anyDouble(), anyDouble(), anyInt());
         verify(eventService,times(1)).getListOfEventInsideDistanceBufor(anyDouble(),anyDouble(),anyInt(),anyList());
     }
@@ -174,7 +174,7 @@ public class EventServiceTest {
         List<EventPosition> listOfPositions=new ArrayList<EventPosition>();
         listOfPositions.add(mock(EventPosition.class));
 
-        when(eventService.formulaToComputeDistance(anyDouble(),anyDouble(),anyDouble(),anyDouble())).thenReturn(difference);
+        when(eventService.computeDistance(anyDouble(),anyDouble(),anyDouble(),anyDouble())).thenReturn(difference);
 
         assertTrue(eventService.checkingDistance(1,1,10,listOfPositions));
 
@@ -190,7 +190,7 @@ public class EventServiceTest {
         List<EventPosition> listOfPositions=new ArrayList<EventPosition>();
         listOfPositions.add(mock(EventPosition.class));
         EventService eventService=spy(new EventService(eventRepo));
-        when(eventService.formulaToComputeDistance(anyDouble(),anyDouble(),anyDouble(),anyDouble())).thenReturn(difference);
+        when(eventService.computeDistance(anyDouble(),anyDouble(),anyDouble(),anyDouble())).thenReturn(difference);
         assertFalse(eventService.checkingDistance(1,1,10,listOfPositions));
     }
 
@@ -201,6 +201,6 @@ public class EventServiceTest {
     @Test
     @Parameters(method = "coordinates")
     public void shouldAlwaysReturnZeroOrPositiveValues(double latCoordinateGivenByUser, double lngCoordinateGivenByUser,double latCoordinateOfEvent, double lngCoordinateOfEvent){
-        assertTrue((eventService.formulaToComputeDistance(latCoordinateGivenByUser, lngCoordinateGivenByUser, latCoordinateOfEvent, lngCoordinateOfEvent)>=0));
+        assertTrue((eventService.computeDistance(latCoordinateGivenByUser, lngCoordinateGivenByUser, latCoordinateOfEvent, lngCoordinateOfEvent)>=0));
     }
 }
