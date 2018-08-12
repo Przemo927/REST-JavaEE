@@ -38,8 +38,8 @@ public class VoteServiceTest {
         User user=mock(User.class);
         Discovery discovery=mock(Discovery.class);
 
-        when(discRepo.get(anyLong())).thenReturn(discovery);
-        when(userRepo.get(anyLong())).thenReturn(user);
+        when(discRepo.get(eq(Discovery.class),anyLong())).thenReturn(discovery);
+        when(userRepo.get(eq(User.class),anyLong())).thenReturn(user);
         Vote vote=voteService.createVote(1,2, VoteType.VOTE_UP);
 
         assertEquals(user, vote.getUser());
@@ -55,8 +55,8 @@ public class VoteServiceTest {
     public void shouldReturnNullIfCommentOrUserAreNull(Discovery discovery, User user, VoteType voteType) throws Exception{
 
 
-        when(userRepo.get(anyLong())).thenReturn(user);
-        when(discRepo.get(anyLong())).thenReturn(discovery);
+        when(userRepo.get(eq(User.class),anyLong())).thenReturn(user);
+        when(discRepo.get(eq(Discovery.class),anyLong())).thenReturn(discovery);
         assertEquals(null,voteService.createVote(1,2, voteType));
     }
 
@@ -114,7 +114,7 @@ public class VoteServiceTest {
         Discovery discovery=mock(Discovery.class);
         Discovery updateDiscovery=mock(Discovery.class);
 
-        when(discRepo.get(anyLong())).thenReturn(discovery);
+        when(discRepo.get(eq(Discovery.class),anyLong())).thenReturn(discovery);
         doReturn(updateDiscovery).when(voteService).createDicovery(isA(Discovery.class));
         voteService.updateDiscovery(1,null,updateVote);
 
@@ -129,7 +129,7 @@ public class VoteServiceTest {
         Discovery discovery=mock(Discovery.class);
         Discovery updateDiscovery=mock(Discovery.class);
 
-        when(discRepo.get(anyLong())).thenReturn(discovery);
+        when(discRepo.get(eq(Discovery.class),anyLong())).thenReturn(discovery);
         doReturn(updateDiscovery).when(voteService).createDicovery(isA(Discovery.class));
         voteService.updateDiscovery(1,oldVote,updateVote);
 
@@ -141,10 +141,10 @@ public class VoteServiceTest {
         voteService=spy(new VoteService(voteRepo,discRepo,userRepo));
         Discovery discovery=mock(Discovery.class);
 
-        when(discRepo.get(anyLong())).thenReturn(discovery);
+        when(discRepo.get(eq(Discovery.class),anyLong())).thenReturn(discovery);
         voteService.updateDiscovery(1,null,null);
 
-        verify(discRepo).get(1);
+        verify(discRepo).get(Discovery.class,1);
         verify(voteService,never()).removeDiscoveryVote(isA(Discovery.class),isA(VoteType.class));
         verify(voteService,never()).addDiscoveryVote(isA(Discovery.class),isA(VoteType.class));
         verify(discRepo,never()).update(isA(Discovery.class));
