@@ -1,9 +1,14 @@
 package pl.przemek.repository.inMemoryRepository;
 
 import pl.przemek.model.Event;
+import pl.przemek.model.EventPosition;
+import pl.przemek.model.User;
 import pl.przemek.repository.JpaEventRepository;
 
+import java.sql.Timestamp;
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Date;
 import java.util.List;
 
 public class JpaEventRepositoryInMemoryImpl implements JpaEventRepository {
@@ -12,6 +17,7 @@ public class JpaEventRepositoryInMemoryImpl implements JpaEventRepository {
 
     public JpaEventRepositoryInMemoryImpl(){
         listOfEvents=new ArrayList<>();
+        populateListOfEvents();
     }
     @Override
     public void add(Event event) {
@@ -35,7 +41,7 @@ public class JpaEventRepositoryInMemoryImpl implements JpaEventRepository {
 
     @Override
     public List<Event> getAll(String nameOfQuery, Class<Event> clazz) {
-        return null;
+        return listOfEvents;
     }
 
     @Override
@@ -45,16 +51,41 @@ public class JpaEventRepositoryInMemoryImpl implements JpaEventRepository {
 
     @Override
     public Event get(Class<Event> clazz, long id) {
+        for(int i=0;i<listOfEvents.size();i++){
+            Event event=listOfEvents.get(i);
+            if(event.getId()==id)
+                return event;
+        }
         return null;
     }
 
     @Override
     public List<Event> getByCity(String city) {
-        return null;
+        List<Event> temporaryLis=new ArrayList<>();
+        listOfEvents.forEach(event -> {
+            if(event.getNameOfCity().equals(city))
+                temporaryLis.add(event);
+        });
+        return temporaryLis;
     }
 
     @Override
     public List<String> getCitiesFromAllEvents() {
-        return null;
+        List<String> temporaryList=new ArrayList<>();
+        listOfEvents.forEach(event -> {
+            temporaryList.add(event.getNameOfCity());
+        });
+        return temporaryList;
+    }
+    private void populateListOfEvents(){
+        for(int i=0;i<10;i++){
+            Event event=new Event();
+            event.setTimestamp(new Timestamp(new Date().getTime()));
+            event.setNameOfCity("name"+i);
+            event.setUser(new User());
+            event.setId(i);
+            event.setEventPosition(Arrays.asList(new EventPosition()));
+            listOfEvents.add(event);
+        }
     }
 }
