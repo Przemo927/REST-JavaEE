@@ -12,6 +12,9 @@ import pl.przemek.model.VoteType;
 import pl.przemek.repository.JpaCommentRepository;
 import pl.przemek.repository.JpaUserRepository;
 import pl.przemek.repository.JpaVoteCommentRepository;
+import pl.przemek.repository.inMemoryRepository.JpaCommentRepositoryInMemoryImpl;
+import pl.przemek.repository.inMemoryRepository.JpaUserRepositoryInMemoryImpl;
+import pl.przemek.repository.inMemoryRepository.JpaVoteCommentRepositoryInMemoryImpl;
 
 import static junitparams.JUnitParamsRunner.$;
 import static org.junit.Assert.*;
@@ -35,32 +38,39 @@ public class VoteCommentServiceTest {
     }
 
     @Test
-    public void shouldReturnVoteWithAssignVoteTypeAndUserAndComment() throws Exception {
-        voteCommentService=new VoteCommentService(userRepo,commentRepo,voteCommentRepo);
-        User user=mock(User.class);
-        Comment comment=mock(Comment.class);
+    public void shouldReturnVoteWithAssignVoteTypeUserAndComment() throws Exception {
+        createVoteCommentServiceObjectWithInMemoryLayer();
+        long userId=1234;
+        User user=new User();
+        user.setId(userId);
+        userRepo.add(user);
+        Comment comment=new Comment();
+        long commentId=4321;
+        comment.setId(commentId);
+        commentRepo.add(comment);
 
-        when(userRepo.get(anyLong())).thenReturn(user);
-        when(commentRepo.get(anyLong())).thenReturn(comment);
-        VoteComment voteComment=voteCommentService.createVote(1,2, VoteType.VOTE_UP);
+        VoteComment voteComment=voteCommentService.createVote(userId,commentId, VoteType.VOTE_UP);
 
         assertEquals(user, voteComment.getUser());
         assertEquals(comment,voteComment.getComment());
         assertEquals(VoteType.VOTE_UP,voteComment.getVoteType());
         assertFalse(VoteType.VOTE_DOWN==voteComment.getVoteType());
     }
-
-    public Object[] commentUserAndVote(){
-        return $(new Object[]{new Comment(),null, VoteType.VOTE_DOWN},new Object[]{null,new User(), VoteType.VOTE_UP},new Object[]{null,null, VoteType.VOTE_UP});
-    }
-    @Test
-    @Parameters(method = "commentUserAndVote")
-    public void shouldReturnNullIfCommentOrUserAreNull(Comment comment, User user, VoteType voteType) throws Exception{
+    private void createVoteCommentServiceObjectWithInMemoryLayer(){
+        userRepo=new JpaUserRepositoryInMemoryImpl();
+        voteCommentRepo=new JpaVoteCommentRepositoryInMemoryImpl();
+        commentRepo=new JpaCommentRepositoryInMemoryImpl();
         voteCommentService=new VoteCommentService(userRepo,commentRepo,voteCommentRepo);
+    }
 
-        when(userRepo.get(anyLong())).thenReturn(user);
-        when(commentRepo.get(anyLong())).thenReturn(comment);
-        assertEquals(null,voteCommentService.createVote(1,1, voteType));
+    @Test
+    public void shouldReturnNullIfCommentOrUserAreNull() throws Exception{
+        createVoteCommentServiceObjectWithInMemoryLayer();
+        VoteType voteType=VoteType.VOTE_UP;
+        long userId=1234;
+        long commentId=4321;
+
+        assertEquals(null,voteCommentService.createVote(userId,commentId, voteType));
     }
 
     public Object[] elements(){
@@ -122,7 +132,7 @@ public class VoteCommentServiceTest {
         Comment comment=mock(Comment.class);
         Comment updateComment=mock(Comment.class);
 
-        when(commentRepo.get(anyLong())).thenReturn(comment);
+        when(commentRepo.get(eq(Comment.class),anyLong())).thenReturn(comment);
         doReturn(updateComment).when(voteCommentService).createComment(isA(Comment.class));
         voteCommentService.updateComment(1,null,updateVote);
 
@@ -141,7 +151,7 @@ public class VoteCommentServiceTest {
         Comment comment1=mock(Comment.class);
 
 
-        when(commentRepo.get(anyLong())).thenReturn(comment);
+        when(commentRepo.get(eq(Comment.class),anyLong())).thenReturn(comment);
         doReturn(comment1).when(voteCommentService).createComment(isA(Comment.class));
         voteCommentService.updateComment(1,oldVote,updateVote);
 
@@ -155,10 +165,10 @@ public class VoteCommentServiceTest {
         VoteCommentService voteCommentService=spy(new VoteCommentService(userRepo,commentRepo,voteCommentRepo));
         Comment comment=mock(Comment.class);
 
-        when(commentRepo.get(anyLong())).thenReturn(comment);
+        when(commentRepo.get(eq(Comment.class),anyLong())).thenReturn(comment);
         voteCommentService.updateComment(1,null,null);
 
-        verify(commentRepo).get(1);
+        verify(commentRepo).get(Comment.class,1);
         verify(voteCommentService,never()).removeCommentVote(isA(Comment.class),isA(VoteType.class));
         verify(voteCommentService,never()).addCommentVote(isA(Comment.class),isA(VoteType.class));
         verify(commentRepo,never()).update(isA(Comment.class));
