@@ -10,8 +10,8 @@ import java.io.Serializable;
 @Entity
 @NamedQueries({
 @NamedQuery(name="Comment.findAll",query="SELECT p FROM Comment p"),
-@NamedQuery(name="Comment.findByDiscoveryName",query="SELECT p FROM Comment p WHERE p.discvovery.name=:name"),
-@NamedQuery(name="Comment.findByDiscoveryId",query="SELECT p FROM Comment p WHERE p.discvovery.id=:id")})
+@NamedQuery(name="Comment.findByDiscoveryName",query="SELECT p FROM Comment p WHERE p.discovery.name=:name"),
+@NamedQuery(name="Comment.findByDiscoveryId",query="SELECT p FROM Comment p WHERE p.discovery.id=:id")})
 public class Comment implements Serializable {
     @Id
     @GeneratedValue(strategy= GenerationType.IDENTITY)
@@ -30,7 +30,7 @@ public class Comment implements Serializable {
 
     @ManyToOne
     @JoinColumn(name = "discovery_id")
-    private Discovery discvovery;
+    private Discovery discovery;
 
     @NotNull
     @Column(nullable = false)
@@ -43,7 +43,7 @@ public class Comment implements Serializable {
     public Comment(Comment comment) {
         this.id = comment.getId();
         this.comment = comment.getComment();
-        this.discvovery=comment.getDiscvovery();
+        this.discovery=comment.getDiscovery();
         this.user = comment.getUser();
         this.upVote = comment.getUpVote();
         this.downVote = comment.getDownVote();
@@ -94,12 +94,12 @@ public class Comment implements Serializable {
         return result;
     }
 
-    public Discovery getDiscvovery() {
-        return discvovery;
+    public Discovery getDiscovery() {
+        return discovery;
     }
 
-    public void setDiscvovery(Discovery discvovery) {
-        this.discvovery = discvovery;
+    public void setDiscovery(Discovery discvovery) {
+        this.discovery = discvovery;
     }
 
     public int getDownVote() {
