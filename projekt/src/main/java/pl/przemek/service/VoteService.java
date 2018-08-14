@@ -11,6 +11,8 @@ import pl.przemek.repository.JpaVoteRepository;
 import javax.inject.Inject;
 import java.sql.Timestamp;
 import java.util.Date;
+import java.util.List;
+import java.util.Optional;
 
 
 public class VoteService {
@@ -44,29 +46,23 @@ public class VoteService {
         }
         return null;
     }
-    Vote createVote(Vote vote){
-        Vote newVote=new Vote(vote);
-        return  newVote;
-    }
-    Discovery createDicovery(Discovery discovery){
-        Discovery newDiscovery=new Discovery(discovery);
-        return newDiscovery;
-    }
+
 
     public void updateVote(long userId, long discoveryId, VoteType newVoteType) {
-        Vote updateVote = null;
+        Vote newVote = null;
         Vote existingVote = null;
-        existingVote = votRepo.getVoteByUserIdDiscoveryId(userId, discoveryId);
-        if (existingVote == null) {
-            updateVote = createVote(userId, discoveryId, newVoteType);
-            votRepo.add(updateVote);
-            updateDiscovery(discoveryId,null,updateVote);
+        List<Vote> listOfVotes = votRepo.getVoteByUserIdDiscoveryId(userId, discoveryId);
+        if (listOfVotes.isEmpty()) {
+            newVote = createVote(userId, discoveryId, newVoteType);
+            votRepo.add(newVote);
+            updateDiscovery(discoveryId,null,newVote);
         } else {
-            updateVote = createVote(existingVote);
-            updateVote.setVoteType(newVoteType);
-            if (!updateVote.equals(existingVote)) {
-                votRepo.update(updateVote);
-                updateDiscovery(discoveryId, existingVote, updateVote);
+            existingVote=listOfVotes.get(0);
+            if (!existingVote.getVoteType().equals(newVoteType)) {
+                newVote = new Vote(existingVote);
+                newVote.setVoteType(newVoteType);
+                votRepo.update(newVote);
+                updateDiscovery(discoveryId, existingVote, newVote);
             }
         }
 
@@ -87,33 +83,33 @@ public class VoteService {
     }
 
     Discovery addDiscoveryVote(Discovery discovery, VoteType voteType) {
-        Discovery copyDiscovery = createDicovery(discovery);
         if (voteType == VoteType.VOTE_UP) {
-            copyDiscovery.setUpVote(copyDiscovery.getUpVote() + 1);
+            discovery.setUpVote(discovery.getUpVote() + 1);
         } else if (voteType == VoteType.VOTE_DOWN) {
-            copyDiscovery.setDownVote(copyDiscovery.getDownVote() + 1);
+            discovery.setDownVote(discovery.getDownVote() + 1);
         }
-        return copyDiscovery;
+        return discovery;
     }
 
     Discovery removeDiscoveryVote(Discovery discovery, VoteType voteType) {
-        Discovery copyDiscovery = createDicovery(discovery);
         if (voteType == VoteType.VOTE_UP) {
-            copyDiscovery.setUpVote(copyDiscovery.getUpVote() - 1);
+            discovery.setUpVote(discovery.getUpVote() - 1);
         } else if (voteType == VoteType.VOTE_DOWN) {
-            copyDiscovery.setDownVote(copyDiscovery.getDownVote() - 1);
+            discovery.setDownVote(discovery.getDownVote() - 1);
         }
-        return copyDiscovery;
+        return discovery;
     }
 
-    public Vote getById(Long id) {
+    public Optional<Vote> getById(Long id) {
         Vote vote = votRepo.get(Vote.class,id);
-        return vote;
+        return Optional.ofNullable(vote);
     }
 
-    public Vote getByUserIdDiscoveryId(Long userId, Long discoveryId) {
-        Vote vote = votRepo.getVoteByUserIdDiscoveryId(userId, discoveryId);
-        return vote;
+    public Optional<Vote> getByUserIdDiscoveryId(Long userId, Long discoveryId) {
+        List<Vote> listOfVotes = votRepo.getVoteByUserIdDiscoveryId(userId, discoveryId);
+        if(listOfVotes.isEmpty())
+            return Optional.empty();
+        return Optional.of(listOfVotes.get(0));
     }
     public void removeByDiscveryId(Long discoveryid) {
         votRepo.removeByDiscoveryId(discoveryid);

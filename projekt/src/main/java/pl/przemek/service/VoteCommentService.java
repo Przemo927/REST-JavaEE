@@ -12,6 +12,7 @@ import pl.przemek.repository.JpaVoteCommentRepository;
 import javax.inject.Inject;
 import java.sql.Timestamp;
 import java.util.Date;
+import java.util.List;
 
 public class VoteCommentService {
 
@@ -45,63 +46,52 @@ public class VoteCommentService {
         }
         return null;
     }
-    VoteComment createVoteFromExistingVote(VoteComment voteComment) {
-        VoteComment vote=new VoteComment(voteComment);
-        return vote;
-    }
-    Comment createComment(Comment comment){
-        Comment newComment=new Comment(comment);
-        return newComment;
-    }
-
     public void updateVote(long userId, long commentId, VoteType newVoteType) {
-        VoteComment updateVote = null;
         VoteComment existingVote = null;
-        existingVote = voteCommentRepo.getVoteByUserIdCommentId(userId, commentId);
-        if (existingVote == null) {
-            updateVote = createVote(userId, commentId, newVoteType);
-            voteCommentRepo.add(updateVote);
-            updateComment(commentId,null,updateVote);
+        VoteComment newVote = null;
+        List<VoteComment> listOfVotes = voteCommentRepo.getVoteByUserIdCommentId(userId, commentId);
+        if (listOfVotes.isEmpty()) {
+            newVote = createVote(userId, commentId, newVoteType);
+            voteCommentRepo.add(newVote);
+            updateComment(commentId,null,newVote);
         } else {
-            updateVote = createVoteFromExistingVote(existingVote);
-            updateVote.setVoteType(newVoteType);
-            if (!existingVote.equals(updateVote)) {
-                voteCommentRepo.update(updateVote);
-                updateComment(commentId, existingVote, updateVote);
+            existingVote=listOfVotes.get(0);
+            if (!existingVote.getVoteType().equals(newVoteType)) {
+                newVote=new VoteComment(existingVote);
+                newVote.setVoteType(newVoteType);
+                voteCommentRepo.update(newVote);
+                updateComment(commentId, existingVote, newVote);
             }
        }
     }
     void updateComment(long commentId, VoteComment oldVote, VoteComment updateVote) {
         Comment comment = commentRepo.get(Comment.class,commentId);
-        Comment updateComment=null;
         if (oldVote == null && updateVote!=null) {
-            updateComment = addCommentVote(comment, updateVote.getVoteType());
-            commentRepo.update(updateComment);
+            comment = addVote(comment, updateVote.getVoteType());
+            commentRepo.update(comment);
         } else if (oldVote != null && updateVote != null) {
-            Comment commentWithRemovedVote = removeCommentVote(comment, oldVote.getVoteType());
-            updateComment = addCommentVote(commentWithRemovedVote, updateVote.getVoteType());
-            commentRepo.update(updateComment);
+            comment = removeVote(comment, oldVote.getVoteType());
+            comment = addVote(comment, updateVote.getVoteType());
+            commentRepo.update(comment);
         }
 
     }
 
-    Comment addCommentVote(Comment comment, VoteType voteType) {
-        Comment copyComment = createComment(comment);
+    Comment addVote(Comment comment, VoteType voteType) {
         if (voteType == VoteType.VOTE_UP) {
-            copyComment.setUpVote(copyComment.getUpVote() + 1);
+            comment.setUpVote(comment.getUpVote() + 1);
         } else if (voteType == VoteType.VOTE_DOWN) {
-            copyComment.setDownVote(copyComment.getDownVote() + 1);
+            comment.setDownVote(comment.getDownVote() + 1);
         }
-        return copyComment;
+        return comment;
     }
 
-    Comment removeCommentVote(Comment comment, VoteType voteType) {
-        Comment copyComment = createComment(comment);
+    Comment removeVote(Comment comment, VoteType voteType) {
         if (voteType == VoteType.VOTE_UP) {
-            copyComment.setUpVote(copyComment.getUpVote() - 1);
+            comment.setUpVote(comment.getUpVote() - 1);
         } else if (voteType == VoteType.VOTE_DOWN) {
-            copyComment.setDownVote(copyComment.getDownVote() - 1);
+            comment.setDownVote(comment.getDownVote() - 1);
         }
-        return copyComment;
+        return comment;
     }
 }
