@@ -5,8 +5,6 @@ import pl.przemek.model.Discovery;
 import javax.annotation.security.PermitAll;
 import javax.annotation.security.RolesAllowed;
 import javax.ejb.Stateless;
-import javax.persistence.EntityManager;
-import javax.persistence.PersistenceContext;
 import javax.persistence.Query;
 import javax.persistence.TypedQuery;
 import java.math.BigInteger;
@@ -50,8 +48,7 @@ public class JpaDiscoveryRepositoryImpl extends JpaRepository<Discovery> impleme
 		Discovery discovery=null;
 		TypedQuery<Discovery> disc = em.createNamedQuery("Discovery.search", Discovery.class);
 		disc.setParameter("name", name);
-		List<Discovery> discoveryResultList=disc.getResultList();
-		return discoveryResultList;
+		return disc.getResultList();
 	
 	}
 	@PermitAll
@@ -59,10 +56,7 @@ public class JpaDiscoveryRepositoryImpl extends JpaRepository<Discovery> impleme
 		Query query=em.createNativeQuery("SELECT 1 FROM Discovery WHERE url=:url");
 		query.setParameter("url",url);
 		List list=query.getResultList();
-		if(list.size()!=0){
-			return false;
-		}
-		return true;
+		return list.size() == 0;
 	}
 	@RolesAllowed({"admin","user"})
 	@Override

@@ -1,25 +1,26 @@
 package pl.przemek.repository;
 
-import java.util.List;
+import pl.przemek.model.User;
 
 import javax.annotation.security.PermitAll;
 import javax.annotation.security.RolesAllowed;
-import javax.ejb.EJBException;
 import javax.ejb.Stateless;
-import javax.persistence.*;
-
-import pl.przemek.model.User;
+import javax.persistence.Query;
+import javax.persistence.TypedQuery;
+import java.util.List;
 
 @Stateless
 public class JpaUserRepositoryImpl extends JpaRepository<User> implements JpaUserRepository  {
 
-@Override
-@PermitAll
-public void add(User user) {
-    em.persist(user);
-	}
     private final static String PRESENCE_OF_USERNAME="SELECT 1 FROM User WHERE username=:username";
     private final static String PRESENCE_OF_EMAIL="SELECT 1 FROM User WHERE email=:email";
+
+    @Override
+    @PermitAll
+    public void add(User user) {
+    em.persist(user);
+	}
+
     @RolesAllowed("admin")
     public Integer updateWithoutPassword(User user) {
         Query queryUpdateUser = em.createNamedQuery("User.editUser");
@@ -30,12 +31,11 @@ public void add(User user) {
         return queryUpdateUser.executeUpdate();
     }
 
-        @RolesAllowed({"admin","user"})
+    @RolesAllowed({"admin","user"})
     public List<User> getUserByUsername(String username) {
         TypedQuery<User> getAllQuery = em.createNamedQuery("User.findByUsername", User.class);
         getAllQuery.setParameter("username",username);
-        List<User> users = getAllQuery.getResultList();
-        return users;
+        return getAllQuery.getResultList();
 
     }
     @PermitAll
@@ -43,19 +43,13 @@ public void add(User user) {
         Query query=em.createNativeQuery(PRESENCE_OF_USERNAME);
         query.setParameter("username",username);
         List list=query.getResultList();
-        if(list.size()!=0){
-            return false;
-        }
-        return true;
+        return list.size() == 0;
     }
-        @PermitAll
+    @PermitAll
     public boolean checkPresenceOfEmail(String email){
-            Query query=em.createNativeQuery(PRESENCE_OF_EMAIL);
-            query.setParameter("email",email);
-            List list=query.getResultList();
-            if(list.size()!=0){
-                return false;
-            }
-            return true;
+        Query query=em.createNativeQuery(PRESENCE_OF_EMAIL);
+        query.setParameter("email",email);
+        List list=query.getResultList();
+        return list.size() == 0;
         }
 }
