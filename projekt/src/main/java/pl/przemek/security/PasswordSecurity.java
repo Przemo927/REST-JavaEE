@@ -7,13 +7,13 @@ import java.security.NoSuchAlgorithmException;
 import java.security.SecureRandom;
 
 public class PasswordSecurity {
-    public String hashPassword(String password) throws NoSuchAlgorithmException {
+    public static String hashPassword(String password) throws NoSuchAlgorithmException {
         if (password == null) return null;
         SimplePBKDF2 crypto = new SimplePBKDF2();
         crypto=fillParameters(crypto,password);
         return crypto.getFormatter().toString(crypto.getParameters());
     }
-    protected SimplePBKDF2 fillParameters(SimplePBKDF2 crypto,String password) throws NoSuchAlgorithmException {
+    protected static SimplePBKDF2 fillParameters(SimplePBKDF2 crypto,String password) throws NoSuchAlgorithmException {
         PBKDF2Parameters params=crypto.getParameters();
         params.setHashCharset("UTF-8");
         params.setHashAlgorithm("HmacSHA1");
@@ -23,7 +23,7 @@ public class PasswordSecurity {
         return crypto;
 
     }
-    protected byte[] generateSalt(int saltSize) {
+    protected static byte[] generateSalt(int saltSize) {
         byte[] salt = new byte[saltSize];
         SecureRandom secureRandom= null;
         try {
