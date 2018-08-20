@@ -8,14 +8,19 @@ import pl.przemek.security.PasswordSecurity;
 
 import javax.inject.Inject;
 import java.security.NoSuchAlgorithmException;
+import java.util.Collections;
 import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 public class UserService {
 
     private JpaUserRepository userRepo;
     private JpaRoleRepository rolRepo;
+    private Logger logger;
     @Inject
-    public UserService(JpaUserRepository userRepo, JpaRoleRepository rolRepo){
+    public UserService(Logger logger,JpaUserRepository userRepo, JpaRoleRepository rolRepo){
+        this.logger=logger;
         this.userRepo=userRepo;
         this.rolRepo=rolRepo;
     }
@@ -24,15 +29,20 @@ public class UserService {
         this.rolRepo=null;
     }
 
-
     public void addUser(User user) throws Exception {
-        if(user!=null) {
-            user.setActive(true);
-            String password = user.getPassword();
-            String hashedPassword = hashPassword(password);
-            user.setPassword(hashedPassword);
-            userRepo.add(user);
-            addRole(user);
+        try {
+            if(user!=null) {
+                user.setActive(true);
+                String password = user.getPassword();
+                String hashedPassword = PasswordSecurity.hashPassword(password);
+                user.setPassword(hashedPassword);
+                userRepo.add(user);
+                addRole(user);
+            }else {
+                logger.log(Level.WARNING,"[UserService] addUser() user is null");
+            }
+        }catch (Exception e){
+            logger.log(Level.SEVERE,"[UserService] addUser()",e);
         }
     }
 
@@ -43,31 +53,55 @@ public class UserService {
             rolRepo.update(role, user);
         }
     }
+
     public User getUserById(long id){
-        return userRepo.get(User.class,id);
+        User user=null;
+        try {
+            user=userRepo.get(User.class,id);
+        }catch (Exception e){
+            logger.log(Level.SEVERE,"[UserService] getUserById() id="+id,e);
+            return null;
+        }
+        return user;
     }
 
     public void removeByUserId(long id) {
-        User user=userRepo.get(User.class,id);
-        if(user!=null)
-            userRepo.remove(user);
+        User user=null;
+        try {
+            user=userRepo.get(User.class,id);
+            if(user!=null)
+                userRepo.remove(user);
+            else logger.log(Level.WARNING,"[UserService] removeByUserId() user wasn't found id="+id);
+        }catch (Exception e){
+            logger.log(Level.SEVERE,"[UserService] removeByUserId()",e);
+        }
     }
 
     public void updateUser(User user){
-        userRepo.update(user);
+        try {
+            userRepo.update(user);
+        }catch (Exception e){
+            logger.log(Level.SEVERE,"[UserService] updateUser()",e);
+        }
     }
 
     public void updateUserWithoutPassword(User user){
-        userRepo.updateWithoutPassword(user);
+        try {
+            userRepo.updateWithoutPassword(user);
+        }catch (Exception e){
+            logger.log(Level.SEVERE,"[UserService] updateUserWithoutPassword()",e);
+        }
     }
 
     public List<User> getAllUsers(){
-        return userRepo.getAll("User.findAll", User.class);
-    }
-
-    public String hashPassword(String password) throws NoSuchAlgorithmException {
-        PasswordSecurity security=new PasswordSecurity();
-        return security.hashPassword(password);
+        List<User> listOfUsers=null;
+        try {
+            listOfUsers=userRepo.getAll("User.findAll", User.class);
+        }catch (Exception e){
+            logger.log(Level.SEVERE,"[UserService] addUser()",e);
+            return Collections.emptyList();
+        }
+        return listOfUsers;
     }
 
 }

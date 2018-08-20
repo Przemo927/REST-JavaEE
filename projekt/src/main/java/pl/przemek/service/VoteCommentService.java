@@ -7,91 +7,97 @@ import pl.przemek.model.VoteComment;
 import pl.przemek.model.VoteType;
 import pl.przemek.repository.JpaCommentRepository;
 import pl.przemek.repository.JpaUserRepository;
-import pl.przemek.repository.JpaVoteCommentRepository;
+import pl.przemek.repository.JpaVoteRepository;
 
 import javax.inject.Inject;
 import java.sql.Timestamp;
 import java.util.Date;
 import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 public class VoteCommentService {
-
     private JpaUserRepository userRepo;
     private JpaCommentRepository commentRepo;
-    private JpaVoteCommentRepository voteCommentRepo;
+    private JpaVoteRepository<VoteComment> voteCommentRepo;
+    private Comment comment;
+    private User user;
+    private Logger logger;
 
     @Inject
-    public VoteCommentService(JpaUserRepository userRepo, JpaCommentRepository commentRepo, JpaVoteCommentRepository voteCommentRepo){
-        this.userRepo=userRepo;
-        this.commentRepo=commentRepo;
-        this.voteCommentRepo=voteCommentRepo;
-    }
-    public VoteCommentService(){
-        this.userRepo=null;
-        this.commentRepo=null;
-        this.voteCommentRepo=null;
+    public VoteCommentService(Logger logger,JpaUserRepository userRepo, JpaCommentRepository commentRepo, JpaVoteRepository<VoteComment> voteCommentRepo) {
+        this.userRepo = userRepo;
+        this.commentRepo = commentRepo;
+        this.voteCommentRepo = voteCommentRepo;
+        this.logger=logger;
     }
 
-
-    VoteComment createVote(long userId, long commentId, VoteType voteType) {
-        User user = userRepo.get(User.class,userId);
-        Comment comment = commentRepo.get(Comment.class,commentId);
-        if(user!=null && comment!=null) {
-            VoteComment vote = new VoteComment();
-            vote.setComment(comment);
-            vote.setDate(new Timestamp(new Date().getTime()));
-            vote.setUser(user);
-            vote.setVoteType(voteType);
-            return vote;
-        }
-        return null;
+    public VoteCommentService() {
     }
+
+    VoteComment createVote(VoteType voteType) {
+        VoteComment vote = new VoteComment();
+        vote.setUser(this.user);
+        vote.setComment(this.comment);
+        vote.setDate(new Timestamp((new Date()).getTime()));
+        vote.setVoteType(voteType);
+        return vote;
+    }
+
     public void updateVote(long userId, long commentId, VoteType newVoteType) {
-        VoteComment existingVote = null;
-        VoteComment newVote = null;
-        List<VoteComment> listOfVotes = voteCommentRepo.getVoteByUserIdCommentId(userId, commentId);
-        if (listOfVotes.isEmpty()) {
-            newVote = createVote(userId, commentId, newVoteType);
-            voteCommentRepo.add(newVote);
-            updateComment(commentId,null,newVote);
-        } else {
-            existingVote=listOfVotes.get(0);
-            if (!existingVote.getVoteType().equals(newVoteType)) {
-                newVote=new VoteComment(existingVote);
-                newVote.setVoteType(newVoteType);
-                voteCommentRepo.update(newVote);
-                updateComment(commentId, existingVote, newVote);
+        try {
+            getCommentAndUserFromDataBase(commentId,userId);
+            VoteComment existingVote = null;
+            VoteComment newVote = null;
+            List<VoteComment> listOfVotes = this.voteCommentRepo.getVoteByUserIdVotedElementId(userId, commentId);
+            if(listOfVotes.isEmpty()) {
+                newVote = this.createVote(newVoteType);
+                this.voteCommentRepo.add(newVote);
+                this.updateComment(null, newVote);
+            } else {
+                existingVote = listOfVotes.get(0);
+                if(!existingVote.getVoteType().equals(newVoteType)) {
+                    newVote = new VoteComment(existingVote);
+                    newVote.setVoteType(newVoteType);
+                    this.voteCommentRepo.update(newVote);
+                    this.updateComment(existingVote, newVote);
+                }
             }
-       }
-    }
-    void updateComment(long commentId, VoteComment oldVote, VoteComment updateVote) {
-        Comment comment = commentRepo.get(Comment.class,commentId);
-        if (oldVote == null && updateVote!=null) {
-            comment = addVote(comment, updateVote.getVoteType());
-            commentRepo.update(comment);
-        } else if (oldVote != null && updateVote != null) {
-            comment = removeVote(comment, oldVote.getVoteType());
-            comment = addVote(comment, updateVote.getVoteType());
-            commentRepo.update(comment);
+        }catch (Exception e){
+            logger.log(Level.SEVERE,"[VoteCommentService] updateVote()",e);
         }
 
     }
 
-    Comment addVote(Comment comment, VoteType voteType) {
-        if (voteType == VoteType.VOTE_UP) {
-            comment.setUpVote(comment.getUpVote() + 1);
-        } else if (voteType == VoteType.VOTE_DOWN) {
-            comment.setDownVote(comment.getDownVote() + 1);
+    void updateComment(VoteComment oldVote, VoteComment updateVote) {
+        if(oldVote == null && updateVote != null) {
+            addVote(updateVote.getVoteType());
+            this.commentRepo.update(this.comment);
+        } else if(oldVote != null && updateVote != null) {
+            removeVote(oldVote.getVoteType());
+            addVote(updateVote.getVoteType());
+            this.commentRepo.update(this.comment);
         }
-        return comment;
+
     }
 
-    Comment removeVote(Comment comment, VoteType voteType) {
-        if (voteType == VoteType.VOTE_UP) {
-            comment.setUpVote(comment.getUpVote() - 1);
-        } else if (voteType == VoteType.VOTE_DOWN) {
-            comment.setDownVote(comment.getDownVote() - 1);
+    void addVote(VoteType voteType) {
+        if(voteType == VoteType.VOTE_UP) {
+            this.comment.setUpVote(this.comment.getUpVote() + 1);
+        } else if(voteType == VoteType.VOTE_DOWN) {
+            this.comment.setDownVote(this.comment.getDownVote() + 1);
         }
-        return comment;
+    }
+
+    void removeVote(VoteType voteType) {
+        if(voteType == VoteType.VOTE_UP) {
+            this.comment.setUpVote(this.comment.getUpVote() - 1);
+        } else if(voteType == VoteType.VOTE_DOWN) {
+            this.comment.setDownVote(this.comment.getDownVote() - 1);
+        }
+    }
+    void getCommentAndUserFromDataBase(long commentId, long userId){
+        this.user = this.userRepo.get(User.class, userId);
+        this.comment = this.commentRepo.get(Comment.class, commentId);
     }
 }

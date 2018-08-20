@@ -16,36 +16,51 @@ import java.security.NoSuchAlgorithmException;
 import java.security.PrivateKey;
 import java.security.SignatureException;
 import java.security.spec.InvalidKeySpecException;
+import java.util.List;
+import java.util.Optional;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 public class EncryptContentService {
 
     private DiscoveryService discoveryService;
     private SecurityKeyService keyService;
+    private Logger logger;
 
     @Inject
-    public EncryptContentService( SecurityKeyService keyService){
+    public EncryptContentService(SecurityKeyService keyService,DiscoveryService discoveryService,Logger logger){
         this.discoveryService=discoveryService;
         this.keyService=keyService;
+        this.logger=logger;
     }
     public EncryptContentService(){
 
     }
-    public SignContent endcryptContent(HttpServletRequest request,Object objectToEncrypt) throws NoSuchAlgorithmException, InvalidKeySpecException, InvalidKeyException, SignatureException, JsonProcessingException {
-        User user=(User)request.getSession().getAttribute("user");
-        String privateKeyString=keyService.getPrivateKeyAsStringByUsername(user.getUsername());
-        if(privateKeyString==null)
-            return null;
-        else {
-            privateKeyString=deleteSignsOfNewLine(privateKeyString);
-            PrivateKey privateKey=KeyUtils.generatePrivateKeyObjectFromString(privateKeyString);
-            String objectAsString=convertObjectToJson(objectToEncrypt);
-            byte[] sign=SignatureUtils.generateSignature("SHA256withRSA",privateKey, objectAsString);
-            String signatureAsString=SignatureUtils.convertSignatureToString(sign);
-            SignContent signContent=new SignContent();
-            signContent.setSignedContent(objectToEncrypt);
-            signContent.setSignature(signatureAsString);
-            return signContent;
+    public Optional<SignContent> endcryptContent(HttpServletRequest request, Object objectToEncrypt) throws NoSuchAlgorithmException, InvalidKeySpecException, InvalidKeyException, SignatureException, JsonProcessingException {
+        SignContent signContent=null;
+        try{
+            User user=(User)request.getSession().getAttribute("user");
+            List<String> listPrivateKeyString=keyService.getPrivateKeyAsStringByUsername(user.getUsername());
+            if(listPrivateKeyString.isEmpty()) {
+                logger.log(Level.WARNING,"[EncryptContentService] endcryptContent() PrivateKey wasn't found");
+                return Optional.empty();
+            }
+            else {
+                String privateKeyString=deleteSignsOfNewLine(listPrivateKeyString.get(0));
+                PrivateKey privateKey=KeyUtils.generatePrivateKeyObjectFromString(privateKeyString);
+                String objectAsString=convertObjectToJson(objectToEncrypt);
+                byte[] sign=SignatureUtils.generateSignature("SHA256withRSA",privateKey, objectAsString);
+                String signatureAsString=SignatureUtils.convertSignatureToString(sign);
+                signContent=new SignContent();
+                signContent.setSignedContent(objectToEncrypt);
+                signContent.setSignature(signatureAsString);
+
+            }
+        }catch (Exception e){
+            logger.log(Level.SEVERE,"[EncryptContentService] endcryptContent()",e);
+            return Optional.empty();
         }
+        return Optional.of(signContent);
     }
 
 

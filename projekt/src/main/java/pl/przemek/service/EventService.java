@@ -3,55 +3,106 @@ package pl.przemek.service;
 
 import pl.przemek.model.Event;
 import pl.przemek.model.EventPosition;
+import pl.przemek.model.SecurityKey;
 import pl.przemek.repository.JpaEventRepository;
+import sun.rmi.runtime.Log;
 
 import javax.inject.Inject;
+import java.util.Collections;
 import java.util.List;
+import java.util.Optional;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import java.util.stream.Collectors;
 
 public class EventService {
 
     private JpaEventRepository eventRepo;
+    private Logger logger;
 
     @Inject
-    public EventService(JpaEventRepository eventRepo){
+    public EventService(Logger logger,JpaEventRepository eventRepo){
+        this.logger=logger;
         this.eventRepo=eventRepo;
     }
     public EventService(){
-        this.eventRepo=null;
     }
 
 
     public void addEvent(Event event){
-        eventRepo.add(event);
+        try {
+            eventRepo.add(event);
+        }catch (Exception e){
+            logger.log(Level.SEVERE,"[EventService] addEvent() event="+event,e);
+        }
     }
 
     public void updateEvent(Event event){
-        eventRepo.update(event);
+        try {
+            eventRepo.update(event);
+        }catch (Exception e){
+            logger.log(Level.SEVERE,"[EventService] updateEvent() event="+event,e);
+        }
     }
 
     public void removeEventById(long id){
-        Event event=eventRepo.get(Event.class,id);
-        eventRepo.remove(event);
+        try {
+            Event event=eventRepo.get(Event.class,id);
+            if(event==null)
+                logger.log(Level.WARNING,"[EventService] removeEventById() event wasn't found");
+            else
+                eventRepo.remove(event);
+        }catch (Exception e){
+            logger.log(Level.SEVERE,"[EventService] removeEventById() id="+id,e);
+        }
     }
-    public Event getEvent(long id){
-        return eventRepo.get(Event.class,id);
+    public Optional<Event> getEvent(long id){
+        Event event=null;
+        try {
+            event=eventRepo.get(Event.class,id);
+        }catch (Exception e){
+            logger.log(Level.SEVERE,"[EventService] getEvent() id="+id,e);
+            return Optional.empty();
+        }
+        return Optional.of(event);
     }
 
     public List<Event> getAllEvents(){
-        return eventRepo.getAll("Event.findAll",Event.class);
+        List<Event> listOfEvents=null;
+        try {
+            listOfEvents=eventRepo.getAll("Event.findAll",Event.class);
+        }catch (Exception e){
+            logger.log(Level.SEVERE,"[EventService] getAllEvents()",e);
+            return Collections.emptyList();
+        }
+        return listOfEvents;
     }
 
     public List<Event> getEventsByCity(String city){
-        return eventRepo.getByCity(city);
+        List<Event> listOfEvents=null;
+        try {
+            listOfEvents=eventRepo.getByCity(city);
+        }catch (Exception e){
+            logger.log(Level.SEVERE,"[EventService] getEventsByCity() name of city="+city,e);
+            return Collections.emptyList();
+        }
+        return listOfEvents;
     }
 
     public List<Event> getEventByPosition(double latCoordinate, double lngCoordinate, int distance){
+        List<Event> list=null;
         if(distance<0){
             distance=distance*(-1);
         }
-        List<Event> lisOfEvents=eventRepo.getAll("Event.findAll",Event.class);
-        return getListOfEventInsideDistanceBufor(latCoordinate,lngCoordinate,distance,lisOfEvents);
+        try {
+            List<Event> lisOfEvents=eventRepo.getAll("Event.findAll",Event.class);
+            list=getListOfEventInsideDistanceBufor(latCoordinate,lngCoordinate,distance,lisOfEvents);
+        }catch (Exception e){
+            logger.log(Level.SEVERE,"[EventService] getEventByPosition() lat="+latCoordinate+
+                    " long="+lngCoordinate+" distance="+distance,e);
+            return Collections.emptyList();
+        }
+        return list;
     }
     List<Event> getListOfEventInsideDistanceBufor(double latCoordinate, double lngCoordinate, int distance, List<Event> listOfEvent){
         return listOfEvent.stream().parallel().filter(event->checkingDistance(latCoordinate,lngCoordinate,distance,event.getEventPosition()))
@@ -59,9 +110,9 @@ public class EventService {
     }
     boolean checkingDistance(double latCoordinate, double lngCoordinate, double distance, List<EventPosition> listOfEventPosition){
         double computedDistance;
-        for(int i=0;i<listOfEventPosition.size();i++){
-            computedDistance=computeDistance(latCoordinate,lngCoordinate,listOfEventPosition.get(i).getxCoordinate(),listOfEventPosition.get(i).getyCoordinate());
-            if(distance>computedDistance){
+        for (EventPosition aListOfEventPosition : listOfEventPosition) {
+            computedDistance = computeDistance(latCoordinate, lngCoordinate, aListOfEventPosition.getxCoordinate(), aListOfEventPosition.getyCoordinate());
+            if (distance > computedDistance) {
                 return true;
             }
         }
@@ -73,6 +124,13 @@ public class EventService {
     }
 
     public List<String> getCitiesFromAllEvents(){
-         return eventRepo.getCitiesFromAllEvents();
+        List<String> allCities=null;
+        try {
+            allCities=eventRepo.getCitiesFromAllEvents();
+        }catch (Exception e){
+            logger.log(Level.SEVERE,"[EventService] getCitiesFromAllEvents()",e);
+            return Collections.emptyList();
+        }
+         return allCities;
     }
 }
