@@ -29,7 +29,7 @@ public class UserService {
         this.rolRepo=null;
     }
 
-    public void addUser(User user) throws Exception {
+    public void addUser(User user) {
         try {
             if(user!=null) {
                 user.setActive(true);
