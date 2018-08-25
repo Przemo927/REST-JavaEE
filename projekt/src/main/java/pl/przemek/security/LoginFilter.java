@@ -1,6 +1,7 @@
 package pl.przemek.security;
 
 
+import io.jsonwebtoken.ExpiredJwtException;
 import pl.przemek.model.User;
 import pl.przemek.repository.JpaUserRepository;
 
@@ -21,6 +22,9 @@ import java.net.URI;
 import java.net.URISyntaxException;
 import java.security.Key;
 import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+
 import static javax.ws.rs.core.HttpHeaders.AUTHORIZATION;
 import static javax.ws.rs.core.HttpHeaders.LOCATION;
 
@@ -39,43 +43,55 @@ public class LoginFilter implements ContainerRequestFilter {
     private TokenStore tokenStore;
     @Inject
     private AuthenticationDataStore userDataStore;
+    @Inject
+    private JwtsRepository jwtsRepository;
+    @Inject
+    private Logger logger;
 
-    private JwtsRepository jwtsRepository=new JwtsRepository();
+    private final static String LOGUT_PATH="/projekt/api/logout";
 
     @Override
-    public void filter(ContainerRequestContext requestContext) throws IOException {
-    	if(request.getSession(false)!=null){
-    	if(request.getSession(false).getAttribute("user")!=null){
+    public void filter(ContainerRequestContext requestContext){
+        String username;
+    	if(request.getSession(false)!=null && request.getSession(false).getAttribute("user")!=null){
     	    String encryptedPassword=userDataStore.getEncryptedPassword();
-    	    String userName=userDataStore.getUsername();
+    	    username=userDataStore.getUsername();
         	String token=requestContext.getHeaderString(AUTHORIZATION);
             checkToken(token,encryptedPassword);
-			saveToken(userName,encryptedPassword);
+			saveToken(username,encryptedPassword);
         }
 
         else if(requestContext.getSecurityContext().getUserPrincipal() != null && request.getSession(false).getAttribute("user") == null) {
-            String username = requestContext.getSecurityContext().getUserPrincipal().getName();
+            username = requestContext.getSecurityContext().getUserPrincipal().getName();
             List<User> listUserByUsername = userrep.getUserByUsername(username);
             if(!listUserByUsername.isEmpty()) {
                 User userByUsername=listUserByUsername.get(0);
-                saveToken(userByUsername.getUsername(), userByUsername.getPassword());
-                saveUserData(userByUsername);
                 try {
                     LogoutIfInActiveStatus(userByUsername, request);
-                } catch (URISyntaxException e) {
-                    e.printStackTrace();
+                } catch (URISyntaxException | IOException e) {
+                    logger.log(Level.SEVERE,"[LoginFilter] filter()",e);
                 }
+                saveToken(userByUsername.getUsername(), userByUsername.getPassword());
+                saveUserData(userByUsername);
                 saveUserInSession(request, userByUsername);
+            } else {
+               logout();
             }
 
         }
-    	}
-
     }
     void LogoutIfInActiveStatus(User user, HttpServletRequest request) throws IOException, URISyntaxException {
         if(!user.isActive()){
-            request.getSession().invalidate();
-			Response.seeOther(new URI("http://localhost:8080/projekt/index.html#/"));
+            logout();
+            response.sendRedirect(LOGUT_PATH);
+        }
+    }
+    void logout(){
+        request.getSession().invalidate();
+        try {
+            request.logout();
+        } catch (ServletException e) {
+            logger.log(Level.SEVERE,"[LoginFilter] logout()",e);
         }
     }
     void saveUserInSession(HttpServletRequest request,User user) {
@@ -90,21 +106,14 @@ public class LoginFilter implements ContainerRequestFilter {
     	userDataStore.setUsername(user.getUsername());
         userDataStore.setEncryptedPassword(user.getPassword());
     }
-    void checkToken(String token,String encryptedPassword){
+    void checkToken(String token,String encryptedPassword) {
 
-        try {
+       try{
             Key key=tokenService.generateKey(encryptedPassword);
-            //Jwts.parser().setSigningKey(key).parseClaimsJws(token);
             jwtsRepository.checkToken(key,token);
-        } catch (Exception e) {
-            System.out.println("Exception");
-            try {
-                request.logout();
-            } catch (ServletException e1) {
-                e1.printStackTrace();
-            }
-
-            request.getSession().invalidate();
+        } catch (ExpiredJwtException e) {
+           logger.log(Level.SEVERE,"[LoginFilter] filter() logout");
+           logout();
         }
 
     }
