@@ -13,18 +13,14 @@ public class JpaSecurityKeyRespositoryImpl extends JpaRepository<SecurityKey> im
 
     @RolesAllowed({"admin","user"})
     @Override
-    public String getPrivateKeyByUserName(String userName) {
+    public List<String> getPrivateKeyByUserName(String userName) {
         TypedQuery<String> findByUsernameQuery=em.createNamedQuery("SecurityKey.findByUserName",String.class);
         findByUsernameQuery.setParameter("username",userName);
-        List<String> listOfKeys=findByUsernameQuery.getResultList();
-        if(listOfKeys.isEmpty())
-            return null;
-        return listOfKeys.get(0);
+        return findByUsernameQuery.getResultList();
     }
     @PermitAll
     @Override
     public void add(SecurityKey securityKey){
         em.persist(securityKey);
-
     }
 }
