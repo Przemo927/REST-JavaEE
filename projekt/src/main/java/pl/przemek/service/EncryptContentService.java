@@ -6,8 +6,6 @@ import pl.przemek.model.User;
 import pl.przemek.security.SignContent;
 import pl.przemek.security.Utils.KeyUtils;
 import pl.przemek.security.Utils.SignatureUtils;
-import pl.przemek.service.DiscoveryService;
-import pl.przemek.service.SecurityKeyService;
 
 import javax.inject.Inject;
 import javax.servlet.http.HttpServletRequest;
@@ -23,13 +21,12 @@ import java.util.logging.Logger;
 
 public class EncryptContentService {
 
-    private DiscoveryService discoveryService;
     private SecurityKeyService keyService;
     private Logger logger;
+    private final static String NEW_LINE = System.getProperty("line.separator");
 
     @Inject
     public EncryptContentService(SecurityKeyService keyService,DiscoveryService discoveryService,Logger logger){
-        this.discoveryService=discoveryService;
         this.keyService=keyService;
         this.logger=logger;
     }
@@ -38,34 +35,29 @@ public class EncryptContentService {
     }
     public Optional<SignContent> endcryptContent(HttpServletRequest request, Object objectToEncrypt) throws NoSuchAlgorithmException, InvalidKeySpecException, InvalidKeyException, SignatureException, JsonProcessingException {
         SignContent signContent=null;
-        try{
-            User user=(User)request.getSession().getAttribute("user");
-            List<String> listPrivateKeyString=keyService.getPrivateKeyAsStringByUsername(user.getUsername());
-            if(listPrivateKeyString.isEmpty()) {
-                logger.log(Level.WARNING,"[EncryptContentService] endcryptContent() PrivateKey wasn't found");
-                return Optional.empty();
-            }
-            else {
-                String privateKeyString=deleteSignsOfNewLine(listPrivateKeyString.get(0));
-                PrivateKey privateKey=KeyUtils.generatePrivateKeyObjectFromString(privateKeyString);
-                String objectAsString=convertObjectToJson(objectToEncrypt);
-                byte[] sign=SignatureUtils.generateSignature("SHA256withRSA",privateKey, objectAsString);
-                String signatureAsString=SignatureUtils.convertSignatureToString(sign);
-                signContent=new SignContent();
-                signContent.setSignedContent(objectToEncrypt);
-                signContent.setSignature(signatureAsString);
-
-            }
-        }catch (Exception e){
-            logger.log(Level.SEVERE,"[EncryptContentService] endcryptContent()",e);
+        User user=(User)request.getSession().getAttribute("user");
+        List<String> listPrivateKeyString=keyService.getPrivateKeyAsStringByUsername(user.getUsername());
+        if(listPrivateKeyString.isEmpty()) {
+            logger.log(Level.WARNING,"[EncryptContentService] endcryptContent() PrivateKey wasn't found");
             return Optional.empty();
+        }
+        else {
+            String privateKeyString=deleteSignsOfNewLine(listPrivateKeyString.get(0));
+            PrivateKey privateKey=KeyUtils.generatePrivateKeyObjectFromString(privateKeyString);
+            String objectAsString=convertObjectToJson(objectToEncrypt);
+            byte[] sign=SignatureUtils.generateSignature("SHA256withRSA",privateKey, objectAsString);
+            String signatureAsString=SignatureUtils.convertSignatureToString(sign);
+            signContent=new SignContent();
+            signContent.setSignedContent(objectToEncrypt);
+            signContent.setSignature(signatureAsString);
+
         }
         return Optional.of(signContent);
     }
 
 
     private String deleteSignsOfNewLine(String content){
-        if(content.contains("\n"))
+        if(content.contains(NEW_LINE))
             content=content.replaceAll("(\n)","");
         return content;
     }

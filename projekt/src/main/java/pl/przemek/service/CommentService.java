@@ -28,49 +28,24 @@ public class CommentService {
     }
 
     public void addComment(Comment comment, long discoveryId){
-        try {
-            Discovery discovery = discRepo.get(Discovery.class, discoveryId);
-            if (comment == null)
-                logger.log(Level.WARNING, "[CommentService] addComment() comment is null");
-            else if (discovery == null)
-                logger.log(Level.WARNING, "[CommentService] addComment() discovery is null");
-            else {
-                comment.setDiscovery(discovery);
-                commentRepo.add(comment);
-            }
-        }catch (Exception e){
-            logger.log(Level.SEVERE,"[CommentService] addComment()",e);
+        Discovery discovery = discRepo.get(Discovery.class, discoveryId);
+        if (comment == null)
+            logger.log(Level.WARNING, "[CommentService] addComment() comment is null");
+        else if (discovery == null)
+            logger.log(Level.WARNING, "[CommentService] addComment() discovery is null");
+        else {
+            comment.setDiscovery(discovery);
+            commentRepo.add(comment);
         }
     }
     public List<Comment> getAllComment(){
-        List<Comment> listOfComment=null;
-        try{
-            listOfComment=commentRepo.getAll("Comment.findAll",Comment.class);
-        }catch (Exception e){
-            logger.log(Level.SEVERE,"[CommentService] getAllComments()",e);
-            return Collections.emptyList();
-        }
-        return listOfComment;
+        return commentRepo.getAll("Comment.findAll",Comment.class);
     }
 
     public List<Comment> getByDiscoveryName(String name){
-        List<Comment> listOfComment=null;
-        try {
-            listOfComment=commentRepo.getByDiscoveryName(name);
-        }catch (Exception e){
-            logger.log(Level.SEVERE,"[CommentService] getByDiscoveryName()",e);
-            return Collections.emptyList();
-        }
-        return listOfComment;
+        return commentRepo.getByDiscoveryName(name);
     }
     public List<Comment> getByDiscoveryId(long id){
-        List<Comment> listOfComment=null;
-        try {
-            listOfComment=commentRepo.getByDiscoveryId(id);
-        }catch (Exception e){
-            logger.log(Level.SEVERE,"[CommentService] getByDiscoveryId()",e);
-            return Collections.emptyList();
-        }
-        return listOfComment;
+        return commentRepo.getByDiscoveryId(id);
     }
 }

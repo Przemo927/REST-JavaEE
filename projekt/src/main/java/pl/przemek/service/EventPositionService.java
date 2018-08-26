@@ -21,15 +21,14 @@ public class EventPositionService {
         this.logger=logger;
     }
     public EventPositionService () {
-        this.eventposrepo=null;
+
     }
 
     public void addEventPosition(EventPosition position){
-        try {
+        if(position==null){
+            logger.log(Level.SEVERE,"[EventPositionService] addEventPosition() position is null");
+        }else{
             eventposrepo.add(position);
-        }catch (Exception e){
-            logger.log(Level.SEVERE,"[EventPositionService] addEventPosition()",e);
         }
-
     }
 }

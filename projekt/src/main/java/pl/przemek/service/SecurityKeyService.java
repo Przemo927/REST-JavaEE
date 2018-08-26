@@ -21,21 +21,14 @@ public class SecurityKeyService {
     }
 
     public List<String> getPrivateKeyAsStringByUsername(String userName){
-        List<String> privateKeyByUserName=null;
-        try {
-            privateKeyByUserName=privateKeyRepo.getPrivateKeyByUserName(userName);
-        }catch (Exception e){
-            logger.log(Level.SEVERE,"[SecurityKeyService] getPrivateKeyAsStringByUsername() username="+userName,e);
-            return Collections.emptyList();
-        }
-        return privateKeyByUserName;
+        return privateKeyRepo.getPrivateKeyByUserName(userName);
     }
 
     public void addPrivateKey(SecurityKey securityKey){
-        try {
+        if(securityKey==null){
+            logger.log(Level.SEVERE,"[SecurityKeyService] getPrivateKeyAsStringByUsername() serucityKey is null");
+        }else {
             privateKeyRepo.add(securityKey);
-        }catch (Exception e){
-            logger.log(Level.SEVERE,"[SecurityKeyService] getPrivateKeyAsStringByUsername() serucityKey="+securityKey,e);
         }
     }
 }

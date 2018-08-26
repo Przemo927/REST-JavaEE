@@ -30,79 +30,48 @@ public class EventService {
 
 
     public void addEvent(Event event){
-        try {
+        if(event==null){
+            logger.log(Level.SEVERE,"[EventService] addEvent() event is null");
+        }else{
             eventRepo.add(event);
-        }catch (Exception e){
-            logger.log(Level.SEVERE,"[EventService] addEvent() event="+event,e);
         }
     }
 
     public void updateEvent(Event event){
-        try {
+        if(event==null){
+            logger.log(Level.SEVERE,"[EventService] updateEvent() event is null");
+        }else{
             eventRepo.update(event);
-        }catch (Exception e){
-            logger.log(Level.SEVERE,"[EventService] updateEvent() event="+event,e);
         }
     }
 
     public void removeEventById(long id){
-        try {
             Event event=eventRepo.get(Event.class,id);
-            if(event==null)
+            if(event==null) {
                 logger.log(Level.WARNING,"[EventService] removeEventById() event wasn't found");
-            else
+            } else {
                 eventRepo.remove(event);
-        }catch (Exception e){
-            logger.log(Level.SEVERE,"[EventService] removeEventById() id="+id,e);
-        }
+            }
     }
     public Optional<Event> getEvent(long id){
-        Event event=null;
-        try {
-            event=eventRepo.get(Event.class,id);
-        }catch (Exception e){
-            logger.log(Level.SEVERE,"[EventService] getEvent() id="+id,e);
-            return Optional.empty();
-        }
-        return Optional.of(event);
+        Event event=eventRepo.get(Event.class,id);
+        return Optional.ofNullable(event);
     }
 
     public List<Event> getAllEvents(){
-        List<Event> listOfEvents=null;
-        try {
-            listOfEvents=eventRepo.getAll("Event.findAll",Event.class);
-        }catch (Exception e){
-            logger.log(Level.SEVERE,"[EventService] getAllEvents()",e);
-            return Collections.emptyList();
-        }
-        return listOfEvents;
+        return eventRepo.getAll("Event.findAll",Event.class);
     }
 
     public List<Event> getEventsByCity(String city){
-        List<Event> listOfEvents=null;
-        try {
-            listOfEvents=eventRepo.getByCity(city);
-        }catch (Exception e){
-            logger.log(Level.SEVERE,"[EventService] getEventsByCity() name of city="+city,e);
-            return Collections.emptyList();
-        }
-        return listOfEvents;
+        return eventRepo.getByCity(city);
     }
 
     public List<Event> getEventByPosition(double latCoordinate, double lngCoordinate, int distance){
-        List<Event> list=null;
         if(distance<0){
             distance=distance*(-1);
         }
-        try {
-            List<Event> lisOfEvents=eventRepo.getAll("Event.findAll",Event.class);
-            list=getListOfEventInsideDistanceBufor(latCoordinate,lngCoordinate,distance,lisOfEvents);
-        }catch (Exception e){
-            logger.log(Level.SEVERE,"[EventService] getEventByPosition() lat="+latCoordinate+
-                    " long="+lngCoordinate+" distance="+distance,e);
-            return Collections.emptyList();
-        }
-        return list;
+        List<Event> lisOfEvents=eventRepo.getAll("Event.findAll",Event.class);
+        return getListOfEventInsideDistanceBufor(latCoordinate,lngCoordinate,distance,lisOfEvents);
     }
     List<Event> getListOfEventInsideDistanceBufor(double latCoordinate, double lngCoordinate, int distance, List<Event> listOfEvent){
         return listOfEvent.stream().parallel().filter(event->checkingDistance(latCoordinate,lngCoordinate,distance,event.getEventPosition()))
@@ -124,13 +93,6 @@ public class EventService {
     }
 
     public List<String> getCitiesFromAllEvents(){
-        List<String> allCities=null;
-        try {
-            allCities=eventRepo.getCitiesFromAllEvents();
-        }catch (Exception e){
-            logger.log(Level.SEVERE,"[EventService] getCitiesFromAllEvents()",e);
-            return Collections.emptyList();
-        }
-         return allCities;
+        return eventRepo.getCitiesFromAllEvents();
     }
 }

@@ -35,47 +35,35 @@ public class VoteDiscoveryService {
     }
 
     public VoteDiscoveryService() {
-        this.votRepo = null;
-        this.disRepo = null;
-        this.userRepo = null;
     }
 
     Vote createVote( VoteType votetype) {
-        if(discovery != null && user != null) {
-            Vote vote = new Vote();
-            vote.setUser(this.user);
-            vote.setDiscovery(this.discovery);
-            vote.setDate(new Timestamp((new Date()).getTime()));
-            vote.setVoteType(votetype);
-            return vote;
-        } else {
-            return null;
-        }
+        Vote vote = new Vote();
+        vote.setUser(this.user);
+        vote.setDiscovery(this.discovery);
+        vote.setDate(new Timestamp((new Date()).getTime()));
+        vote.setVoteType(votetype);
+        return vote;
     }
 
     public void updateVote(long userId, long discoveryId, VoteType newVoteType) {
-        try {
-            getDiscoveryAndUserFromDataBase(discoveryId,userId);
-            Vote newVote = null;
-            Vote existingVote = null;
-            List<Vote> listOfVotes = this.votRepo.getVoteByUserIdVotedElementId(userId, discoveryId);
-            if(listOfVotes.isEmpty()) {
-                newVote = this.createVote(newVoteType);
-                this.votRepo.add(newVote);
-                this.updateDiscovery(discoveryId, (Vote)null, newVote);
-            } else {
-                existingVote = (Vote)listOfVotes.get(0);
-                if(!existingVote.getVoteType().equals(newVoteType)) {
-                    newVote = new Vote(existingVote);
-                    newVote.setVoteType(newVoteType);
-                    this.votRepo.update(newVote);
-                    this.updateDiscovery(discoveryId, existingVote, newVote);
-                }
+        getDiscoveryAndUserFromDataBase(discoveryId,userId);
+        Vote newVote = null;
+        Vote existingVote = null;
+        List<Vote> listOfVotes = this.votRepo.getVoteByUserIdVotedElementId(userId, discoveryId);
+        if(listOfVotes.isEmpty()) {
+            newVote = this.createVote(newVoteType);
+            this.votRepo.add(newVote);
+            this.updateDiscovery(discoveryId, (Vote)null, newVote);
+        } else {
+            existingVote = (Vote)listOfVotes.get(0);
+            if(!existingVote.getVoteType().equals(newVoteType)) {
+                newVote = new Vote(existingVote);
+                newVote.setVoteType(newVoteType);
+                this.votRepo.update(newVote);
+                this.updateDiscovery(discoveryId, existingVote, newVote);
             }
-        }catch (Exception e){
-            logger.log(Level.SEVERE,"[VoteDiscoveryService] updateVote()",e);
         }
-
     }
 
     void updateDiscovery(long discoveryId, Vote oldVote, Vote updateVote) {
@@ -107,34 +95,16 @@ public class VoteDiscoveryService {
     }
 
     public Optional<Vote> getById(long id) {
-        Vote vote=null;
-        try {
-            vote = this.votRepo.get(Vote.class, id);
-        }catch (Exception e){
-            logger.log(Level.SEVERE,"[VoteDiscoveryService] getByid() id="+id,e);
-            return Optional.empty();
-        }
+        Vote vote=this.votRepo.get(Vote.class, id);
         return Optional.ofNullable(vote);
     }
 
     public List<Vote> getByUserIdDiscoveryId(long userId, long discoveryId) {
-        List<Vote> listOfVotes=null;
-        try {
-            listOfVotes = this.votRepo.getVoteByUserIdVotedElementId(userId, discoveryId);
-        }catch (Exception e){
-            logger.log(Level.SEVERE,"[VoteDiscoveryService] getByUserIdDiscoveryId() userId="+userId+
-                    " discoveryId="+discoveryId,e);
-            return Collections.emptyList();
-        }
-        return listOfVotes;
+        return this.votRepo.getVoteByUserIdVotedElementId(userId, discoveryId);
     }
 
     public void removeByDiscveryId(Long discoveryid) {
-        try {
-            this.votRepo.removeByVotedElementId(discoveryid);
-        }catch (Exception e){
-            logger.log(Level.SEVERE,"[VoteDiscoveryService] getByUserIdDiscoveryId() discoveyId="+discoveryid,e);
-        }
+        this.votRepo.removeByVotedElementId(discoveryid);
     }
 
     void getDiscoveryAndUserFromDataBase(long discoveryId, long userId){

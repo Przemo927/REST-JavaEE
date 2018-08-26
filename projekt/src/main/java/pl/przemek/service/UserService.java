@@ -10,6 +10,7 @@ import javax.inject.Inject;
 import java.security.NoSuchAlgorithmException;
 import java.util.Collections;
 import java.util.List;
+import java.util.Optional;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -41,12 +42,13 @@ public class UserService {
             }else {
                 logger.log(Level.WARNING,"[UserService] addUser() user is null");
             }
-        }catch (Exception e){
-            logger.log(Level.SEVERE,"[UserService] addUser()",e);
+        }catch (NoSuchAlgorithmException e){
+            logger.log(Level.WARNING,"[UserService] addUser()",e);
         }
+
     }
 
-    void addRole(User user) throws Exception {
+    void addRole(User user) {
         List<Role> listOfRoles=rolRepo.getRoles("user");
         if(!listOfRoles.isEmpty()){
             Role role = listOfRoles.get(0);
@@ -54,54 +56,37 @@ public class UserService {
         }
     }
 
-    public User getUserById(long id){
-        User user=null;
-        try {
-            user=userRepo.get(User.class,id);
-        }catch (Exception e){
-            logger.log(Level.SEVERE,"[UserService] getUserById() id="+id,e);
-            return null;
-        }
-        return user;
+    public Optional<User> getUserById(long id){
+        User user=userRepo.get(User.class,id);
+        return Optional.ofNullable(user);
     }
 
     public void removeByUserId(long id) {
         User user=null;
-        try {
-            user=userRepo.get(User.class,id);
-            if(user!=null)
-                userRepo.remove(user);
-            else logger.log(Level.WARNING,"[UserService] removeByUserId() user wasn't found id="+id);
-        }catch (Exception e){
-            logger.log(Level.SEVERE,"[UserService] removeByUserId()",e);
-        }
+        user=userRepo.get(User.class,id);
+        if(user!=null)
+            userRepo.remove(user);
+        else logger.log(Level.WARNING,"[UserService] removeByUserId() user wasn't found id="+id);
     }
 
     public void updateUser(User user){
-        try {
+        if(user==null){
+            logger.log(Level.SEVERE,"[UserService] updateUser() user is null");
+        }else{
             userRepo.update(user);
-        }catch (Exception e){
-            logger.log(Level.SEVERE,"[UserService] updateUser()",e);
         }
     }
 
     public void updateUserWithoutPassword(User user){
-        try {
+        if(user==null){
+            logger.log(Level.SEVERE,"[UserService] updateUserWithoutPassword() user is null");
+        }else{
             userRepo.updateWithoutPassword(user);
-        }catch (Exception e){
-            logger.log(Level.SEVERE,"[UserService] updateUserWithoutPassword()",e);
         }
     }
 
     public List<User> getAllUsers(){
-        List<User> listOfUsers=null;
-        try {
-            listOfUsers=userRepo.getAll("User.findAll", User.class);
-        }catch (Exception e){
-            logger.log(Level.SEVERE,"[UserService] addUser()",e);
-            return Collections.emptyList();
-        }
-        return listOfUsers;
+        return userRepo.getAll("User.findAll", User.class);
     }
 
 }
