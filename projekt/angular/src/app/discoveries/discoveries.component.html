@@ -1,40 +1,37 @@
-<div id="main" style="padding-top: 0px" class="panel-body">
+<app-header title="Discoveries"></app-header>
+<div id="main">
   <div>
     <div>
-       <div style="display:inline-flex">
-            <div id="TextOne">Sort by:</div>
-            <button class="btn btn-deafult" id="button" >Time</button>
-            <button class="btn btn-deafult" id="button" >Popularity</button>
-       </div>
-       <div id="listOfUsers" class="text-center">
-              <a routerLink="/users" ><button id="button" *ngIf="adminRole==true" type="button" class="btn btn-default" >List of users</button></a>
-       </div>
-     </div>
-      <div id="search">
-            <div>Find:</div> <input type="text" placeholder="Search"/>
-            <button id="button" type="submit" class="btn btn-deafult">Search</button>
+      <div style="display:inline-flex">
+        <div id="TextOne">Sort by:</div>
+        <button class="buttonClass" id="button">Time</button>
+        <button class="buttonClass" id="button">Popularity</button>
       </div>
-  </div>
-  <div class="container">
-	  <ul id="discoveries" class="list-unstyled">
-      <li *ngFor="let discovery of discoveries">
-      <div style=";display:inline-flex;width:100%;margin-right:5px" class="row bs-callout bs-callout-primary">
-        <div class="" style="display:inline-flex;flex-direction:column;margin-right:5px">
-          <span  (click)="addVote(VOTE_UP,discovery.id)" class="glyphicon glyphicon-thumbs-up btn btn-success"></span>
-          <div  class="well well-sm centered pull-left">{{discovery.upVote-discovery.downVote}}</div>
-          <span  (click)="addVote(VOTE_DOWN,discovery.id)" class="glyphicon glyphicon-thumbs-down btn btn-warning"></span>
-        </div>
-
-        <div style="width:100%">
-          <div>
-            <a routerLink="/discovery/{{discovery.id}}"><p style="color: black">{{discovery.name}}</p></a>
-            <a href="{{discovery.url}}"><button class="btn btn-default btn-xs">Source</button></a>
-            <a style="float:right" routerLink="/editdiscovery/{{discovery.id}}"><button *ngIf="adminRole==true" type="button" class="btn btn-warning push-right">Edit</button></a>
-          </div>
-        </div>
+      <div id="listOfUsers" class="text-center">
+        <button routerLink="/users" id="button" *ngIf="adminRole==true" type="button" class="buttonClass">List of users</button>
       </div>
-      </li>
-    </ul>
-        <router-outlet></router-outlet>
     </div>
   </div>
+  <div>
+    <ul id="discoveries" class="list-unstyled">
+      <li *ngFor="let discovery of discoveries">
+        <div style=";display:inline-flex;width:100%;margin-right:5px" class="row bs-callout bs-callout-primary">
+          <div class="" style="display:flex;flex-direction:column;margin-right:5px">
+            <span (click)="addVote(VOTE_UP,discovery.id)" class="glyphicon glyphicon-thumbs-up btn btn-success"></span>
+            <div style="text-align: center;margin-bottom: 0px" class="well well-sm pull-left">{{discovery.upVote-discovery.downVote}}</div>
+            <span (click)="addVote(VOTE_DOWN,discovery.id)" class="glyphicon glyphicon-thumbs-down btn btn-warning"></span>
+          </div>
+
+          <div style="width:100%">
+            <div>
+              <a routerLink="/discovery/{{discovery.id}}"><p style="color: black">{{discovery.name}}</p></a>
+              <a href="{{discovery.url}}"><button class="btn btn-default btn-xs">Source</button></a>
+              <a style="float:right" routerLink="/editdiscovery/{{discovery.id}}"><button *ngIf="adminRole==true" type="button" class="btn btn-warning push-right">Edit</button></a>
+            </div>
+          </div>
+        </div>
+      </li>
+    </ul>
+    <router-outlet></router-outlet>
+  </div>
+</div>
