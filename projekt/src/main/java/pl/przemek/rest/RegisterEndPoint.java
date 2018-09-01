@@ -3,6 +3,7 @@ package pl.przemek.rest;
 import pl.przemek.Message.EmailMessageTemplate;
 import pl.przemek.Message.MailService;
 import pl.przemek.Message.MessageWrapper;
+import pl.przemek.mapper.ExceptionMapperAnnotation;
 import pl.przemek.model.SecurityKey;
 import pl.przemek.model.User;
 import pl.przemek.security.KeyDataStore;
@@ -27,6 +28,7 @@ import java.util.logging.Logger;
 
 @Produces(MediaType.APPLICATION_JSON)
 @Path("/register")
+@ExceptionMapperAnnotation
 public class RegisterEndPoint {
 
 

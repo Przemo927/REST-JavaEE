@@ -1,5 +1,7 @@
 package pl.przemek.rest;
 
+import pl.przemek.mapper.ExceptionMapperAnnotation;
+
 import javax.inject.Inject;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;

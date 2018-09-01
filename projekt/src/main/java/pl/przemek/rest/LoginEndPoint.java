@@ -1,6 +1,7 @@
 package pl.przemek.rest;
 
 
+import pl.przemek.mapper.ExceptionMapperAnnotation;
 import pl.przemek.security.Login;
 import pl.przemek.security.PasswordSecurity;
 import pl.przemek.security.TokenService;
@@ -30,6 +31,7 @@ import static javax.ws.rs.core.HttpHeaders.AUTHORIZATION;
 import static javax.ws.rs.core.HttpHeaders.LOCATION;
 
 @Path("/login")
+@ExceptionMapperAnnotation
 public class LoginEndPoint {
     private final static String HOMEPATH="/projekt/index.html#!/home";
     private final static String LOGINPATH="http://localhost:8080/projekt/j_security_check";

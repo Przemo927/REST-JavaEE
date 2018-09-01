@@ -1,5 +1,6 @@
 package pl.przemek.rest;
 
+import pl.przemek.mapper.ExceptionMapperAnnotation;
 import pl.przemek.model.User;
 import pl.przemek.service.UserService;
 import pl.przemek.wrapper.ResponseMessageWrapper;
@@ -14,6 +15,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 @Path("/user")
+@ExceptionMapperAnnotation
 public class UserEndPoint {
 
 

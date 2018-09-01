@@ -1,5 +1,6 @@
 package pl.przemek.rest;
 
+import pl.przemek.mapper.ExceptionMapperAnnotation;
 import pl.przemek.model.EventPosition;
 import pl.przemek.service.EventPositionService;
 
@@ -14,6 +15,7 @@ import javax.ws.rs.core.UriInfo;
 import java.net.URI;
 
 @Path("/eventPosition")
+@ExceptionMapperAnnotation
 public class EventPositionEndPoint {
 
     private EventPositionService eventPositionService;

@@ -1,6 +1,7 @@
 
 package pl.przemek.rest;
 
+import pl.przemek.mapper.ExceptionMapperAnnotation;
 import pl.przemek.model.User;
 import pl.przemek.model.Vote;
 import pl.przemek.model.VoteType;
@@ -18,6 +19,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 @Path("/vote")
+@ExceptionMapperAnnotation
 public class VoteEndPoint {
 
 	private VoteDiscoveryService voteService;

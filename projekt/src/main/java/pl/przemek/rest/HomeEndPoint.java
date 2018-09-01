@@ -1,6 +1,7 @@
 package pl.przemek.rest;
 
 import org.json.simple.JSONObject;
+import pl.przemek.mapper.ExceptionMapperAnnotation;
 
 import javax.enterprise.context.RequestScoped;
 import javax.inject.Inject;
@@ -11,8 +12,8 @@ import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
-@RequestScoped
 @Path("/home")
+@ExceptionMapperAnnotation
 public class HomeEndPoint {
 	private final static String LOGIN_PATH = "/projekt";
 	private final static String LOGOUT_PATH= "/projekt/api/logout";

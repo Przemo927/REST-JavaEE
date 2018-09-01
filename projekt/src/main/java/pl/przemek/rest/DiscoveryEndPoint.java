@@ -1,6 +1,7 @@
 package pl.przemek.rest;
 
 import org.json.simple.JSONObject;
+import pl.przemek.mapper.ExceptionMapperAnnotation;
 import pl.przemek.model.Discovery;
 import pl.przemek.model.User;
 import pl.przemek.service.DiscoveryService;
@@ -24,8 +25,8 @@ import java.util.Optional;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-@RequestScoped
 @Path("/discovery")
+@ExceptionMapperAnnotation
 public class DiscoveryEndPoint {
 
 	private DiscoveryService discoveryService;

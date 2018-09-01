@@ -1,5 +1,6 @@
 package pl.przemek.rest;
 
+import pl.przemek.mapper.ExceptionMapperAnnotation;
 import pl.przemek.model.Event;
 import pl.przemek.model.User;
 import pl.przemek.service.EventService;
@@ -19,8 +20,8 @@ import java.util.Optional;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-@RequestScoped
 @Path("/event")
+@ExceptionMapperAnnotation
 public class EventEndPoint {
 
     private EventService eventservice;

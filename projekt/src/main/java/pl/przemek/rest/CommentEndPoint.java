@@ -1,5 +1,6 @@
 package pl.przemek.rest;
 
+import pl.przemek.mapper.ExceptionMapperAnnotation;
 import pl.przemek.model.Comment;
 import pl.przemek.model.User;
 import pl.przemek.service.CommentService;
@@ -20,6 +21,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 @Path("/comment")
+@ExceptionMapperAnnotation
 public class CommentEndPoint {
 
     private CommentService commentservice;
