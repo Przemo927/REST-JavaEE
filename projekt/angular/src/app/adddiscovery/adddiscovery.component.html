@@ -1,14 +1,14 @@
-<div class="container">
-      <div class="col-md-8 col-md-offset-2">
-            <form class="form-signin">
-                <h2 class="form-signin-login">Add new Discovery</h2>
-              <app-validatableinput idContainer="name" #name (changeEvent)="assignName($event)" positionMessage="above"
-                                       placeholder="Name" type="text"></app-validatableinput>
-              <app-validatableinput idContainer="url" #url (changeEvent)="assignUrl($event)" positionMessage="above"
-                                       placeholder="URL" type="text"></app-validatableinput>
-              <app-validatabletextarea idContainer="description" #description (changeEvent)="assignDescription($event)" positionMessage="above"
-                                       placeholder="Description" rows="5"></app-validatabletextarea>
-              <button (click)="addDiscovery(discovery)" class="btn btn-lg btn-primary btn-block">Add</button>
-            </form>
-        </div>
-        </div>
+<app-header title="Add Discovery"></app-header>
+<div id="main">
+  <div class="addForm">
+    <form>
+      <app-validatableinput idContainer="name" #name (changeEvent)="assignName($event)" positionMessage="above"
+                            placeholder="Name" type="text"></app-validatableinput>
+      <app-validatableinput idContainer="url" #url (changeEvent)="assignUrl($event)" positionMessage="above"
+                            placeholder="URL" type="text"></app-validatableinput>
+      <app-validatabletextarea idContainer="description" #description (changeEvent)="assignDescription($event)" positionMessage="above"
+                               placeholder="Description" rows="5"></app-validatabletextarea>
+      <button (click)="addDiscovery(discovery)" class="bigButtonClass">Add</button>
+    </form>
+  </div>
+</div>
