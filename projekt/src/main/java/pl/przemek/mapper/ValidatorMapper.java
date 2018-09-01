@@ -14,7 +14,7 @@ import org.jboss.resteasy.api.validation.ResteasyViolationException;
 import org.json.simple.JSONObject;
 
 @Provider
-public class Mapper implements ExceptionMapper<ValidationException> {
+public class ValidatorMapper implements ExceptionMapper<ValidationException> {
 
     @Override
     public Response toResponse(ValidationException e) {
