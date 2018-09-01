@@ -2,9 +2,13 @@ package pl.przemek.rest;
 
 import java.io.IOException;
 
+import java.io.UnsupportedEncodingException;
 import java.math.BigInteger;
 import java.net.URI;
 import java.util.List;
+import java.util.Optional;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 import javax.enterprise.context.RequestScoped;
 import javax.inject.Inject;
@@ -18,6 +22,7 @@ import javax.ws.rs.core.Response;
 import javax.ws.rs.core.UriInfo;
 
 import org.json.simple.JSONObject;
+import pl.przemek.mapper.ExceptionMapperAnnotation;
 import pl.przemek.model.Discovery;
 import pl.przemek.model.User;
 import pl.przemek.service.DiscoveryService;
@@ -30,11 +35,13 @@ public class DiscoveryEndPoint {
 	private DiscoveryService discoveryService;
 	private HttpServletRequest request;
 	private final static ResponseMessageWrapper mw=new ResponseMessageWrapper();
+	private Logger logger;
 	@Context
 	UriInfo uriInfo;
 
 	@Inject
-	public DiscoveryEndPoint(DiscoveryService discoveryService, HttpServletRequest request){
+	public DiscoveryEndPoint(Logger logger,DiscoveryService discoveryService, HttpServletRequest request){
+		this.logger=logger;
 		this.discoveryService=discoveryService;
 		this.request=request;
 	}
@@ -42,12 +49,23 @@ public class DiscoveryEndPoint {
 
 	@POST
 	@Consumes(MediaType.APPLICATION_JSON)
-	public Response addDiscovery(@Valid Discovery discovery) throws IOException {
-		request.setCharacterEncoding("UTF-8");
-		HttpSession session=request.getSession(false);
-		User user = (User) session.getAttribute("user");
-		discovery.setUser(user);
-		discoveryService.addDiscovery(discovery);
+	public Response addDiscovery(@Valid Discovery discovery) {
+		try {
+			request.setCharacterEncoding("UTF-8");
+			HttpSession session=request.getSession(false);
+			User user = (User) session.getAttribute("user");
+			if(user!=null) {
+				discovery.setUser(user);
+				discoveryService.addDiscovery(discovery);
+			}else{
+				logger.log(Level.SEVERE,"[DiscoveryEndPoint] addDiscovery() user wasn't saved in session");
+				return Response.status(Response.Status.UNAUTHORIZED).build();
+			}
+		} catch (UnsupportedEncodingException e) {
+			logger.log(Level.SEVERE,"[DiscoveryEndPoint] addDiscovery()",e);
+			Response.status(Response.Status.BAD_REQUEST).build();
+		}
+
 		return Response.created(URI.create(uriInfo.getAbsolutePath()+"/"+discovery.getId())).build();
 	}
 
@@ -55,12 +73,13 @@ public class DiscoveryEndPoint {
 	@Path("/{id}")
 	@Produces(MediaType.APPLICATION_JSON)
 	public Response getById(@PathParam("id") long id) {
-		Discovery discovery=discoveryService.getById(id);
-		if(discovery==null){
+		Optional<Discovery> discoveryOptional=discoveryService.getById(id);
+		return discoveryOptional.map(discovery -> {
+			return Response.ok(discovery).build();
+		}).orElseGet(()->{
+			logger.log(Level.SEVERE,"[DiscoveryEndPoint] getById() discovery wasn't found");
 			return Response.status(Response.Status.NO_CONTENT).build();
-		}
-		System.out.println(uriInfo.getAbsolutePath());
-		return Response.ok(discovery).build();
+		});
 	}
 
     @DELETE
@@ -74,7 +93,7 @@ public class DiscoveryEndPoint {
 	@GET
 	@Produces(MediaType.APPLICATION_JSON)
 	public Response getALL(@QueryParam("orderBy") @DefaultValue("popular") String order,@QueryParam("beginWith") Integer begin,
-						   @QueryParam("quantity") Integer quantity) {
+						   @QueryParam("quantity") Integer quantity) throws Exception {
 		List<Discovery> allDiscoveries;
 	if(begin!=null && !(begin<0) && quantity!=null && !(quantity<0)){
 		allDiscoveries=discoveryService.getWithLimit(begin,quantity);
@@ -83,6 +102,7 @@ public class DiscoveryEndPoint {
 		allDiscoveries = discoveryService.getAll(order);
 	}
 	if(allDiscoveries.isEmpty()){
+		logger.log(Level.SEVERE,"[DiscoveryEndPoint] getALL() discovery wasn't found");
 		return Response.status(Response.Status.NO_CONTENT).build();
 	}
 		return Response.ok(allDiscoveries).build();
@@ -91,21 +111,21 @@ public class DiscoveryEndPoint {
 	@PUT
 	@Consumes(MediaType.APPLICATION_JSON)
 	public Response updateDiscovery(Discovery discovery) {
-		discoveryService.updateDiscovery(discovery);
-		return Response.ok(mw.wrappMessage("Discovery was updated")).build();
+		if(discovery!=null) {
+			discoveryService.updateDiscovery(discovery);
+			return Response.ok(ResponseMessageWrapper.wrappMessage("Discovery was updated")).build();
+		}else {
+			logger.log(Level.SEVERE,"[DiscoveryEndPoint] updateDiscovery() discovery is null");
+			return Response.status(Response.Status.NOT_MODIFIED).build();
+		}
 	}
 	@GET
 	@Path("quantity")
 	@Produces(MediaType.APPLICATION_JSON)
 	public Response getQuantityOfDiscoveries(){
 		BigInteger quantityOfDiscoveries=discoveryService.getQuantityOfDiscoveries();
-		JSONObject jsonObject=wrappMessage(String.valueOf(quantityOfDiscoveries));
+		JSONObject jsonObject=ResponseMessageWrapper.wrappMessage(String.valueOf(quantityOfDiscoveries));
 		return Response.ok(jsonObject).header("Access-Control-Allow-Origin","*").build();
-	}
-	private JSONObject wrappMessage(String message){
-		JSONObject jsonObject=new JSONObject();
-		jsonObject.put("Message",message);
-		return jsonObject;
 	}
 
 

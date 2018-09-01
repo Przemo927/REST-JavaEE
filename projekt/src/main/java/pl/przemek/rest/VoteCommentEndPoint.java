@@ -9,6 +9,8 @@ import javax.servlet.http.HttpServletRequest;
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;
 import javax.ws.rs.QueryParam;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 @Path("/votecom")
 public class VoteCommentEndPoint {
@@ -16,21 +18,25 @@ public class VoteCommentEndPoint {
 
     VoteCommentService votecommentservice;
     HttpServletRequest request;
+    private Logger logger;
 
     @Inject
-    public VoteCommentEndPoint(VoteCommentService votecommentservice,HttpServletRequest request){
+    public VoteCommentEndPoint(Logger logger,VoteCommentService votecommentservice,HttpServletRequest request){
+        this.logger=logger;
         this.votecommentservice=votecommentservice;
         this.request=request;
     }
     public VoteCommentEndPoint(){}
 
     @GET
-    public void voting(@QueryParam("vote") String vote, @QueryParam("commentId") long commentId){
+    public void vote(@QueryParam("vote") String vote, @QueryParam("commentId") long commentId){
         User loggedUser=(User)request.getSession().getAttribute("user");
         if(loggedUser!=null){
             VoteType votetype=VoteType.valueOf(vote);
             Long userId=loggedUser.getId();
             votecommentservice.updateVote(loggedUser.getId(),commentId,votetype);
+        }else {
+            logger.log(Level.SEVERE,"[VoteCommentEndPoint] vote() user wasn't saved in session");
         }
     }
 }

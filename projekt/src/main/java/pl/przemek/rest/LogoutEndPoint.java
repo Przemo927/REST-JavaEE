@@ -1,7 +1,11 @@
 package pl.przemek.rest;
 
 import java.io.IOException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
+import javax.inject.Inject;
+import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.ws.rs.GET;
@@ -10,12 +14,23 @@ import javax.ws.rs.core.Context;
 
 @Path("/logout")
 public class LogoutEndPoint {
-    private final static String homePath="/projekt";
-    //projekt/index.html#!/home
+    private final static String HOME_PATH="/projekt";
 
-@GET
-public void logout(@Context HttpServletRequest request,@Context HttpServletResponse response) throws IOException{
-    request.getSession().invalidate();
-    response.sendRedirect(homePath);
-}
+    private Logger logger;
+
+    @Inject
+    public LogoutEndPoint(Logger logger){
+        this.logger=logger;
+    }
+    public LogoutEndPoint(){}
+    @GET
+    public void logout(@Context HttpServletRequest request,@Context HttpServletResponse response){
+        try {
+            request.getSession().invalidate();
+            request.logout();
+            response.sendRedirect(HOME_PATH);
+        } catch (IOException | ServletException e) {
+            logger.log(Level.SEVERE,"[LoginEndPoint] logout()",e);
+        }
+    }
 }

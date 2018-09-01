@@ -17,6 +17,9 @@ import javax.ws.rs.core.Response;
 import javax.ws.rs.core.UriInfo;
 import java.net.URI;
 import java.util.List;
+import java.util.Optional;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 @RequestScoped
 @Path("/event")
@@ -24,7 +27,7 @@ public class EventEndPoint {
 
     private EventService eventservice;
     private HttpServletRequest request;
-    private final static ResponseMessageWrapper mw=new ResponseMessageWrapper();
+    private Logger logger;
 
     @Context
     UriInfo uriInfo;
@@ -32,7 +35,8 @@ public class EventEndPoint {
     public EventEndPoint() {
     }
     @Inject
-    public EventEndPoint(EventService eventservice,HttpServletRequest request) {
+    public EventEndPoint(Logger logger,EventService eventservice,HttpServletRequest request) {
+        this.logger=logger;
         this.eventservice = eventservice;
         this.request=request;
     }
@@ -41,13 +45,14 @@ public class EventEndPoint {
     @GET
     @Produces(MediaType.APPLICATION_JSON)
     public Response getEvent(@PathParam("id") long id) {
-        Event event=eventservice.getEvent(id);
-        if(event==null){
+        Optional<Event> eventOptional=eventservice.getEvent(id);
+        return eventOptional.map(event -> {
+            return Response.ok(event).build();
+        }).orElseGet(()->{
+            logger.log(Level.SEVERE,"[EventEndPoint] getEvent() event wasn't found");
             return Response.status(Response.Status.NO_CONTENT).build();
+        });
         }
-        return Response.ok(event).build();
-    }
-
 
     @GET
     @Produces(MediaType.APPLICATION_JSON)
@@ -57,8 +62,10 @@ public class EventEndPoint {
             listOfEvents=eventservice.getAllEvents();
         }else
             listOfEvents=eventservice.getEventsByCity(city);
-        if(listOfEvents.isEmpty())
+        if(listOfEvents.isEmpty()) {
+            logger.log(Level.SEVERE, "[EventEndPoint] getEvents() events wasn't found");
             return Response.status(Response.Status.NO_CONTENT).build();
+        }
         return Response.ok(listOfEvents).build();
     }
 
@@ -67,8 +74,10 @@ public class EventEndPoint {
     @Produces(MediaType.APPLICATION_JSON)
     public Response getEventsByPosition(@QueryParam("x") double x, @QueryParam("y") double y,@QueryParam("distance") int distance ) {
         List<Event> listOfEventsGetByPosition=eventservice.getEventByPosition(x,y,distance);
-        if(listOfEventsGetByPosition.isEmpty())
+        if(listOfEventsGetByPosition.isEmpty()) {
+            logger.log(Level.SEVERE, "[EventEndPoint] getEventsByPosition() events wasn't found");
             Response.status(Response.Status.NO_CONTENT).build();
+        }
         return Response.ok(listOfEventsGetByPosition).build();
     }
 
@@ -76,18 +85,25 @@ public class EventEndPoint {
     @Consumes(MediaType.APPLICATION_JSON)
     public Response addEvent(Event event){
         User user=(User)request.getSession().getAttribute("user");
-        if(user!=null) {
+        if(user!=null && event!=null) {
             event.setUser(user);
             eventservice.addEvent(event);
             return Response.created(URI.create(uriInfo.getAbsolutePath()+"/"+event.getId())).build();
+        }else {
+            logger.log(Level.SEVERE, "[EventEndPoint] addEvent() event wasn't added user="+user+" event="+event);
+            return Response.status(Response.Status.UNAUTHORIZED).entity(ResponseMessageWrapper.wrappMessage("Logged user wasn't found")).build();
         }
-        return Response.ok(mw.wrappMessage("User isn't logged")).build();
     }
     @PUT
     @Consumes(MediaType.APPLICATION_JSON)
     public Response updateEvent(Event event){
-        eventservice.updateEvent(event);
-        return Response.ok(mw.wrappMessage("Event was updated")).build();
+        if(event!=null) {
+            eventservice.updateEvent(event);
+            return Response.ok(ResponseMessageWrapper.wrappMessage("Event was updated")).build();
+        }else {
+            logger.log(Level.SEVERE, "[EventEndPoint] updateEvent() event is null");
+            return Response.status(Response.Status.NOT_MODIFIED).build();
+        }
     }
 
     @DELETE
@@ -95,7 +111,7 @@ public class EventEndPoint {
     @Consumes(MediaType.APPLICATION_JSON)
     public Response removeEvent(@PathParam("id") long id){
         eventservice.removeEventById(id);
-        return Response.ok(mw.wrappMessage("Event was removed")).build();
+        return Response.ok(ResponseMessageWrapper.wrappMessage("Event was removed")).build();
     }
 
     @GET
@@ -103,8 +119,10 @@ public class EventEndPoint {
     @Produces
     public Response getCitiesFromAllEvents(){
         List<String> listOfCities=eventservice.getCitiesFromAllEvents();
-        if(listOfCities.isEmpty())
+        if(listOfCities.isEmpty()) {
+            logger.log(Level.SEVERE, "[EventEndPoint] getCitiesFromAllEvents() cities weren't found");
             return Response.status(Response.Status.NO_CONTENT).build();
+        }
         return Response.ok(listOfCities).build();
     }
 

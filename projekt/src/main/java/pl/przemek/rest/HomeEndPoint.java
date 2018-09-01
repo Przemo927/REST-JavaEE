@@ -22,34 +22,34 @@ import java.util.logging.Logger;
 @RequestScoped
 @Path("/home")
 public class HomeEndPoint {
-private final static String loginPath= "/projekt";
-private final static String logoutPath= "/projekt/api/logout";
+	private final static String LOGIN_PATH = "/projekt";
+	private final static String LOGOUT_PATH= "/projekt/api/logout";
 
-@Inject
-private  HttpServletRequest request;
+	@Inject
+	private  HttpServletRequest request;
 
 	@GET
-@Path("/check")
-@Produces(MediaType.APPLICATION_JSON)
-public Response loginStatus (){
-		JSONObject json = new JSONObject();
-	if(request.getUserPrincipal() != null) {
-		User user = (User) request.getSession(false).getAttribute("user");
-		json.put("name", "Logout");
-		json.put("path", logoutPath);
-		if (request.isUserInRole("admin")) {
-			json.put("role", "admin");
+	@Path("/check")
+	@Produces(MediaType.APPLICATION_JSON)
+	public Response loginStatus (){
+			JSONObject json = new JSONObject();
+		if(request.getUserPrincipal() != null) {
+			User user = (User) request.getSession(false).getAttribute("user");
+			json.put("name", "Logout");
+			json.put("path", LOGOUT_PATH);
+			if (request.isUserInRole("admin")) {
+				json.put("role", "admin");
+			}
+			else{
+				json.put("role","user");
+			}
 		}
 		else{
-			json.put("role","user");
+			json.put("name","Login");
+			json.put("path",LOGIN_PATH);
 		}
+		return Response.ok(json).build();
 	}
-	else{
-		json.put("name","Login");
-		json.put("path",loginPath);
-	}
-	return Response.ok(json).build();
-}
 
 }
 

@@ -1,38 +1,30 @@
 package pl.przemek.rest;
 
 import com.sun.org.apache.regexp.internal.RE;
-import pl.przemek.Message.MailService;
-import pl.przemek.Message.MessageWrapper;
 import pl.przemek.model.User;
-import pl.przemek.repository.JpaUserRepository;
 import pl.przemek.service.UserService;
 import pl.przemek.wrapper.ResponseMessageWrapper;
 
 import javax.inject.Inject;
-import javax.mail.*;
-import javax.mail.internet.AddressException;
-import javax.mail.internet.InternetAddress;
-import javax.mail.internet.MimeMessage;
 import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import java.util.List;
-import java.util.Properties;
+import java.util.Optional;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 @Path("/user")
 public class UserEndPoint {
 
 
     private UserService userservice;
-    private JpaUserRepository userrepo;
-    private MailService mailService;
-    private final static ResponseMessageWrapper mw=new ResponseMessageWrapper();
+    private Logger logger;
 
     @Inject
-    public UserEndPoint(UserService userService,JpaUserRepository userRepository,MailService mailService){
+    public UserEndPoint(Logger logger,UserService userService){
+        this.logger=logger;
         this.userservice=userService;
-        this.userrepo=userRepository;
-        this.mailService=mailService;
     }
     public UserEndPoint(){}
 
@@ -41,33 +33,42 @@ public class UserEndPoint {
     @DELETE
     public Response removeByUserName(@PathParam("id") long id) {
         userservice.removeByUserId(id);
-        return Response.ok(mw.wrappMessage("User was removed")).build();
+        return Response.ok(ResponseMessageWrapper.wrappMessage("User was removed")).build();
     }
 
     @GET
     @Path("/{id}")
     @Produces(MediaType.APPLICATION_JSON)
     public Response getUserById(@PathParam("id") Long id){
-        User user=userservice.getUserById(id);
-        if(user==null){
+        Optional<User> userOptional=userservice.getUserById(id);
+        return userOptional.map(user -> {
+            return Response.ok(user).build();
+        }).orElseGet(()->{
+            logger.log(Level.SEVERE,"[UserService] getUserById() user wasn't found");
             return Response.status(Response.Status.NO_CONTENT).build();
-        }
-        return Response.ok(user).build();
+        });
     }
 
     @PUT
     @Consumes(MediaType.APPLICATION_JSON)
     public Response updateUser(User user){
-        userservice.updateUserWithoutPassword(user);
-        return Response.ok("User was updated").build();
+        if(user!=null) {
+            userservice.updateUserWithoutPassword(user);
+            return Response.ok("User was updated").build();
+        }else {
+            logger.log(Level.SEVERE,"[UserService] updateUser() user wasn't updated");
+            return Response.status(Response.Status.BAD_REQUEST).entity("User wasn't found").build();
+        }
     }
 
     @GET
     @Produces(MediaType.APPLICATION_JSON)
     public Response getAllUsers(){
         List<User> listOfUsers=userservice.getAllUsers();
-        if(listOfUsers.isEmpty())
+        if(listOfUsers.isEmpty()) {
+            logger.log(Level.SEVERE,"[UserService] getAllUsers() users weren't found");
             return Response.status(Response.Status.NO_CONTENT).build();
+        }
        return Response.ok(listOfUsers).build();
     }
 

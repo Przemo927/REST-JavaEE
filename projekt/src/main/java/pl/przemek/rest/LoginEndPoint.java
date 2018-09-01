@@ -2,6 +2,7 @@ package pl.przemek.rest;
 
 
 import pl.przemek.security.Login;
+import pl.przemek.security.PasswordSecurity;
 import pl.przemek.security.TokenService;
 import pl.przemek.security.TokenStore;
 import pl.przemek.service.UserService;
@@ -59,7 +60,7 @@ public class LoginEndPoint {
 @POST
 public Response login(@FormParam("j_username") String username,@FormParam("j_password") String password) throws IOException, URISyntaxException, NoSuchAlgorithmException {
 
-    String hashedPassword=userService.hashPassword(password);
+    String hashedPassword= PasswordSecurity.hashPassword(password);
     String token=tokenService.generateToken(username,hashedPassword);
 
     logger.log(Level.INFO, "Generated token is {0}", token);
