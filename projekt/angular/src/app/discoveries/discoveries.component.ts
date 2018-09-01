@@ -63,6 +63,3 @@ export class DiscoveriesComponent implements OnInit, DoCheck {
   }
 
 }
-interface UiEvent{
-  pageY:number;
-}

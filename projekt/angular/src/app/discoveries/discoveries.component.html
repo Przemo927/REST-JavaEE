@@ -4,11 +4,11 @@
     <div>
       <div style="display:inline-flex">
         <div id="TextOne">Sort by:</div>
-        <button class="buttonClass" id="button">Time</button>
-        <button class="buttonClass" id="button">Popularity</button>
+        <button class="buttonClass">Time</button>
+        <button class="buttonClass">Popularity</button>
       </div>
       <div id="listOfUsers" class="text-center">
-        <button routerLink="/users" id="button" *ngIf="adminRole==true" type="button" class="buttonClass">List of users</button>
+        <button routerLink="/users" *ngIf="adminRole==true" type="button" class="buttonClass">List of users</button>
       </div>
     </div>
   </div>
