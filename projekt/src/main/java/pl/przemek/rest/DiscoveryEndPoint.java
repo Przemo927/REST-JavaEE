@@ -1,14 +1,10 @@
 package pl.przemek.rest;
 
-import java.io.IOException;
-
-import java.io.UnsupportedEncodingException;
-import java.math.BigInteger;
-import java.net.URI;
-import java.util.List;
-import java.util.Optional;
-import java.util.logging.Level;
-import java.util.logging.Logger;
+import org.json.simple.JSONObject;
+import pl.przemek.model.Discovery;
+import pl.przemek.model.User;
+import pl.przemek.service.DiscoveryService;
+import pl.przemek.wrapper.ResponseMessageWrapper;
 
 import javax.enterprise.context.RequestScoped;
 import javax.inject.Inject;
@@ -20,13 +16,13 @@ import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.UriInfo;
-
-import org.json.simple.JSONObject;
-import pl.przemek.mapper.ExceptionMapperAnnotation;
-import pl.przemek.model.Discovery;
-import pl.przemek.model.User;
-import pl.przemek.service.DiscoveryService;
-import pl.przemek.wrapper.ResponseMessageWrapper;
+import java.io.UnsupportedEncodingException;
+import java.math.BigInteger;
+import java.net.URI;
+import java.util.List;
+import java.util.Optional;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 @RequestScoped
 @Path("/discovery")
@@ -34,7 +30,6 @@ public class DiscoveryEndPoint {
 
 	private DiscoveryService discoveryService;
 	private HttpServletRequest request;
-	private final static ResponseMessageWrapper mw=new ResponseMessageWrapper();
 	private Logger logger;
 	@Context
 	UriInfo uriInfo;

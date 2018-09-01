@@ -1,6 +1,5 @@
 package pl.przemek.rest;
 
-import com.sun.org.apache.regexp.internal.RE;
 import pl.przemek.model.User;
 import pl.przemek.service.UserService;
 import pl.przemek.wrapper.ResponseMessageWrapper;

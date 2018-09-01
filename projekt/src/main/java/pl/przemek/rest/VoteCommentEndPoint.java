@@ -16,8 +16,8 @@ import java.util.logging.Logger;
 public class VoteCommentEndPoint {
 
 
-    VoteCommentService votecommentservice;
-    HttpServletRequest request;
+    private VoteCommentService votecommentservice;
+    private HttpServletRequest request;
     private Logger logger;
 
     @Inject
@@ -34,7 +34,7 @@ public class VoteCommentEndPoint {
         if(loggedUser!=null){
             VoteType votetype=VoteType.valueOf(vote);
             Long userId=loggedUser.getId();
-            votecommentservice.updateVote(loggedUser.getId(),commentId,votetype);
+            votecommentservice.updateVote(userId,commentId,votetype);
         }else {
             logger.log(Level.SEVERE,"[VoteCommentEndPoint] vote() user wasn't saved in session");
         }

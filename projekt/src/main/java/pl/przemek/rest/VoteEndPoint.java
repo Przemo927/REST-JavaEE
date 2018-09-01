@@ -5,7 +5,6 @@ import pl.przemek.model.User;
 import pl.przemek.model.Vote;
 import pl.przemek.model.VoteType;
 import pl.przemek.service.VoteDiscoveryService;
-import pl.przemek.wrapper.ResponseMessageWrapper;
 
 import javax.inject.Inject;
 import javax.servlet.http.HttpServletRequest;

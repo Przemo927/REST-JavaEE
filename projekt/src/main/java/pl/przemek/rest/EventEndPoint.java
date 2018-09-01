@@ -1,12 +1,10 @@
 package pl.przemek.rest;
 
-import com.sun.org.apache.regexp.internal.RE;
 import pl.przemek.model.Event;
 import pl.przemek.model.User;
 import pl.przemek.service.EventService;
 import pl.przemek.wrapper.ResponseMessageWrapper;
 
-import javax.ejb.Remove;
 import javax.enterprise.context.RequestScoped;
 import javax.inject.Inject;
 import javax.servlet.http.HttpServletRequest;

@@ -2,7 +2,6 @@ package pl.przemek.rest;
 
 import pl.przemek.model.EventPosition;
 import pl.przemek.service.EventPositionService;
-import pl.przemek.wrapper.ResponseMessageWrapper;
 
 import javax.inject.Inject;
 import javax.ws.rs.Consumes;
@@ -12,14 +11,12 @@ import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.UriInfo;
-import java.awt.*;
 import java.net.URI;
 
 @Path("/eventPosition")
 public class EventPositionEndPoint {
 
     private EventPositionService eventPositionService;
-    private final static ResponseMessageWrapper mw=new ResponseMessageWrapper();
 
     @Context
     UriInfo uriInfo;

@@ -3,7 +3,6 @@ package pl.przemek.rest;
 import pl.przemek.model.Comment;
 import pl.przemek.model.User;
 import pl.przemek.service.CommentService;
-import pl.przemek.wrapper.ResponseMessageWrapper;
 
 import javax.inject.Inject;
 import javax.servlet.http.HttpServletRequest;
@@ -14,10 +13,9 @@ import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.UriInfo;
-import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.net.URI;
-import java.util.*;
+import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -26,7 +24,6 @@ public class CommentEndPoint {
 
     private CommentService commentservice;
     private HttpServletRequest request;
-    private final static ResponseMessageWrapper mw=new ResponseMessageWrapper();
     private Logger logger;
     @Context
     UriInfo uriInfo;

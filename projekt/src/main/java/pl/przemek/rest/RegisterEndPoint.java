@@ -1,5 +1,15 @@
 package pl.przemek.rest;
 
+import pl.przemek.Message.EmailMessageTemplate;
+import pl.przemek.Message.MailService;
+import pl.przemek.Message.MessageWrapper;
+import pl.przemek.model.SecurityKey;
+import pl.przemek.model.User;
+import pl.przemek.security.KeyDataStore;
+import pl.przemek.security.Utils.KeyUtils;
+import pl.przemek.service.SecurityKeyService;
+import pl.przemek.service.UserService;
+
 import javax.inject.Inject;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
@@ -7,20 +17,7 @@ import javax.validation.Valid;
 import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
-
-import pl.przemek.Message.EmailMessageTemplate;
-import pl.przemek.Message.MailService;
-import pl.przemek.Message.MessageWrapper;
-import pl.przemek.model.SecurityKey;
-import pl.przemek.model.User;
-import pl.przemek.security.AuthenticationDataStore;
-import pl.przemek.security.KeyDataStore;
-import pl.przemek.security.Utils.KeyUtils;
-import pl.przemek.service.SecurityKeyService;
-import pl.przemek.service.UserService;
-
 import java.net.URI;
-import java.net.URISyntaxException;
 import java.security.KeyPair;
 import java.security.NoSuchAlgorithmException;
 import java.security.NoSuchProviderException;

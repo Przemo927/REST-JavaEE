@@ -1,9 +1,5 @@
 package pl.przemek.rest;
 
-import java.io.IOException;
-import java.util.logging.Level;
-import java.util.logging.Logger;
-
 import javax.inject.Inject;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
@@ -11,6 +7,9 @@ import javax.servlet.http.HttpServletResponse;
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;
 import javax.ws.rs.core.Context;
+import java.io.IOException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 @Path("/logout")
 public class LogoutEndPoint {
