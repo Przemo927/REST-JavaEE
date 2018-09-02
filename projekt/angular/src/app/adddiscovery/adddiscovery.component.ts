@@ -18,8 +18,6 @@ export class AdddiscoveryComponent implements OnInit {
 
 
   private discovery= new Discovery();
-  private invalidFieldList: InvalidFieldList= {};
-
 
   constructor(private discoveryService: DiscoveryService) { }
 
@@ -28,9 +26,8 @@ export class AdddiscoveryComponent implements OnInit {
 
   addDiscovery(discovery: Discovery) {
     this.discoveryService.addDiscovery(discovery).subscribe((res) => {
-    if (res!==undefined && res.InvalidFieldList != null){
-        this.invalidFieldList = res.InvalidFieldList;
-        this.checkInvalidFieldList(this.invalidFieldList);
+      if (res!==undefined && res.invalidFieldList != null){
+          this.checkInvalidFieldList(res.invalidFieldList);
     }
   });
 
