@@ -26,11 +26,11 @@ public class ValidatorMapper implements ExceptionMapper<ValidationException> {
             for (ConstraintViolation<?> v : violations) {
                 String[] strings = (v.getPropertyPath() + "").split("\\.");
                 map.put(strings[2],v.getMessage());
-        json.put("InvalidFieldList", map);
+        json.put("invalidFieldList", map);
         }
-            return Response.ok().entity(json).type(MediaType.APPLICATION_JSON).header("Access-Control-Allow-Origin","*").build();
+            return Response.status(Status.BAD_REQUEST).entity(json).build();
     	}
-		return Response.status(Status.BAD_REQUEST).entity("sorry").type(MediaType.APPLICATION_JSON).build();
+		return Response.status(Status.BAD_REQUEST).build();
         
     }
 }
