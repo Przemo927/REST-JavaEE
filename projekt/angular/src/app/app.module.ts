@@ -44,6 +44,9 @@ import {DiscoveriesEncryptedComponent} from "./discoveries/discoveriesencrypted.
 import {EncryptedComponent} from "./encrypted/encrypted.component";
 import {KeyService} from "./key.service";
 import { ValidatableinputComponent } from './validatableinput/validatableinput.component';
+import { CalendarModule } from 'primeng/calendar';
+import { LeftmenuComponent } from './leftmenu/leftmenu.component';
+import { HeaderComponent } from './header/header.component';
 
 @NgModule({
   declarations: [
@@ -66,6 +69,8 @@ import { ValidatableinputComponent } from './validatableinput/validatableinput.c
     DiscoveriesEncryptedComponent,
     EncryptedComponent,
     ValidatableinputComponent,
+    LeftmenuComponent,
+    HeaderComponent,
   ],
   imports: [
     ReactiveFormsModule,
@@ -78,7 +83,8 @@ import { ValidatableinputComponent } from './validatableinput/validatableinput.c
     AppRoutingModule,
     LeafletModule.forRoot(),
     BootstrapSwitchModule.forRoot(),
-    BrowserAnimationsModule
+    BrowserAnimationsModule,
+    CalendarModule
   ],
   providers: [DiscoveryService, UserService, CommentService, EventService, EventpositionService, CheckUserService, DiscoveryPageService, PageService, NameofcityService, DataService, EncryptedService, KeyService],
   bootstrap: [AppComponent]

@@ -9,4 +9,60 @@ nav > div {
   display: flex;
   margin-right: 2em;
 }
+ul.nav li a span {
+  padding: 10px;
+}
+.navBoxShadow:hover {
+  animation: boxShadow 0.5s;
+  animation-fill-mode: forwards;
+}
+@keyframes boxShadow {
+  from {
+  }
+
+  to {
+    box-shadow: 0px 0px 5px rgba(255, 255, 255, 1);
+  }
+}
+#counter {
+  margin-left: auto;
+  display: flex;
+  align-items: center;
+}
+  #counter div {
+    padding: 5px;
+    box-shadow: 0px 0px 4px white;
+    border-radius: 10px;
+    display: flex;
+  }
+  #counter div:hover {
+    box-shadow: 0px 0px 10px white;
+  }
+  @media(max-width:1000px){
+    #leftMenu {
+      display:none;
+    }
+    #mainMenu{
+      width:100% !important;
+    }
+  }
+
+#leftMenu {
+  background:white;
+  width: 20%;
+  max-width:300px;
+  margin-right: 5px;
+  box-shadow: 0px 0px 5px black;
+}
+#mainMenu {
+  background:white;
+  width: 80%;
+  max-width:1100px;
+  padding: 10px;
+  margin-left: 5px;
+  box-shadow: 0px 0px 5px black;
+}
+
+
+
 

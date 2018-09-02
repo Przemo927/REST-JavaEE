@@ -1,8 +1,7 @@
-import { Component, OnInit, DoCheck, AfterViewInit  } from '@angular/core';
-import { Router, NavigationEnd, NavigationStart } from '@angular/router';
-import { DataService } from './data.service';
-import { BaseUrl } from './baseurl.enum';
-import { EndPoint } from './endpoint.enum';
+import {Component, DoCheck, OnInit} from "@angular/core";
+import {NavigationEnd, Router} from "@angular/router";
+import {BaseUrl} from "./baseurl.enum";
+import {EndPoint} from "./endpoint.enum";
 
 @Component({
   selector: 'app-root',
@@ -11,18 +10,20 @@ import { EndPoint } from './endpoint.enum';
 })
 export class AppComponent implements OnInit, DoCheck {
 
-  private counter = 600;
+  private counterSeconds = 600;
   private panelBody: any;
   private navHeight: number;
   private nav: any;
+  private urlLogout: string;
 
   constructor(private router: Router) {
-    router.events.subscribe((e) => {
-      this.counter = 600;
+    router.events.subscribe(() => {
+      this.counterSeconds = 600;
     });
   }
 
   ngOnInit() {
+    this.urlLogout = window.location.protocol + "//" + BaseUrl.development + EndPoint.logout;
     this.nav = document.getElementsByTagName("nav")[0];
     this.navHeight = this.nav.offsetHeight;
     this.initialCounter();
@@ -30,8 +31,8 @@ export class AppComponent implements OnInit, DoCheck {
   }
 
   private addRouteChangeListener() {
-    this.router.events.forEach((e) => {
-      if (e instanceof NavigationStart) {
+    this.router.events.forEach((event) => {
+      if (event instanceof NavigationEnd) {
         this.panelBody = document.getElementById("main");
       }
     });
@@ -39,16 +40,22 @@ export class AppComponent implements OnInit, DoCheck {
 
   private initialCounter(): void {
     setInterval(() => {
-      --this.counter;
-      if (this.counter == 0) {
-        window.location.href = window.location.protocol + "//" + BaseUrl.development + EndPoint.logout;
-
+      --this.counterSeconds;
+      if (this.counterSeconds == 0) {
+        window.location.href = this.urlLogout;
+      }
+      if (this.counterSeconds<0){
+        this.counterSeconds=0;
       }
 
     }, 1000);
   }
 
   ngDoCheck() {
+    this.setUpTopMarginOfMainDivDependOfPositionOfNavbar();
+  }
+
+  private setUpTopMarginOfMainDivDependOfPositionOfNavbar(){
     if (this.navHeight !== this.nav.offsetHeight) {
       this.navHeight = this.nav.offsetHeight;
     }
@@ -61,7 +68,7 @@ export class AppComponent implements OnInit, DoCheck {
   }
 
   private reloadCounter(){
-  this.counter=600;
+  this.counterSeconds=600;
   }
 
 }
