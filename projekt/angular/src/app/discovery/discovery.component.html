@@ -1,48 +1,42 @@
-<div class="container">
-            <div *ngIf="discovery" class="row bs-callout bs-callout-primary">
-                <div class="col col-md-2 col-sm-3" >
-                    <h4><p>{{this.discovery.name}}</p></h4>
-                    <a href={{this.discovery.url}}><button class="btn btn-default btn-xs">Source</button></a>
-                </div>
+<app-header title="Discovery"></app-header>
+<div id="main">
+  <div *ngIf="discovery" class="row bs-callout bs-callout-primary">
+    <div class="col col-md-2 col-sm-3">
+      <h4><p>{{this.discovery.name}}</p></h4>
+      <a href={{this.discovery.url}}><button class="btn btn-default btn-xs">Source</button></a>
+    </div>
 
-                <div class="col col-md-10 col-sm-9">
-                    <p>{{this.discovery.description}}</p>
-                </div>
-                <div class="col col-md-1 col-sm-2" >
-                    </div>
-            </div>
+    <div class="col col-md-10 col-sm-9">
+      <p>{{this.discovery.description}}</p>
+    </div>
+    <div class="col col-md-1 col-sm-2">
+    </div>
+  </div>
 
-<br><h3>Comments:</h3>
-    <ul class="list-unstyled" *ngIf="comments">
-        <li  *ngFor="let comment of comments">
-    <div class="row">
-        <div class="col col-md-2 col-sm-3" >
-            <p>{{comment.user.username}}</p>
+  <br><h3>Comments:</h3>
+  <ul class="list-unstyled" *ngIf="comments">
+    <li *ngFor="let comment of comments">
+      <div style="box-shadow: 0px 0px 5px rgba(51, 51, 51, 0.7)">
+        <div class="col col-md-2 col-sm-3">
+          <p>{{comment.user.username}}</p>
         </div>
-        <div class="row bs-callout bs-callout-default">
-            <div class="col col-md-11 col-sm-11" >
-                <p>{{comment.comment}}</p>
-            </div>
-                <div class="col col-md-1 col-sm-1">
-                    <div class="row">
-                        <div class="col col-md-6 col-sm-6">
-                        <span (click)="addVote(VoTE_UP,comment.id)" class="glyphicon glyphicon-thumbs-up btn-xs btn-success"></span><p>{{comment.upVote}}</p>
-                        </div>
-                        <div class="col col-md-6 col-sm-6">
-                        <span (click)="addVote(VoTE_DOWN,comment.id)" class="glyphicon glyphicon-thumbs-down btn-xs btn-warning"></span><p>{{comment.downVote}}</p>
-                        </div>
-                    </div>
-
-                    </div>
-    </div>
-</div>
-        </li>
-    </ul>
-    <div class="col-md-8 col-md-offset-2" *ngIf="comment">
-        <form class="form-signin">
-          <h2 class="form-signin-heading">Add new comment</h2>
-          <app-validatabletextarea name="comment" (changeEvent)="assignComment($event)" positionMessage="above" placeholder="Write comment" rows="5"></app-validatabletextarea>
-          <button (click)="addComment()" class="btn btn-lg btn-primary btn-block" type="submit">Add</button>
-        </form>
-    </div>
+        <div class="row bs-callout bs-callout-default;position:relative">
+          <div style="width:760px">
+            <p>{{comment.comment}}</p>
+          </div>
+          <div style="display: flex;height: 20px;position: absolute;right: 10px">
+            <span (click)="addVote(VoTE_UP,comment.id)" class="glyphicon glyphicon-thumbs-up btn-xs btn-success"></span><p>{{comment.upVote}}</p>
+            <span (click)="addVote(VoTE_DOWN,comment.id)" class="glyphicon glyphicon-thumbs-down btn-xs btn-warning"></span><p>{{comment.downVote}}</p>
+          </div>
+        </div>
+      </div>
+    </li>
+  </ul>
+  <div *ngIf="comment">
+    <form class="addForm">
+      <h2 class="form-signin-heading">Add new comment</h2>
+      <app-validatabletextarea name="comment" (changeEvent)="assignComment($event)" positionMessage="above" placeholder="Write comment" rows="5"></app-validatabletextarea>
+      <button (click)="addComment()" style="width:100%" class="bigButtonClass" type="submit">Add</button>
+    </form>
+  </div>
 </div>
