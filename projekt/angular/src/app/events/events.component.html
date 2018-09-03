@@ -1,13 +1,14 @@
-    <div id="main" style="margin-top:10px;min-width:250px">
+<app-header title="{{title}}"></app-header>
+<div id="main" style="margin-top:10px;min-width:250px">
     <div style="text-align:center" class="container-fluid">
-    <button [ngStyle]="positionStyle" (click)="searchByPosition()" routerLink="searchByPosition" class="btn btn-primary">Find By Position</button>
-    <button [ngStyle]="cityStyle" (click)="searchByCity()" routerLink="searchByCity" class="btn btn-warning">Find By City</button>
-    <button [ngStyle]="allStyle" (click)="showAllEvents()" routerLink="listOfAllEvents" class="btn btn-success">Show All Events</button>
+      <button [ngStyle]="positionStyle" (click)="searchByPosition()" routerLink="searchByPosition" class="btn btn-primary">Find By Position</button>
+      <button [ngStyle]="cityStyle" (click)="searchByCity()" routerLink="searchByCity" class="btn btn-warning">Find By City</button>
+      <button [ngStyle]="allStyle" (click)="showAllEvents()" routerLink="listOfAllEvents" class="btn btn-success">Show All Events</button>
     </div>
 </div>
-    <div>
+<div>
       <router-outlet></router-outlet>
-    </div>
+</div>
 
 
 
