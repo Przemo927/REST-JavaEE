@@ -17,6 +17,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 import javax.validation.Valid;
 import javax.ws.rs.*;
+import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.UriInfo;
@@ -40,17 +41,17 @@ public class RegisterEndPoint {
     private SecurityKeyService keyService;
     private KeyDataStore keyStore;
     private Logger logger;
+    @Context
     private UriInfo uriInfo;
 
     @Inject
-    public RegisterEndPoint(Logger logger, UserService userService, MailService mailService, HttpServletRequest request, SecurityKeyService keyService, KeyDataStore keyStore, UriInfo uriInfo){
+    public RegisterEndPoint(Logger logger, UserService userService, MailService mailService, HttpServletRequest request, SecurityKeyService keyService, KeyDataStore keyStore){
         this.logger=logger;
         this.userService=userService;
         this.mailService=mailService;
         this.request=request;
         this.keyService=keyService;
         this.keyStore=keyStore;
-        this.uriInfo=uriInfo;
     }
     public RegisterEndPoint(){}
 

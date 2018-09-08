@@ -13,14 +13,16 @@ public class EmailMessageTemplateTest {
 
 
     public Object[] baseUrlAndUserName() {
-        return $(new String[] {"http://wwww.baseurl.pl","username"},
-                new String[]{"http://wwww.localhost:8080","user1234"});
+        return $(new String[] {"http://wwww.baseurl.pl/","username"},
+                new String[]{"http://wwww.localhost:8080/","user1234"});
     }
     @Parameters(method = "baseUrlAndUserName")
     @Test
     public void shouldReturnEmailMessageWithUername(String baseUrl,String username) throws Exception {
         String message="Click link below to continue registration<br><br><a href="+
-                baseUrl+"/register/"+username+">Continue</a>";
+                baseUrl+"register/"+username+">Continue</a>";
+        String baseUrlWithoutLastCharacterAsSeparator=baseUrl.substring(0,baseUrl.length()-1);
+        assertEquals(message,EmailMessageTemplate.getPreparedMessage(baseUrlWithoutLastCharacterAsSeparator,username));
         assertEquals(message,EmailMessageTemplate.getPreparedMessage(baseUrl,username));
     }
 
