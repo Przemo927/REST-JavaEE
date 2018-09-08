@@ -91,16 +91,16 @@ public class DiscoveryEndPoint {
 	public Response getALL(@QueryParam("orderBy") @DefaultValue("popular") String order,@QueryParam("beginWith") Integer begin,
 						   @QueryParam("quantity") Integer quantity) throws Exception {
 		List<Discovery> allDiscoveries;
-	if(begin!=null && !(begin<0) && quantity!=null && !(quantity<0)){
-		allDiscoveries=discoveryService.getWithLimit(begin,quantity);
+		if(begin!=null && !(begin<0) && quantity!=null && !(quantity<0)){
+			allDiscoveries=discoveryService.getWithLimit(begin,quantity);
+			}
+		else {
+			allDiscoveries = discoveryService.getAll(order);
 		}
-	else {
-		allDiscoveries = discoveryService.getAll(order);
-	}
-	if(allDiscoveries.isEmpty()){
-		logger.log(Level.SEVERE,"[DiscoveryEndPoint] getALL() discovery wasn't found");
-		return Response.status(Response.Status.NO_CONTENT).build();
-	}
+		if(allDiscoveries.isEmpty()){
+			logger.log(Level.SEVERE,"[DiscoveryEndPoint] getALL() discovery wasn't found");
+			return Response.status(Response.Status.NO_CONTENT).build();
+		}
 		return Response.ok(allDiscoveries).build();
 	}
 

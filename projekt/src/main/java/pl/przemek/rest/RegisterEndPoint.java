@@ -1,5 +1,6 @@
 package pl.przemek.rest;
 
+import com.sun.jndi.toolkit.url.Uri;
 import pl.przemek.Message.EmailMessageTemplate;
 import pl.przemek.Message.MailService;
 import pl.przemek.Message.MessageWrapper;
@@ -18,6 +19,7 @@ import javax.validation.Valid;
 import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
+import javax.ws.rs.core.UriInfo;
 import java.net.URI;
 import java.security.KeyPair;
 import java.security.NoSuchAlgorithmException;
@@ -38,15 +40,17 @@ public class RegisterEndPoint {
     private SecurityKeyService keyService;
     private KeyDataStore keyStore;
     private Logger logger;
+    private UriInfo uriInfo;
 
     @Inject
-    public RegisterEndPoint(Logger logger,UserService userService, MailService mailService, HttpServletRequest request,SecurityKeyService keyService,KeyDataStore keyStore){
+    public RegisterEndPoint(Logger logger, UserService userService, MailService mailService, HttpServletRequest request, SecurityKeyService keyService, KeyDataStore keyStore, UriInfo uriInfo){
         this.logger=logger;
         this.userService=userService;
         this.mailService=mailService;
         this.request=request;
         this.keyService=keyService;
         this.keyStore=keyStore;
+        this.uriInfo=uriInfo;
     }
     public RegisterEndPoint(){}
 
@@ -54,7 +58,7 @@ public class RegisterEndPoint {
     @Consumes(MediaType.APPLICATION_JSON)
     public void sendMessageToRegistration(@Valid User user) {
         try {
-            String message=EmailMessageTemplate.getPreparedMessage(user.getUsername());
+            String message=EmailMessageTemplate.getPreparedMessage(uriInfo.getBaseUri().toString(),user.getUsername());
             KeyPair keyPair= null;
             keyPair = KeyUtils.generatePairOfKeys();
             String publicKeyAsString=KeyUtils.convertKeyToString(keyPair.getPublic());
