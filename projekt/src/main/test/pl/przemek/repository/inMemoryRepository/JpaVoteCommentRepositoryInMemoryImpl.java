@@ -5,14 +5,14 @@ import pl.przemek.model.Comment;
 import pl.przemek.model.User;
 import pl.przemek.model.VoteComment;
 import pl.przemek.model.VoteType;
-import pl.przemek.repository.JpaVoteCommentRepository;
+import pl.przemek.repository.JpaVoteRepository;
 
 import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
-public class JpaVoteCommentRepositoryInMemoryImpl implements JpaVoteCommentRepository {
+public class JpaVoteCommentRepositoryInMemoryImpl implements JpaVoteRepository<VoteComment> {
 
     private List<VoteComment> listofVoteComments;
 
@@ -56,16 +56,21 @@ public class JpaVoteCommentRepositoryInMemoryImpl implements JpaVoteCommentRepos
     }
 
     @Override
-    public VoteComment getVoteByUserIdCommentId(Long userId, Long commentId) {
+    public List<VoteComment> getAll(String nameOfQuery, Class<VoteComment> clazz) {
+        return null;
+    }
+
+    @Override
+    public List<VoteComment> getVoteByUserIdVotedElementId(long userId, long commentId) {
         for(VoteComment voteComment: listofVoteComments){
-            if(voteComment.getUser().getId()==userId && voteComment.getComment().getId()==commentId)
-                return voteComment;
+            if(voteComment.getUser().getId()==userId && voteComment.getComment().getId()==commentId);
+                //return voteComment;
         }
         return null;
     }
 
     @Override
-    public void removeByCommentId(Long commentId) {
+    public void removeByVotedElementId(long commentId) {
         for(VoteComment voteComment:listofVoteComments){
             if(voteComment.getId()==commentId)
                 listofVoteComments.remove(commentId);

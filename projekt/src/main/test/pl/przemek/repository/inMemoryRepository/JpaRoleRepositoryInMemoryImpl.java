@@ -21,7 +21,7 @@ public class JpaRoleRepositoryInMemoryImpl implements JpaRoleRepository {
     public void update(Role role, User user) {
         role.getUsers().add(user);
         for(int i=0;i<listOfRoles.size();i++){
-            if(listOfRoles.get(i).getroleName().equals(role.getroleName())){
+            if(listOfRoles.get(i).getRoleName().equals(role.getRoleName())){
                 listOfRoles.set(i,role);
             }
         }
@@ -31,7 +31,7 @@ public class JpaRoleRepositoryInMemoryImpl implements JpaRoleRepository {
     public List<Role> getRoles(String nameRole) {
         List<Role> temporaryList=new ArrayList<>();
         listOfRoles.forEach(role -> {
-            if(nameRole!=null && nameRole.equals(role.getroleName()))
+            if(nameRole!=null && nameRole.equals(role.getRoleName()))
                 temporaryList.add(role);
         });
         return temporaryList;
@@ -41,12 +41,12 @@ public class JpaRoleRepositoryInMemoryImpl implements JpaRoleRepository {
         for(int i=0;i<10;i++){
             role=new Role();
             role.setDescription("description"+i);
-            role.setroleName("rolename"+i);
+            role.setRoleName("rolename"+i);
             listOfRoles.add(role);
             role.setUsers(new HashSet<>());
         }
         role=new Role();
-        role.setroleName("user");
+        role.setRoleName("user");
         role.setDescription("description");
         role.setUsers(new HashSet<>());
         listOfRoles.add(role);
@@ -63,7 +63,7 @@ public class JpaRoleRepositoryInMemoryImpl implements JpaRoleRepository {
         Role role=null;
         for(int i=0;i<listOfRoles.size();i++){
             role=listOfRoles.get(i);
-            if(roleName!=null && roleName.equals(role.getroleName()))
+            if(roleName!=null && roleName.equals(role.getRoleName()))
                 listOfRoles.remove(role);
         }
     }

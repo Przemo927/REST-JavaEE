@@ -11,11 +11,11 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
-public class JpaVoteRepositoryInMemoryImpl implements JpaVoteRepository {
+public class JpaVoteDicoveryRepositoryInMemoryImpl implements JpaVoteRepository<Vote> {
 
     List<Vote> listOfVotes;
 
-    public JpaVoteRepositoryInMemoryImpl(){
+    public JpaVoteDicoveryRepositoryInMemoryImpl(){
         listOfVotes=new ArrayList<>();
         populateVoteList();
     }
@@ -55,18 +55,17 @@ public class JpaVoteRepositoryInMemoryImpl implements JpaVoteRepository {
     }
 
     @Override
-    public Vote getVoteByUserIdDiscoveryId(Long userId, Long discoveryId) {
-        for(int i=0;i<listOfVotes.size();i++) {
-            Vote vote = listOfVotes.get(i);
-            if(vote.getDiscovery().getId()==discoveryId && vote.getUser().getId()==userId)
-                return vote;
-
+    public List<Vote> getVoteByUserIdVotedElementId(long userId, long discoveryId) {
+        List<Vote> temporaryList=new ArrayList<>();
+        for (Vote vote : listOfVotes) {
+            if (vote.getDiscovery().getId() == discoveryId && vote.getUser().getId() == userId)
+                temporaryList.add(vote);
         }
-        return null;
+        return temporaryList;
     }
 
     @Override
-    public void removeByDiscoveryId(Long discoveryId) {
+    public void removeByVotedElementId(long discoveryId) {
         for(int i=0;i<listOfVotes.size();i++) {
             Vote vote = listOfVotes.get(i);
             if(vote.getDiscovery().getId()==discoveryId)
