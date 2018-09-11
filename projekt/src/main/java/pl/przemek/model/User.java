@@ -1,6 +1,7 @@
 package pl.przemek.model;
 
 import java.io.Serializable;
+import java.sql.Timestamp;
 import java.util.Set;
 
 import javax.persistence.*;
@@ -18,7 +19,8 @@ import pl.przemek.validation.UsernameUnique;
     @NamedQuery(name = "User.findAll", query = "SELECT p FROM User p"),
     @NamedQuery(name = "User.findByUsername", query = "SELECT p FROM User p WHERE p.username=:username"),
     @NamedQuery(name = "User.editUser", query = "UPDATE User p SET p.username=:username, p.email=:email, p.active=:active " +
-            "WHERE p.id=:id")
+            "WHERE p.id=:id"),
+    @NamedQuery(name= "User.setLastLogin", query = "UPDATE User p SET p.lastLogin=:lastLogin WHERE p.username=:username")
     })
 @Entity
 public class User implements Serializable {
@@ -42,13 +44,15 @@ public class User implements Serializable {
 	@Column(nullable = false, unique = true, length=60)
     private String email;
     @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
-    @Size(max=45)
+    @Size(max=255)
     @NotNull
-	@Column(nullable = false, length=45)
+	@Column(nullable = false, length=255)
     private String password;
     @NotNull
 	@Column(nullable = false)
     private boolean active;
+
+    private Timestamp lastLogin;
 
      
     public User() { }
@@ -93,7 +97,15 @@ public class User implements Serializable {
     public void setActive(boolean active) {
         this.active = active;
     }
- 
+
+    public Timestamp getLastLogin() {
+        return lastLogin;
+    }
+
+    public void setLastLogin(Timestamp lastLogin) {
+        this.lastLogin = lastLogin;
+    }
+
     @Override
     public String toString() {
         return "User [id=" + id + ", username=" + username + ", email=" + email + ", password="
@@ -142,6 +154,4 @@ public class User implements Serializable {
             return false;
         return true;
     }
-
-
 }

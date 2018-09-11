@@ -3,7 +3,10 @@ package pl.przemek.repository.inMemoryRepository;
 import pl.przemek.model.User;
 import pl.przemek.repository.JpaUserRepository;
 
+import javax.jws.soap.SOAPBinding;
+import java.sql.Timestamp;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.Random;
 
@@ -93,6 +96,18 @@ public class JpaUserRepositoryInMemoryImpl implements JpaUserRepository {
         }
         return false;
     }
+
+    @Override
+    public boolean updateLastLogin(String username) {
+        for(User user:listOfUsers){
+            if(user.getUsername().equals(username)){
+                user.setLastLogin(new Timestamp(new Date().getTime()));
+                return true;
+            }
+        }
+        return false;
+    }
+
     private void populateUserList(){
         User user;
         for(int i=0;i<10;i++){

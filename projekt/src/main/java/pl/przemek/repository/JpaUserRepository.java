@@ -14,4 +14,5 @@ public interface JpaUserRepository {
     public List<User> getUserByUsername(String name);
     public boolean checkPresenceOfUserByUsername(String username);
     public boolean checkPresenceOfEmail(String email);
+    public boolean updateLastLogin(String username);
 }

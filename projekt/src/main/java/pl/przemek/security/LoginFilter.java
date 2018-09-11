@@ -12,13 +12,8 @@ import javax.servlet.http.HttpServletResponse;
 import javax.ws.rs.container.ContainerRequestContext;
 import javax.ws.rs.container.ContainerRequestFilter;
 import javax.ws.rs.core.Context;
-import javax.ws.rs.core.Response;
 import javax.ws.rs.ext.Provider;
-
-import io.jsonwebtoken.Jwts;
-
 import java.io.IOException;
-import java.net.URI;
 import java.net.URISyntaxException;
 import java.security.Key;
 import java.util.List;
@@ -26,7 +21,6 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import static javax.ws.rs.core.HttpHeaders.AUTHORIZATION;
-import static javax.ws.rs.core.HttpHeaders.LOCATION;
 
 @Provider
 public class LoginFilter implements ContainerRequestFilter {
@@ -64,6 +58,7 @@ public class LoginFilter implements ContainerRequestFilter {
         else if(requestContext.getSecurityContext().getUserPrincipal() != null && request.getSession(false).getAttribute("user") == null) {
             username = requestContext.getSecurityContext().getUserPrincipal().getName();
             List<User> listUserByUsername = userrep.getUserByUsername(username);
+            updateLastLogin(username,userrep);
             if(!listUserByUsername.isEmpty()) {
                 User userByUsername=listUserByUsername.get(0);
                 try {
@@ -78,6 +73,12 @@ public class LoginFilter implements ContainerRequestFilter {
                logout();
             }
 
+        }
+    }
+    void updateLastLogin(String username, JpaUserRepository userrep){
+        boolean resultBoolean=userrep.updateLastLogin(username);
+        if(!resultBoolean){
+            logger.log(Level.SEVERE,"[LoginFilter] updateLastLogin() lastLogin wasn't updated");
         }
     }
     void LogoutIfInActiveStatus(User user, HttpServletRequest request) throws IOException, URISyntaxException {

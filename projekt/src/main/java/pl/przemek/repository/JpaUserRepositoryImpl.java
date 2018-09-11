@@ -7,6 +7,8 @@ import javax.annotation.security.RolesAllowed;
 import javax.ejb.Stateless;
 import javax.persistence.Query;
 import javax.persistence.TypedQuery;
+import java.sql.Timestamp;
+import java.util.Date;
 import java.util.List;
 
 @Stateless
@@ -22,6 +24,7 @@ public class JpaUserRepositoryImpl extends JpaRepository<User> implements JpaUse
 	}
 
     @RolesAllowed("admin")
+    @Override
     public Integer updateWithoutPassword(User user) {
         Query queryUpdateUser = em.createNamedQuery("User.editUser");
         queryUpdateUser.setParameter("username", user.getUsername());
@@ -32,6 +35,7 @@ public class JpaUserRepositoryImpl extends JpaRepository<User> implements JpaUse
     }
 
     @RolesAllowed({"admin","user"})
+    @Override
     public List<User> getUserByUsername(String username) {
         TypedQuery<User> getAllQuery = em.createNamedQuery("User.findByUsername", User.class);
         getAllQuery.setParameter("username",username);
@@ -39,6 +43,7 @@ public class JpaUserRepositoryImpl extends JpaRepository<User> implements JpaUse
 
     }
     @PermitAll
+    @Override
     public boolean checkPresenceOfUserByUsername(String username){
         Query query=em.createNativeQuery(PRESENCE_OF_USERNAME);
         query.setParameter("username",username);
@@ -46,10 +51,19 @@ public class JpaUserRepositoryImpl extends JpaRepository<User> implements JpaUse
         return list.size() == 0;
     }
     @PermitAll
+    @Override
     public boolean checkPresenceOfEmail(String email){
         Query query=em.createNativeQuery(PRESENCE_OF_EMAIL);
         query.setParameter("email",email);
         List list=query.getResultList();
         return list.size() == 0;
-        }
+    }
+    @RolesAllowed({"admin","user"})
+    @Override
+    public boolean updateLastLogin(String username){
+        Query query=em.createNamedQuery("User.setLastLogin");
+        query.setParameter("username",username);
+        query.setParameter("lastLogin",new Timestamp(new Date().getTime()));
+        return query.executeUpdate() > 0;
+    }
 }
