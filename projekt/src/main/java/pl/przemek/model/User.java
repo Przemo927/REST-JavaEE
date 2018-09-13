@@ -1,19 +1,17 @@
 package pl.przemek.model;
 
-import java.io.Serializable;
-import java.sql.Timestamp;
-import java.util.Set;
-
-import javax.persistence.*;
-import javax.validation.constraints.NotNull;
-import javax.validation.constraints.Size;
-
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import org.hibernate.validator.constraints.Email;
 import pl.przemek.validation.EmailUnique;
 import pl.przemek.validation.UsernameMatching;
 import pl.przemek.validation.UsernameUnique;
+
+import javax.persistence.*;
+import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Size;
+import java.io.Serializable;
+import java.sql.Timestamp;
 
 @NamedQueries({
     @NamedQuery(name = "User.findAll", query = "SELECT p FROM User p"),
@@ -22,6 +20,8 @@ import pl.przemek.validation.UsernameUnique;
             "WHERE p.id=:id"),
     @NamedQuery(name= "User.setLastLogin", query = "UPDATE User p SET p.lastLogin=:lastLogin WHERE p.username=:username")
     })
+@NamedNativeQuery(name = "User.SetInActive",query = "UPDATE User SET active=0 WHERE datediff(date(date:date),date(lastLogin))>365" +
+        " AND active=1")
 @Entity
 public class User implements Serializable {
 

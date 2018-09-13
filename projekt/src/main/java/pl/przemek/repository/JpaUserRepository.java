@@ -15,4 +15,5 @@ public interface JpaUserRepository {
     public boolean checkPresenceOfUserByUsername(String username);
     public boolean checkPresenceOfEmail(String email);
     public boolean updateLastLogin(String username);
+    public int setInactiveIfLasLoginLAterThan365Days();
 }

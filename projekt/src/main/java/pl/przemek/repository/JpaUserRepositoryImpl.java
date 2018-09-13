@@ -8,6 +8,7 @@ import javax.ejb.Stateless;
 import javax.persistence.Query;
 import javax.persistence.TypedQuery;
 import java.sql.Timestamp;
+import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
 
@@ -37,6 +38,7 @@ public class JpaUserRepositoryImpl extends JpaRepository<User> implements JpaUse
     @RolesAllowed({"admin","user"})
     @Override
     public List<User> getUserByUsername(String username) {
+        setInactiveIfLasLoginLAterThan365Days();
         TypedQuery<User> getAllQuery = em.createNamedQuery("User.findByUsername", User.class);
         getAllQuery.setParameter("username",username);
         return getAllQuery.getResultList();
@@ -65,5 +67,14 @@ public class JpaUserRepositoryImpl extends JpaRepository<User> implements JpaUse
         query.setParameter("username",username);
         query.setParameter("lastLogin",new Timestamp(new Date().getTime()));
         return query.executeUpdate() > 0;
+    }
+
+    @Override
+    @PermitAll
+    public int setInactiveIfLasLoginLAterThan365Days() {
+        Query query=em.createNamedQuery("User.SetInActive");
+        SimpleDateFormat simpleDateFormat=new SimpleDateFormat("yyyy-MM-dd");
+        query.setParameter("date",simpleDateFormat.format(new Date()));
+        return query.executeUpdate();
     }
 }
