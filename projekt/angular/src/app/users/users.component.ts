@@ -13,9 +13,14 @@ export class UsersComponent implements OnInit {
 
   users: User[];
   getUsers(): void {
-  this.userService.getUsers().subscribe(users => this.users = users);
+  this.userService.getUsers().subscribe(users => {
+    users.map((user)=>{
+      user.lastLogin=new Date(user.lastLogin);
+    });
+    this.users = users;
+  });
   }
-  
+
   ngOnInit() {
   this.getUsers();
   }

@@ -1,0 +1,109 @@
+img {
+  height: 80px;
+  margin: auto;
+  box-shadow: 0px 0px 5px rgba(51, 51, 51, 0.7);
+  padding:5px;
+}
+table {
+  font-family: arial, sans-serif;
+  border-collapse: collapse;
+  width: 100%;
+}
+td, th {
+  border: 1px solid #dddddd;
+  text-align: left;
+  padding: 8px;
+}
+#main {
+  width: 80%;
+  margin:auto;
+}
+#information{
+  width: 40%;
+}
+#information div:nth-child(1){
+  margin: auto;
+  text-align: center;
+  background: #EDEDED;
+}
+#information div:nth-child(2){
+  padding: 5px;
+}
+#information div:nth-child(2) p:nth-child(1){
+  display: block;
+  word-break: break-all;
+}
+#information div:nth-child(2) p:nth-child(2) {
+  word-break: break-all;
+  font-size: smaller;
+}
+#user{
+  display: flex;
+  margin-bottom: 10px;
+  padding: 10px;box-shadow: 0px 0px 5px rgba(51, 51, 51, 0.7);
+}
+#user > div {
+  margin-left: 5px !important;
+  border: 2px #EDEDED solid;
+}
+#lastLogin{
+  width: 30%;
+}
+#lastLogin div:nth-child(1){
+  margin: auto;
+  text-align: center;
+  background: #EDEDED;
+}
+#lastLogin div:nth-child(2){
+  text-align: center;
+  height: 100%;
+  margin-top: 20px;
+}
+div > div:nth-child(0) {
+  margin-left: 0px;
+}
+div > div:last-child {
+  border: none !important;
+}
+#active{
+  width: 30%;
+}
+#active div:nth-child(1){
+  margin: auto;
+  text-align: center;
+  background: #EDEDED;
+}
+#active div:nth-child(2){
+  margin-top:10px;
+  text-align: center;
+}
+.fa-check-circle, .fa-times-circle {
+  opacity: 0.5;
+}
+@media (max-width: 750px){
+  #main{
+    width: 100%;
+  }
+}
+@media (max-width: 620px){
+  .fa-check-circle, .fa-times-circle {
+    font-size: 2em;
+  }
+  #information div:nth-child(2) p:nth-child(2){
+    display: none;
+  }
+}
+p {
+  margin: 0;
+}
+@media (max-width: 380px) {
+  #role{
+    display: block;
+  }
+  img {
+    display: none;
+  }
+  #lastLogin{
+    display: none;
+  }
+}

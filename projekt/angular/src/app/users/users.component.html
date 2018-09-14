@@ -1,23 +1,27 @@
-
-<div class="panel-body">
-<div class="row col-md-offset-3" *ngFor="let user of users">
-<div class="col-md-1 col-sm-1">
-<div class="thumbnail">
-<img class="img-responsive user-photo" src="https://ssl.gstatic.com/accounts/ui/avatar_2x.png">
-</div><!-- /thumbnail -->
-</div><!-- /col-sm-1 -->
-
-<div class="col-md-5 col-sm-3">
-<div class="panel panel-info">
-<div class="panel-heading">
-<strong>{{user.username}}</strong> <button class="pull-right" routerLink="/edituser/{{user.id}}">edit</button>
-</div>
-<div class="panel-body">
-<p>email: {{user.email}}</p><br>
-<p>active: {{user.active}}</p>
-</div><!-- /panel-body -->
-</div><!-- /panel panel-default -->
-</div><!-- /col-sm-5 -->
-
-</div><!-- /row -->
+<app-header title="List of users"></app-header>
+<div id="main" style="">
+  <div id="user" *ngFor="let user of users">
+    <img class="img-responsive user-photo" src="https://ssl.gstatic.com/accounts/ui/avatar_2x.png">
+    <div id="information" style="">
+      <div>Information</div>
+      <div>
+        <p>{{user.username}}</p>
+        <p>{{user.email}}</p>
+      </div>
+    </div>
+    <div id="active">
+      <div>Active</div>
+      <div>
+          <span [ngStyle]="user.active ? {'color': 'green', 'opacity': 1} : {}" class="far fa-check-circle fa-3x"></span>
+          <span [ngStyle]="!user.active ? {'color': 'red', 'opacity': 1} : {}" class="far fa-times-circle fa-3x"></span>
+      </div>
+    </div>
+    <div id="lastLogin">
+      <div>Last login</div>
+      <div><span>{{user.lastLogin.toLocaleDateString()}}</span></div>
+    </div>
+    <div style="margin: auto;">
+      <button class="pull-right buttonClass" routerLink="/edituser/{{user.id}}">edit</button>
+    </div>
+  </div>
 </div>

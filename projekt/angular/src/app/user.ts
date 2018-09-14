@@ -3,4 +3,5 @@ export class User {
   username: string;
   email: string;
   active: boolean;
+  lastLogin:Date;
 }
