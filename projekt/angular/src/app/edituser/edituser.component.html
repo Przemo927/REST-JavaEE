@@ -1,12 +1,13 @@
-    <div *ngIf="user" class="container">
-    <br>
-        <form class="form-signin col-md-6 col-md-offset-3" method="post">
-            <h2 class="form-signin-heading">Edit user</h2>
+<app-header title="Edit User"></app-header>
+<div id="main" *ngIf="user">
+        <form class="addForm">
             <input [(ngModel)]="user.email" type="email" class="form-control" name="email" placeholder="{{this.user.email}}" />
             <input [(ngModel)]="user.username"  type="text" name="username" class="form-control" placeholder="{{this.user.username}}" />
-            <label>Active:</label>
-                <input [(ngModel)]="user.active" name="active" type="checkbox" checked="checked"/>
-            <button class="btn btn-lg btn-primary btn-block" (click)="updateUser()" >Edit</button>
+            <div style="display: block; margin:5px">
+              <label style="vertical-align: bottom">Active:</label>
+              <div [ngStyle]="user.active ? {'color': 'green', 'opacity': 1} : {'opacity': 0.5}" style="display: inline" (click)="setUserActive()"><span class="far fa-check-circle fa-2x"></span></div>
+              <div [ngStyle]="!user.active ? {'color': 'red', 'opacity': 1} : {'opacity': 0.5}" style="display: inline" (click)="setUserInactive()"><span class="far fa-times-circle fa-2x"></span></div>
+            </div>
+            <button class="bigButtonClass" (click)="updateUser()" >Edit</button>
         </form>
-
 </div>

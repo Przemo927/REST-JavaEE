@@ -1,9 +1,8 @@
-import { Component, OnInit } from '@angular/core';
-import { User } from '../user';
-import { UserService } from '../user.service';
-import { ActivatedRoute } from '@angular/router';
-import { Location } from '@angular/common';
-
+import {Component, OnInit} from "@angular/core";
+import {User} from "../user";
+import {UserService} from "../user.service";
+import {ActivatedRoute} from "@angular/router";
+import {Location} from "@angular/common";
 
 
 @Component({
@@ -15,22 +14,30 @@ export class EdituserComponent implements OnInit {
 
   constructor(private userService: UserService,private route: ActivatedRoute, private location: Location) { }
 
-  user: User;
+  private user: User;
+
   getUser(): void {
   const id = +this.route.snapshot.paramMap.get('id');
-  this.userService.getUser(id).subscribe(user => this.user = user);
+  this.userService.getUser(id).subscribe(user =>{
+    this.user = user;
+  });
   }
-  
+
   updateUser(): void {
   this.userService.updateUser(this.user).subscribe(() => this.goBack());
   }
-  
+
   goBack(): void {
   this.location.back();
   }
-  
   ngOnInit() {
   this.getUser();
+  }
+  private setUserActive(){
+    this.user.active=true;
+  }
+  private setUserInactive(){
+    this.user.active=false;
   }
 
 }
