@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import {AfterViewInit, Component, OnInit} from '@angular/core';
 import * as L from 'leaflet';
 import { EventService } from '../event.service';
 import { Event } from '../event';
@@ -9,17 +9,29 @@ import {EventPosition } from '../eventposition';
   templateUrl: './addevent.component.html',
   styleUrls: ['./addevent.component.css']
 })
-export class AddeventComponent implements OnInit {
+export class AddeventComponent implements OnInit, AfterViewInit {
 
   private myMap= null;
   private markers= [];
   private displayMap: any= {'display': 'none'};
-  private formClass= 'col-md-6 col-md-offset-3';
+  private inputDateTimePicker: any;
+  private inputTimePicker: any;
 
    private event= new Object();
 
   constructor(private eventService: EventService) {
 
+  }
+  ngAfterViewInit(){
+    this.inputDateTimePicker = document.getElementsByTagName('p-calendar')[0].getElementsByTagName('input')[0];
+    this.inputTimePicker = document.getElementsByTagName('p-calendar')[1].getElementsByTagName('input')[0];
+    this.inputTimePicker.classList.remove("ui-corner-all");
+    this.inputTimePicker.classList.add('form-control');
+    this.inputTimePicker.parentElement.style.width = '49%';
+    this.inputTimePicker.parentElement.style.float = 'right';
+    this.inputDateTimePicker.classList.remove("ui-corner-all");
+    this.inputDateTimePicker.classList.add('form-control');
+    this.inputDateTimePicker.parentElement.style.width = '49%';
   }
 
   ngOnInit() {
@@ -35,9 +47,6 @@ export class AddeventComponent implements OnInit {
     });
 
   }
-
-
-
  removeMarker(e){
     for (const marker of this.markers){
         if (e.latlng == marker.getLatLng()){
@@ -63,14 +72,12 @@ export class AddeventComponent implements OnInit {
  }
 
  showMap(){
-    const titlePosition = document.getElementById('title').offsetTop;
-    this.displayMap = {'margin-top': titlePosition};
-    this.formClass = 'col-md-6';
+   this.displayMap = { 'margin-top' : '1em', 'padding-bottom' : '1em' };
  }
 
 
-addEvent(event: Event, date: string, time: string): void {
-  event.timestamp = new Date(date + ' ' + time);
+addEvent(event: Event): void {
+  event.timestamp = new Date(this.inputDateTimePicker.value + ' ' + this.inputTimePicker.value);
   event.eventPosition = new Array();
   if (this.markers.length == 0){
     this.showMap();
@@ -82,7 +89,8 @@ addEvent(event: Event, date: string, time: string): void {
       this.eventService.addEvent(event).subscribe();
       /*.subscribe(()=> this.goBack());*/
   }
-  }
+  console.log(event);
+}
 
 
 
