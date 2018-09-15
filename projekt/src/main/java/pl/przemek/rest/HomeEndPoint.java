@@ -2,6 +2,7 @@ package pl.przemek.rest;
 
 import org.json.simple.JSONObject;
 import pl.przemek.mapper.ExceptionMapperAnnotation;
+import pl.przemek.wrapper.ResponseMessageWrapper;
 
 import javax.enterprise.context.RequestScoped;
 import javax.inject.Inject;
@@ -11,6 +12,7 @@ import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
+import java.util.HashMap;
 
 @Path("/home")
 @ExceptionMapperAnnotation
@@ -25,22 +27,22 @@ public class HomeEndPoint {
 	@Path("/check")
 	@Produces(MediaType.APPLICATION_JSON)
 	public Response loginStatus (){
-			JSONObject json = new JSONObject();
+			HashMap<String,Object> map=new HashMap<>();
 		if(request.getUserPrincipal() != null) {
-			json.put("name", "Logout");
-			json.put("path", LOGOUT_PATH);
+			map.put("name", "Logout");
+			map.put("path", LOGOUT_PATH);
 			if (request.isUserInRole("admin")) {
-				json.put("role", "admin");
+				map.put("role", "admin");
 			}
 			else{
-				json.put("role","user");
+				map.put("role","user");
 			}
 		}
 		else{
-			json.put("name","Login");
-			json.put("path",LOGIN_PATH);
+			map.put("name","Login");
+			map.put("path",LOGIN_PATH);
 		}
-		return Response.ok(json).build();
+		return Response.ok(ResponseMessageWrapper.wrapMessage(map)).build();
 	}
 
 }
