@@ -1,10 +1,8 @@
 package pl.przemek.rest;
 
-import org.json.simple.JSONObject;
 import pl.przemek.mapper.ExceptionMapperAnnotation;
 import pl.przemek.wrapper.ResponseMessageWrapper;
 
-import javax.enterprise.context.RequestScoped;
 import javax.inject.Inject;
 import javax.servlet.http.HttpServletRequest;
 import javax.ws.rs.GET;
