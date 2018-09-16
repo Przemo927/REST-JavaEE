@@ -1,27 +1,18 @@
 package pl.przemek.model;
 
+import javax.persistence.*;
 import java.io.Serializable;
 import java.util.Set;
 
-import javax.persistence.CascadeType;
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.FetchType;
-import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.JoinTable;
-import javax.persistence.ManyToMany;
-import javax.persistence.NamedQuery;
-
 @Entity	
-@NamedQuery(name = "Role.findByName", query = "SELECT p FROM Role p WHERE p.role_name=:role_name")
+@NamedQuery(name = "Role.findByName", query = "SELECT p FROM Role p WHERE p.roleName=:role_name")
 public class Role implements Serializable {
 
 	private static final long serialVersionUID = 1L;
 	
 @Id
-@Column(nullable = false, unique = true)
-private String role_name;
+@Column(nullable = false, unique = true, name="role_name")
+private String roleName;
 @Column(length=250)
 private String description;
 @ManyToMany(cascade = CascadeType.ALL,fetch=FetchType.EAGER)
@@ -32,20 +23,20 @@ private Set<User> users;
 
 public Role(){}
 
-public Role(String role_name,String description){
-	this.role_name=role_name;
+public Role(String roleName,String description){
+	this.roleName=roleName;
 	this.description=description;	
 }
 @Override
 public String toString() {
-	return "Role [role_name=" + role_name + ", description=" + description + ", users=" + users + "]";
+	return "Role [roleName=" + roleName + ", description=" + description + ", users=" + users + "]";
 }
 @Override
 public int hashCode() {
 	final int prime = 31;
 	int result = 1;
 	result = prime * result + ((description == null) ? 0 : description.hashCode());
-	result = prime * result + ((role_name == null) ? 0 : role_name.hashCode());
+	result = prime * result + ((roleName == null) ? 0 : roleName.hashCode());
 	result = prime * result + ((users == null) ? 0 : users.hashCode());
 	return result;
 }
@@ -63,10 +54,10 @@ public boolean equals(Object obj) {
 			return false;
 	} else if (!description.equals(other.description))
 		return false;
-	if (role_name == null) {
-		if (other.role_name != null)
+	if (roleName == null) {
+		if (other.roleName != null)
 			return false;
-	} else if (!role_name.equals(other.role_name))
+	} else if (!roleName.equals(other.roleName))
 		return false;
 	if (users == null) {
 		if (other.users != null)
@@ -75,11 +66,11 @@ public boolean equals(Object obj) {
 		return false;
 	return true;
 }
-public String getRole_name() {
-	return role_name;
+public String getRoleName() {
+	return roleName;
 }
-public void setRole_name(String role_name) {
-	this.role_name = role_name;
+public void setRoleName(String roleName) {
+	this.roleName = roleName;
 }
 public String getDescription() {
 	return description;
