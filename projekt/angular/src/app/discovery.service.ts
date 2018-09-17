@@ -1,10 +1,12 @@
-import {Injectable} from '@angular/core';
-import { HttpClient, HttpHeaders } from '@angular/common/http';
-import { Observable } from 'rxjs/Observable';
-import { catchError, tap } from 'rxjs/operators';
-import { of } from 'rxjs/observable/of';
-import { Discovery} from './discovery';
+import {Injectable} from "@angular/core";
+import {HttpClient} from "@angular/common/http";
+import {Observable} from "rxjs/Observable";
+import {catchError, tap} from "rxjs/operators";
+import {Discovery} from "./discovery";
 import {ErrorHandler} from "./errorhandler";
+import {BaseUrl} from "./baseurl.enum";
+import {EndPoint} from "./endpoint.enum";
+import {UrlUtils} from "./UrlUtils";
 
 @Injectable()
 export class DiscoveryService {
@@ -12,7 +14,7 @@ export class DiscoveryService {
   constructor(private http: HttpClient) { }
 
   private discovery: Discovery;
-  private discoveryUrl= 'http://localhost:8080/projekt/api/discovery';
+  private discoveryUrl= window.location.protocol+BaseUrl.doubleUrlSeparator+BaseUrl.development+EndPoint.discoveries;
 
 getDiscoveries(): Observable<Discovery[]> {
   return this.http.get<Discovery[]>(this.discoveryUrl)
@@ -22,16 +24,22 @@ getDiscoveries(): Observable<Discovery[]> {
 
 }
 
-getDiscoveriesWithLimit(firstIndex: number, quantity: number): Observable<Discovery[]>{
-    return this.http.get<Discovery[]>(this.discoveryUrl + '?beginWith=' + firstIndex + '&endWith=' + quantity)
-    .pipe(tap((e) => console.log('fetched discoveries with limit')),
-    catchError(ErrorHandler.handleError<Discovery[]>('getDiscoveriesWithlimit', []))
-    );
+getDiscoveriesWithLimitAndOrder(firstIndex: number, quantity: number, orderBy:String = ''): Observable<Discovery[]>{
+  let endPointUrl=this.discoveryUrl;
+  endPointUrl=UrlUtils.addParameterToUrl(endPointUrl,'beginWith',firstIndex);
+  endPointUrl=UrlUtils.addParameterToUrl(endPointUrl,'quantity',quantity);
+  if(orderBy!==undefined && orderBy!==''){
+    endPointUrl=UrlUtils.addParameterToUrl(endPointUrl,'orderBy',orderBy);
+  }
+  return this.http.get<Discovery[]>(endPointUrl)
+  .pipe(tap((e) => console.log('fetched discoveries with limit')),
+  catchError(ErrorHandler.handleError<Discovery[]>('getDiscoveriesWithlimit', []))
+  );
 
 }
 
 getDiscovery (id: number): Observable<Discovery> {
-    return this.http.get<Discovery>(this.discoveryUrl + '/' + id)
+    return this.http.get<Discovery>(this.discoveryUrl + BaseUrl.urlSeparator + id)
     .pipe(tap((e) => console.log(`fetched discovery id=${id}`)),
     catchError(ErrorHandler.handleError<Discovery>('getDiscovery id=${id}'))
     );
