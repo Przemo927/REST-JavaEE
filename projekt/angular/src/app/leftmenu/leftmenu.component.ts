@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { Discovery } from '../discovery';
+import {DiscoveryService} from "../discovery.service";
 
 @Component({
   selector: 'app-leftmenu',
@@ -10,18 +11,12 @@ export class LeftmenuComponent implements OnInit {
 
   private discoveries: Discovery[]=[];
 
-  constructor() { }
+  constructor(private discoveryService:DiscoveryService) { }
 
   ngOnInit() {
-    let i = 0;
-    for (i = 0; i < 5; i++) {
-      let disc = new Discovery();
-      disc.id = i;
-      disc.url = 'http://url' + i + '.pl';
-      disc.description = 'spoko spoko spoko' + i;
-      disc.name = 'Name name name' + i;
-      this.discoveries.push(disc);
-    }
+    this.discoveryService.getDiscoveriesWithLimitAndOrder(0,5,'date').subscribe((discoveries)=>{
+      this.discoveries=discoveries;
+    });
   }
 
 }

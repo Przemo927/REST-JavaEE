@@ -3,20 +3,20 @@
     <span style="color:black">Latest discoveries</span>
   </div>
   <div style="border-bottom:1px solid;height:10px;width:90%;margin:auto;margin-bottom:10px"></div>
-  <div>
-    <div style="display:flex;padding-left:5px;padding-right:5px"><input style="margin-right:5px" class="inputClass" /><button type="submit" class="buttonClass">Search</button></div>
-    <ul style="padding-left:5px;padding-top:5px" *ngIf="discoveries">
-      <li style="list-style:none;margin:5px" *ngFor="let discovery of discoveries"><div class="divClickableClass" routerLink="/discovery/{{discovery.id}}"><span>{{discovery.name}}</span></div></li>
+  <div id="list">
+    <div><input class="inputClass"/><button type="submit" class="buttonClass">Search</button></div>
+    <ul *ngIf="discoveries">
+      <li *ngFor="let discovery of discoveries"><div class="divClickableClass" routerLink="/discovery/{{discovery.id}}"><span>{{discovery.name}}</span></div></li>
     </ul>
   </div>
   <div id="header">
     <span>Latest Events</span>
   </div>
   <div style="border-bottom:1px solid;height:10px;width:90%;margin:auto;margin-bottom:10px"></div>
-  <div style="height:200px;">
-    <div style="display:flex;padding-left:5px;padding-right:5px"><input style="margin-right:5px" class="inputClass" /><button type="submit" class="buttonClass">Search</button></div>
-    <ul style="padding-left:5px;padding-top:10px" *ngIf="discoveries">
-      <li style="list-style:none;border-bottom:1px solid silver;padding-top:5px;padding-bottom:5px" *ngFor="let discovery of discoveries"><span>{{discovery.name}}</span></li>
+  <div id="list">
+    <div><input class="inputClass" /><button type="submit" class="buttonClass">Search</button></div>
+    <ul *ngIf="discoveries">
+      <li *ngFor="let discovery of discoveries"><div class="divClickableClass" routerLink="/discovery/{{discovery.id}}"><span>{{discovery.name}}</span></div></li>
     </ul>
   </div>
 </div>
