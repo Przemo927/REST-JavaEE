@@ -14,6 +14,7 @@ public interface JpaDiscoveryRepository {
     public List<Discovery> getAllInOneQuery();
     public List<Discovery> getAll(Comparator<Discovery> c);
     public List<Discovery> getWithLimit(int begin, int quantity);
+    public List<Discovery> getWithLimitOrderByDate(int begin, int quantity);
     public List<Discovery> getByName(String name);
     public Discovery get(Class<Discovery> clazz,long id);
     public boolean checkPresenceDiscveryByUrl(String url);
