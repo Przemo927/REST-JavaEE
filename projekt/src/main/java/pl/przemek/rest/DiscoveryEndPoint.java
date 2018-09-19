@@ -20,6 +20,7 @@ import javax.ws.rs.core.UriInfo;
 import java.io.UnsupportedEncodingException;
 import java.math.BigInteger;
 import java.net.URI;
+import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 import java.util.logging.Level;
@@ -88,14 +89,15 @@ public class DiscoveryEndPoint {
 
 	@GET
 	@Produces(MediaType.APPLICATION_JSON)
-	public Response getALL(@QueryParam("orderBy") @DefaultValue("popular") String order,@QueryParam("beginWith") Integer begin,
+	public Response getALL(@QueryParam("orderBy") String order,@QueryParam("beginWith") Integer begin,
 						   @QueryParam("quantity") Integer quantity) throws Exception {
-		List<Discovery> allDiscoveries;
+		List<Discovery> allDiscoveries= Collections.emptyList();
 		if(begin!=null && !(begin<0) && quantity!=null && !(quantity<0)){
-			allDiscoveries=discoveryService.getWithLimit(begin,quantity);
+			if("date".equals(order)){
+				allDiscoveries=discoveryService.getWithLimitOrderByDate(begin,quantity);
+			}else {
+				allDiscoveries = discoveryService.getWithLimit(begin, quantity);
 			}
-		else {
-			allDiscoveries = discoveryService.getAll(order);
 		}
 		if(allDiscoveries.isEmpty()){
 			logger.log(Level.SEVERE,"[DiscoveryEndPoint] getALL() discovery wasn't found");
