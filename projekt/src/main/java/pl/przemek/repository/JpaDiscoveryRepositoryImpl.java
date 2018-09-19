@@ -14,13 +14,25 @@ import java.util.List;
 @Stateless
 public class JpaDiscoveryRepositoryImpl extends JpaRepository<Discovery> implements JpaDiscoveryRepository {
 
+	private final static String PRESENCE_DISCOVERY_BY_URL="SELECT 1 FROM Discovery WHERE url=:url";
+	private final static String QUANTITY_OF_DISCOVERIES="SELECT count(*) FROM discovery";
+
 	@RolesAllowed({"admin","user"})
 	@Override
 	public List<Discovery> getWithLimit(int begin, int quantity) {
-		TypedQuery<Discovery> getAllQueryWithLimit=em.createNamedQuery("Discovery.findAllWithLimit",Discovery.class);
-		getAllQueryWithLimit.setParameter("begin",begin);
-		getAllQueryWithLimit.setParameter("quantity",quantity);
-		return getAllQueryWithLimit.getResultList();
+		TypedQuery<Discovery> query=em.createNamedQuery("Discovery.findAllWithLimit",Discovery.class);
+		query.setParameter("begin",begin);
+		query.setParameter("quantity",quantity);
+		return query.getResultList();
+	}
+
+	@RolesAllowed({"admin","user"})
+	@Override
+	public List<Discovery> getWithLimitOrderByDate(int begin, int quantity) {
+		TypedQuery<Discovery> query=em.createNamedQuery("Discovery.findAllWithLimitOrderByDate",Discovery.class);
+		query.setParameter("begin",begin);
+		query.setParameter("quantity",quantity);
+		return query.getResultList();
 	}
 
 	@RolesAllowed({"admin","user"})
@@ -53,7 +65,7 @@ public class JpaDiscoveryRepositoryImpl extends JpaRepository<Discovery> impleme
 	}
 	@PermitAll
 	public boolean checkPresenceDiscveryByUrl(String url){
-		Query query=em.createNativeQuery("SELECT 1 FROM Discovery WHERE url=:url");
+		Query query=em.createNativeQuery(PRESENCE_DISCOVERY_BY_URL);
 		query.setParameter("url",url);
 		List list=query.getResultList();
 		return list.size() == 0;
@@ -61,7 +73,7 @@ public class JpaDiscoveryRepositoryImpl extends JpaRepository<Discovery> impleme
 	@RolesAllowed({"admin","user"})
 	@Override
 	public BigInteger getQuantityOfDiscoveries() {
-		Query query=em.createNativeQuery("SELECT count(*) FROM discovery");
+		Query query=em.createNativeQuery(QUANTITY_OF_DISCOVERIES);
 		return (BigInteger)query.getSingleResult();
 	}
 
