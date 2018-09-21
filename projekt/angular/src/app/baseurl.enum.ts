@@ -1,3 +1,5 @@
 export enum BaseUrl {
-  development="localhost:8080/projekt/",
+  doubleUrlSeparator = '//',
+  urlSeparator = '/',
+  development = "localhost:8080/projekt/",
 }
