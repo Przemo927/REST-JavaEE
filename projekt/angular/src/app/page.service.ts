@@ -1,7 +1,11 @@
-import { Injectable } from '@angular/core';
-import {Page} from './page';
-import {Observable} from 'rxjs/Rx';
-import { HttpClient, HttpHeaders } from '@angular/common/http';
+import {Injectable} from "@angular/core";
+import {Page} from "./page";
+import {Observable} from "rxjs/Rx";
+import {HttpClient} from "@angular/common/http";
+import {catchError, tap} from "rxjs/operators";
+import {ErrorHandler} from "./errorhandler";
+import {UrlUtils} from "./UrlUtils";
+import {BaseUrl} from "./baseurl.enum";
 
 @Injectable()
 export class PageService <T> {
@@ -44,7 +48,12 @@ export class PageService <T> {
     return currentPage;
   }
   getElementsWithLimit<T>(firstIndex: number, quantity: number): Observable<T[]> {
-    return this.http.get<T[]>(this.url + '?beginWith=' + firstIndex + '&quantity=' + quantity);
+    let endPoint=UrlUtils.addParameterToUrl(this.url,"beginWith",firstIndex);
+    endPoint=UrlUtils.addParameterToUrl(endPoint,"quantity",quantity);
+    return this.http.get<T[]>(endPoint)
+      .pipe(tap((e) => console.log('fetched elements with limit')),
+        catchError(ErrorHandler.handleError<any>('getElementsWithLimit', []))
+      );
   }
   chooseFirstPage<T>(): Observable<T[]> {
     this.giveActualPage(1);
@@ -54,7 +63,6 @@ export class PageService <T> {
   increaseLimit<T>(): Observable<T[]> {
     if (this.actualPage != null && this.actualPage.numberPage < this.preparedPages.length) {
       this.giveNextPage();
-      console.log(this.actualPage.firstIndex, this.actualPage.quantity);
       return this.getElementsWithLimit<T>(this.actualPage.firstIndex, this.actualPage.quantity);
     }else {
       return Observable.empty<T[]>();
@@ -72,7 +80,10 @@ export class PageService <T> {
   }
 
   getQuantityOfAllElements(): Observable<any> {
-    return this.http.get<any>(this.url + '/quantity');
+    return this.http.get<any>(this.url + BaseUrl.urlSeparator+ 'quantity')
+      .pipe(tap((e) => console.log('fetched quantity of elements')),
+        catchError(ErrorHandler.handleError<any>('getQuantityOfAllElements'))
+      );
   }
   private givePreviousPage(): void {
     this.actualPage = this.preparedPages[this.actualPage.numberPage - 2];
