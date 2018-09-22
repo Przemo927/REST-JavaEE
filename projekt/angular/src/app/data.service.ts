@@ -13,7 +13,6 @@ export class DataService {
     this.currentData=this.dataSource$.asObservable();
   }
   changeData(elements:any){
-    console.log(elements);
     this.dataSource$.next(elements);
   }
 
