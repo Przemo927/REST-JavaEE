@@ -1,7 +1,8 @@
 import {Component, DoCheck, OnInit} from "@angular/core";
-import {NavigationEnd, Router} from "@angular/router";
+import {NavigationEnd, NavigationStart, Router} from "@angular/router";
 import {BaseUrl} from "./baseurl.enum";
 import {EndPoint} from "./endpoint.enum";
+import {ContentPdfService} from "./contentpdf.service";
 
 @Component({
   selector: 'app-root',
@@ -15,15 +16,16 @@ export class AppComponent implements OnInit, DoCheck {
   private navHeight: number;
   private nav: any;
   private urlLogout: string;
+  private mainMenu:any;
 
-  constructor(private router: Router) {
+  constructor(private router: Router, private dataService:ContentPdfService) {
     router.events.subscribe(() => {
       this.counterSeconds = 600;
     });
   }
 
   ngOnInit() {
-    this.urlLogout = window.location.protocol + "//" + BaseUrl.development + EndPoint.logout;
+    this.urlLogout = window.location.protocol + BaseUrl.doubleUrlSeparator + BaseUrl.development + EndPoint.logout;
     this.nav = document.getElementsByTagName("nav")[0];
     this.navHeight = this.nav.offsetHeight;
     this.initialCounter();
@@ -68,7 +70,12 @@ export class AppComponent implements OnInit, DoCheck {
   }
 
   private reloadCounter(){
-  this.counterSeconds=600;
+    this.counterSeconds=600;
   }
 
+  private sendContentToPdfModule(){
+    if(this.panelBody!==null){
+      this.dataService.addBehaviourSource(this.panelBody.outerHTML);
+    }
+  }
 }

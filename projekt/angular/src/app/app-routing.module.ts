@@ -1,19 +1,20 @@
-import { NgModule } from '@angular/core';
-import { RouterModule, Routes } from '@angular/router';
-import { UsersComponent } from './users/users.component';
-import { EdituserComponent } from './edituser/edituser.component';
-import { DiscoveriesComponent } from './discoveries/discoveries.component';
-import { EditdiscoveryComponent } from './editdiscovery/editdiscovery.component';
-import { DiscoveryComponent } from './discovery/discovery.component';
-import { AdddiscoveryComponent } from './adddiscovery/adddiscovery.component';
-import { EventsComponent } from './events/events.component';
-import { AddeventComponent } from './addevent/addevent.component';
-import { SearcheventbycityComponent } from './searcheventbycity/searcheventbycity.component';
-import { ListofeventsComponent } from './listofevents/listofevents.component';
-import { SearchbypositionComponent } from './searchbyposition/searchbyposition.component';
+import {NgModule} from "@angular/core";
+import {RouterModule, Routes} from "@angular/router";
+import {UsersComponent} from "./users/users.component";
+import {EdituserComponent} from "./edituser/edituser.component";
+import {DiscoveriesComponent} from "./discoveries/discoveries.component";
+import {EditdiscoveryComponent} from "./editdiscovery/editdiscovery.component";
+import {DiscoveryComponent} from "./discovery/discovery.component";
+import {AdddiscoveryComponent} from "./adddiscovery/adddiscovery.component";
+import {EventsComponent} from "./events/events.component";
+import {AddeventComponent} from "./addevent/addevent.component";
+import {SearcheventbycityComponent} from "./searcheventbycity/searcheventbycity.component";
+import {ListofeventsComponent} from "./listofevents/listofevents.component";
+import {SearchbypositionComponent} from "./searchbyposition/searchbyposition.component";
 import {PagesComponent} from "./pages/pages.component";
 import {DiscoveriesEncryptedComponent} from "./discoveries/discoveriesencrypted.component";
-
+import {ProfileComponent} from "./profile/profile.component";
+import {PdfmoduleComponent} from "./pdfmodule/pdfmodule.component";
 
 
 const routes: Routes = [
@@ -30,6 +31,7 @@ const routes: Routes = [
   { path: 'discovery/:id', component: DiscoveryComponent },
   { path: 'adddiscovery', component: AdddiscoveryComponent },
   { path: 'edituser/:id', component: EdituserComponent },
+  { path: 'pdfModule', component: PdfmoduleComponent },
   { path: 'event', component: EventsComponent,
     children: [
       {
@@ -65,7 +67,9 @@ const routes: Routes = [
   { path: 'encrypt', component: DiscoveriesEncryptedComponent,
     children: [
       { path: '', component: PagesComponent}
-    ]},
+    ]
+  },
+  { path: 'profile', component: ProfileComponent },
   { path: '', redirectTo: '', pathMatch: 'full' },
   { path: '**', redirectTo: '', pathMatch: 'full' },
 ];
