@@ -25,13 +25,13 @@ export class PdfmoduleComponent implements OnInit {
   private loadDataToDisplay(){
     if(this.contentService.currentData!==undefined){
       this.contentService.currentData.subscribe(content=>{
-        content=this.deleteHrefs(content);
+        content=PdfmoduleComponent.deleteHrefs(content);
         this.contentDiv.innerHTML=content;
       });
     }
   }
 
-  private deleteHrefs(contentPage):string{
+  private static deleteHrefs(contentPage):string{
     let hrefRegexp=new RegExp('href=".*?"');
     let match;
     while(match = hrefRegexp.exec(contentPage)){
@@ -47,7 +47,7 @@ export class PdfmoduleComponent implements OnInit {
         this.draggaleElement.setInitialPosition(e.clientX,e.clientY);
       }
     });
-    this.contentDiv.addEventListener('mouseup', (e)=>{
+    this.contentDiv.addEventListener('mouseup', ()=>{
       if(this.draggaleElement!==undefined){
         this.draggaleElement.suspendDraggable();
       }
