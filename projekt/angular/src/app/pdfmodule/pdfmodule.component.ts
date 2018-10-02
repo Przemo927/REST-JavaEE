@@ -1,36 +1,34 @@
-import {Component, OnDestroy, OnInit} from "@angular/core";
+import {Component, OnInit} from "@angular/core";
 import {ContentPdfService} from "../contentpdf.service";
-import {Observable} from "rxjs/Observable";
+import {DraggableService} from "../draggable.service";
 
 @Component({
   selector: 'app-pdfmodule',
   templateUrl: './pdfmodule.component.html',
   styleUrls: ['./pdfmodule.component.css']
 })
-export class PdfmoduleComponent implements OnInit, OnDestroy {
+export class PdfmoduleComponent implements OnInit {
+
+  private contentDiv;
+  private draggaleElement;
 
   constructor(private contentService:ContentPdfService) { }
 
   ngOnInit() {
-    let contentDiv=document.getElementById("pdfModule");
+    this.contentDiv=document.getElementById("pdfModule");
     //clear content of div
-    contentDiv.innerHTML="";
+    this.contentDiv.innerHTML="";
+    this.loadDataToDisplay();
+    this.serveDraggableElement();
+  }
 
+  private loadDataToDisplay(){
     if(this.contentService.currentData!==undefined){
       this.contentService.currentData.subscribe(content=>{
         content=this.deleteHrefs(content);
-        contentDiv.innerHTML=content;
+        this.contentDiv.innerHTML=content;
       });
     }
-
-    contentDiv.addEventListener('click', function(e) {
-      if(e.ctrlKey){
-        e.target;
-      }
-    });
-  }
-  ngOnDestroy(){
-
   }
 
   private deleteHrefs(contentPage):string{
@@ -40,5 +38,19 @@ export class PdfmoduleComponent implements OnInit, OnDestroy {
       contentPage=contentPage.replace(match[0],'');
     }
     return contentPage;
+  }
+
+  private serveDraggableElement(){
+    this.contentDiv.addEventListener('mousedown', (e)=> {
+      if(e.ctrlKey){
+        this.draggaleElement = DraggableService.prepareDraggableElement(this.contentDiv, e.target);
+        this.draggaleElement.setInitialPosition(e.clientX,e.clientY);
+      }
+    });
+    this.contentDiv.addEventListener('mouseup', (e)=>{
+      if(this.draggaleElement!==undefined){
+        this.draggaleElement.suspendDraggable();
+      }
+    });
   }
 }
