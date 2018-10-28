@@ -41,7 +41,11 @@ public class DiscoveryService {
         return discRepo.getWithLimit(begin,quantity);
     }
 
-    public List<Discovery> getByName(String name){
+    public List<Discovery> getWithLimitOrderByDate(int begin, int quantity){
+        return discRepo.getWithLimitOrderByDate(begin,quantity);
+    }
+
+    List<Discovery> getByName(String name){
         if(name!=null && !"".equals(name))
             return discRepo.getByName(name);
         else {
@@ -58,7 +62,7 @@ public class DiscoveryService {
     }
 
     public List<Discovery> getAll(String order){
-        List<Discovery> discoveries = null;
+        List<Discovery> discoveries;
 
         switch (order) {
             case "popular":
@@ -72,10 +76,6 @@ public class DiscoveryService {
                 break;
         }
         return discoveries;
-    }
-
-    public List<Discovery> getAllInOneQuery(){
-        return discRepo.getAllInOneQuery();
     }
 
     public void removeDiscoveryById(long id){
