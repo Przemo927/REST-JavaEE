@@ -4,14 +4,13 @@ import pl.przemek.model.SecurityKey;
 import pl.przemek.repository.JpaSecurityKeyRespository;
 
 import javax.inject.Inject;
-import java.util.Collections;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
 public class SecurityKeyService {
 
-    JpaSecurityKeyRespository privateKeyRepo;
+    private JpaSecurityKeyRespository privateKeyRepo;
     private Logger logger;
 
     @Inject
@@ -20,7 +19,7 @@ public class SecurityKeyService {
         this.privateKeyRepo=privateKeyRepo;
     }
 
-    public List<String> getPrivateKeyAsStringByUsername(String userName){
+    List<String> getPrivateKeyAsStringByUsername(String userName){
         return privateKeyRepo.getPrivateKeyByUserName(userName);
     }
 

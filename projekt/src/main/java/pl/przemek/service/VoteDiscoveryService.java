@@ -10,7 +10,6 @@ import pl.przemek.repository.JpaVoteRepository;
 
 import javax.inject.Inject;
 import java.sql.Timestamp;
-import java.util.Collections;
 import java.util.Date;
 import java.util.List;
 import java.util.Optional;
@@ -34,9 +33,6 @@ public class VoteDiscoveryService {
         this.logger=logger;
     }
 
-    public VoteDiscoveryService() {
-    }
-
     Vote createVote( VoteType votetype) {
         Vote vote = new Vote();
         vote.setUser(this.user);
@@ -48,15 +44,15 @@ public class VoteDiscoveryService {
 
     public void updateVote(long userId, long discoveryId, VoteType newVoteType) {
         getDiscoveryAndUserFromDataBase(discoveryId,userId);
-        Vote newVote = null;
-        Vote existingVote = null;
+        Vote newVote;
+        Vote existingVote;
         List<Vote> listOfVotes = this.votRepo.getVoteByUserIdVotedElementId(userId, discoveryId);
         if(listOfVotes.isEmpty()) {
             newVote = this.createVote(newVoteType);
             this.votRepo.add(newVote);
-            this.updateDiscovery(discoveryId, (Vote)null, newVote);
+            this.updateDiscovery(discoveryId, null, newVote);
         } else {
-            existingVote = (Vote)listOfVotes.get(0);
+            existingVote = listOfVotes.get(0);
             if(!existingVote.getVoteType().equals(newVoteType)) {
                 newVote = new Vote(existingVote);
                 newVote.setVoteType(newVoteType);

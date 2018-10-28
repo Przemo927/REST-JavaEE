@@ -7,7 +7,6 @@ import pl.przemek.repository.JpaCommentRepository;
 import pl.przemek.repository.JpaDiscoveryRepository;
 
 import javax.inject.Inject;
-import java.util.Collections;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -23,8 +22,6 @@ public class CommentService {
         this.logger=logger;
         this.commentRepo=commentRepo;
         this.discRepo=discRepo;
-    }
-    public CommentService(){
     }
 
     public void addComment(Comment comment, long discoveryId){
@@ -42,7 +39,7 @@ public class CommentService {
         return commentRepo.getAll("Comment.findAll",Comment.class);
     }
 
-    public List<Comment> getByDiscoveryName(String name){
+    List<Comment> getByDiscoveryName(String name){
         return commentRepo.getByDiscoveryName(name);
     }
     public List<Comment> getByDiscoveryId(long id){

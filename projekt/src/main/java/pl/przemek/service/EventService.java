@@ -3,12 +3,9 @@ package pl.przemek.service;
 
 import pl.przemek.model.Event;
 import pl.przemek.model.EventPosition;
-import pl.przemek.model.SecurityKey;
 import pl.przemek.repository.JpaEventRepository;
-import sun.rmi.runtime.Log;
 
 import javax.inject.Inject;
-import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 import java.util.logging.Level;
@@ -46,12 +43,12 @@ public class EventService {
     }
 
     public void removeEventById(long id){
-            Event event=eventRepo.get(Event.class,id);
-            if(event==null) {
-                logger.log(Level.WARNING,"[EventService] removeEventById() event wasn't found");
-            } else {
-                eventRepo.remove(event);
-            }
+        Event event=eventRepo.get(Event.class,id);
+        if(event==null) {
+            logger.log(Level.WARNING,"[EventService] removeEventById() event wasn't found");
+        } else {
+            eventRepo.remove(event);
+        }
     }
     public Optional<Event> getEvent(long id){
         Event event=eventRepo.get(Event.class,id);

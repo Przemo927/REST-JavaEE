@@ -8,7 +8,6 @@ import pl.przemek.security.PasswordSecurity;
 
 import javax.inject.Inject;
 import java.security.NoSuchAlgorithmException;
-import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 import java.util.logging.Level;
@@ -62,14 +61,14 @@ public class UserService {
     }
 
     public void removeByUserId(long id) {
-        User user=null;
+        User user;
         user=userRepo.get(User.class,id);
         if(user!=null)
             userRepo.remove(user);
         else logger.log(Level.WARNING,"[UserService] removeByUserId() user wasn't found id="+id);
     }
 
-    public void updateUser(User user){
+    void updateUser(User user){
         if(user==null){
             logger.log(Level.SEVERE,"[UserService] updateUser() user is null");
         }else{

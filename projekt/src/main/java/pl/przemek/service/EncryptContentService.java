@@ -30,11 +30,9 @@ public class EncryptContentService {
         this.keyService=keyService;
         this.logger=logger;
     }
-    public EncryptContentService(){
 
-    }
     public Optional<SignContent> endcryptContent(HttpServletRequest request, Object objectToEncrypt) throws NoSuchAlgorithmException, InvalidKeySpecException, InvalidKeyException, SignatureException, JsonProcessingException {
-        SignContent signContent=null;
+        SignContent signContent;
         User user=(User)request.getSession().getAttribute("user");
         List<String> listPrivateKeyString=keyService.getPrivateKeyAsStringByUsername(user.getUsername());
         if(listPrivateKeyString.isEmpty()) {
