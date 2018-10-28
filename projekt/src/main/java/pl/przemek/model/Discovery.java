@@ -4,19 +4,20 @@ import org.hibernate.validator.constraints.URL;
 import pl.przemek.validation.ForbiddenWord;
 import pl.przemek.validation.URLUnique;
 
-import java.io.Serializable;
-import java.sql.Timestamp;
-import java.util.List;
-
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
+import java.io.Serializable;
+import java.sql.Timestamp;
 
 @Entity
 @NamedQueries({
     @NamedQuery(name = "Discovery.findAll", query = "SELECT p FROM Discovery p"),
     @NamedQuery(name = "Discovery.search", query = "SELECT p FROM Discovery p WHERE p.name=:name")})
-@NamedNativeQuery(name = "Discovery.findAllWithLimit",query = "SELECT * FROM discovery limit :begin,:quantity",resultClass = Discovery.class)
+@NamedNativeQueries({
+        @NamedNativeQuery(name = "Discovery.findAllWithLimit",query = "SELECT * FROM discovery limit :begin,:quantity",resultClass = Discovery.class),
+        @NamedNativeQuery(name="Discovery.findAllWithLimitOrderByDate",query = "SELECT * FROM discovery ORDER BY timestamp limit :begin,:quantity",resultClass = Discovery.class)
+})
 public class Discovery implements Serializable {
 	private static final long serialVersionUID = 1L;
 	
