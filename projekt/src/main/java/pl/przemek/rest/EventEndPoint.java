@@ -6,7 +6,6 @@ import pl.przemek.model.User;
 import pl.przemek.service.EventService;
 import pl.przemek.wrapper.ResponseMessageWrapper;
 
-import javax.enterprise.context.RequestScoped;
 import javax.inject.Inject;
 import javax.servlet.http.HttpServletRequest;
 import javax.ws.rs.*;

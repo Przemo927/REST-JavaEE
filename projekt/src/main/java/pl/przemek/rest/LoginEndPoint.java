@@ -21,8 +21,6 @@ import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.MultivaluedHashMap;
 import javax.ws.rs.core.MultivaluedMap;
 import javax.ws.rs.core.Response;
-import java.io.IOException;
-import java.net.URISyntaxException;
 import java.security.NoSuchAlgorithmException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -60,7 +58,7 @@ public class LoginEndPoint {
 
 @Login
 @POST
-public Response login(@FormParam("j_username") String username,@FormParam("j_password") String password) throws IOException, URISyntaxException, NoSuchAlgorithmException {
+public Response login(@FormParam("j_username") String username,@FormParam("j_password") String password) throws NoSuchAlgorithmException {
 
     String hashedPassword= PasswordSecurity.hashPassword(password);
     String token=tokenService.generateToken(username,hashedPassword);
@@ -74,8 +72,11 @@ public Response login(@FormParam("j_username") String username,@FormParam("j_pas
     Response response1=target.request(MediaType.APPLICATION_FORM_URLENCODED_TYPE).post(Entity.form(multivaluedMap));
     if(response1==null){
     	logger.log(Level.INFO,"Response is null");
+    	return Response.status(Response.Status.NO_CONTENT).build();
+    }else{
+        tokenStore.setToken("Bearer "+token);
+        return Response.fromResponse(response1).header(LOCATION,HOMEPATH).header(AUTHORIZATION,"Bearer "+token).status(302).build();
+
     }
-    tokenStore.setToken("Bearer "+token);
-    return Response.fromResponse(response1).header(LOCATION,HOMEPATH).header(AUTHORIZATION,"Bearer "+token).status(302).build();
-}
+    }
 }

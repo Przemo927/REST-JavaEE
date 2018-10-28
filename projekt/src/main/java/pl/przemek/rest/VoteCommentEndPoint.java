@@ -35,7 +35,7 @@ public class VoteCommentEndPoint {
         User loggedUser=(User)request.getSession().getAttribute("user");
         if(loggedUser!=null){
             VoteType votetype=VoteType.valueOf(vote);
-            Long userId=loggedUser.getId();
+            long userId=loggedUser.getId();
             votecommentservice.updateVote(userId,commentId,votetype);
         }else {
             logger.log(Level.SEVERE,"[VoteCommentEndPoint] vote() user wasn't saved in session");

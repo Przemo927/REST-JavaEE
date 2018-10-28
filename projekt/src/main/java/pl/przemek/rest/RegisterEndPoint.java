@@ -1,6 +1,5 @@
 package pl.przemek.rest;
 
-import com.sun.jndi.toolkit.url.Uri;
 import pl.przemek.Message.EmailMessageTemplate;
 import pl.przemek.Message.MailService;
 import pl.przemek.Message.MessageWrapper;
@@ -60,7 +59,7 @@ public class RegisterEndPoint {
     public void sendMessageToRegistration(@Valid User user) {
         try {
             String message=EmailMessageTemplate.getPreparedMessage(uriInfo.getBaseUri().toString(),user.getUsername());
-            KeyPair keyPair= null;
+            KeyPair keyPair;
             keyPair = KeyUtils.generatePairOfKeys();
             String publicKeyAsString=KeyUtils.convertKeyToString(keyPair.getPublic());
             MessageWrapper msg = wrapMessage(message,user,publicKeyAsString);
