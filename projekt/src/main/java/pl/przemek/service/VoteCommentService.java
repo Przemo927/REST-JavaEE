@@ -8,7 +8,6 @@ import pl.przemek.model.VoteType;
 import pl.przemek.repository.JpaCommentRepository;
 import pl.przemek.repository.JpaUserRepository;
 import pl.przemek.repository.JpaVoteRepository;
-import sun.rmi.runtime.Log;
 
 import javax.inject.Inject;
 import java.sql.Timestamp;
@@ -33,9 +32,6 @@ public class VoteCommentService {
         this.voteCommentRepo = voteCommentRepo;
     }
 
-    public VoteCommentService() {
-    }
-
     VoteComment createVote(VoteType voteType) {
         VoteComment vote = new VoteComment();
         vote.setUser(this.user);
@@ -47,15 +43,14 @@ public class VoteCommentService {
 
     public void updateVote(long userId, long commentId, VoteType newVoteType) {
         getCommentAndUserFromDataBase(commentId,userId);
-        VoteComment existingVote = null;
-        VoteComment newVote = null;
+        VoteComment newVote;
         List<VoteComment> listOfVotes = this.voteCommentRepo.getVoteByUserIdVotedElementId(userId, commentId);
         if(listOfVotes.isEmpty()) {
             newVote = this.createVote(newVoteType);
             this.voteCommentRepo.add(newVote);
             this.updateComment(null, newVote);
         } else {
-            existingVote = listOfVotes.get(0);
+            VoteComment existingVote = listOfVotes.get(0);
             if(!existingVote.getVoteType().equals(newVoteType)) {
                 newVote = new VoteComment(existingVote);
                 newVote.setVoteType(newVoteType);
