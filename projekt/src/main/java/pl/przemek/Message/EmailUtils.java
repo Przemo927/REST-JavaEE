@@ -18,7 +18,6 @@ public class EmailUtils {
 
     static Transport getTransportProtocol(Session mailSession,javax.mail.Message mailMessage, String protocol, String host) throws MessagingException, JMSException {
         Transport transport=mailSession.getTransport(protocol);
-        transport.addTransportListener(new TransportListener());
         transport.connect(host,EmailInformation.getLoginSenderEmail(),EmailInformation.getPasswordSenderEmail());
         return transport;
     }
