@@ -5,7 +5,10 @@ import javax.activation.DataSource;
 import javax.activation.FileDataSource;
 import javax.jms.JMSException;
 import javax.mail.*;
-import javax.mail.internet.*;
+import javax.mail.internet.InternetAddress;
+import javax.mail.internet.MimeBodyPart;
+import javax.mail.internet.MimeMessage;
+import javax.mail.internet.MimeMultipart;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
@@ -16,7 +19,7 @@ public class EmailUtils {
 
     private static Logger logger=Logger.getLogger(EmailUtils.class.getName());
 
-    static Transport getTransportProtocol(Session mailSession,javax.mail.Message mailMessage, String protocol, String host) throws MessagingException, JMSException {
+    static Transport getTransportProtocol(Session mailSession, String protocol, String host) throws MessagingException, JMSException {
         Transport transport=mailSession.getTransport(protocol);
         transport.connect(host,EmailInformation.getLoginSenderEmail(),EmailInformation.getPasswordSenderEmail());
         return transport;
@@ -27,7 +30,7 @@ public class EmailUtils {
         return mailSession;
     }
 
-    static javax.mail.Message createMailMessage(Session mailSession, MessageWrapper msg) throws MessagingException, IOException {
+    static javax.mail.Message createMailMessage(Session mailSession, MessageWrapper msg) throws MessagingException {
         Message mailMessage=prepareMailWithoutContent(mailSession,msg);
         mailMessage.setSubject("Email");
         mailMessage.setContent(createBodyOfEmail(msg.getMessage(),msg.getPublicKey()));
@@ -61,7 +64,7 @@ public class EmailUtils {
         multipart.addBodyPart(messageBodyPart1);
         return multipart;
     }
-    static Multipart createBodyOfFailureEmail(String message) throws MessagingException {
+    private static Multipart createBodyOfFailureEmail(String message) throws MessagingException {
         Multipart multipart = new MimeMultipart();
         BodyPart messageBodyPart = new MimeBodyPart();
         messageBodyPart.setContent(message,"text/html");
