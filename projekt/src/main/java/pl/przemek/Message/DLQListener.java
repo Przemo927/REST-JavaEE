@@ -26,7 +26,7 @@ public class DLQListener implements MessageListener {
         Session mailSession= EmailUtils.createEmailSession();
         try {
             javax.mail.Message mailMessage=EmailUtils.createFailureMailMessage(mailSession,message.getBody(MessageWrapper.class));
-            Transport transport=EmailUtils.getTransportProtocol(mailSession,mailMessage,EmailInformation.getTransportProtocol(),EmailInformation.getHostTransportProtocolEmail());
+            Transport transport=EmailUtils.getTransportProtocol(mailSession,EmailInformation.getTransportProtocol(),EmailInformation.getHostTransportProtocolEmail());
             transport.sendMessage(mailMessage,mailMessage.getAllRecipients());
         } catch (MessagingException | JMSException e) {
             logger.log(Level.SEVERE,"[DLQListener] onMessage()",e);

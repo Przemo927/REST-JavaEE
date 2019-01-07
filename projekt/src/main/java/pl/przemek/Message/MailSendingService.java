@@ -31,9 +31,9 @@ public class MailSendingService implements MessageListener {
         try{
             MessageWrapper msg = message.getBody(MessageWrapper.class);
             javax.mail.Message mailMessage=EmailUtils.createMailMessage(mailSession,msg);
-            Transport transport=EmailUtils.getTransportProtocol(mailSession,mailMessage,EmailInformation.getTransportProtocol(),EmailInformation.getHostTransportProtocolEmail());
+            Transport transport=EmailUtils.getTransportProtocol(mailSession,EmailInformation.getTransportProtocol(),EmailInformation.getHostTransportProtocolEmail());
             transport.sendMessage(mailMessage,mailMessage.getAllRecipients());
-        } catch (MessagingException | JMSException | IOException e) {
+        } catch (MessagingException | JMSException e) {
             logger.log(Level.SEVERE,"[MailSendingService] onMessage()",e);
         }
     }
