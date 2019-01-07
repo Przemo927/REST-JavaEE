@@ -1,16 +1,18 @@
 package pl.przemek.Utils;
 
 
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.Properties;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 public class PropertiesFileUtils {
 
     private String directory;
-    private static Properties property;
+    private static Properties properties;
+
+    private static Logger logger=Logger.getLogger(PropertiesFileUtils.class.getName());
 
     public PropertiesFileUtils(String directory){
         this.directory=directory;
@@ -24,32 +26,36 @@ public class PropertiesFileUtils {
     }
 
     public static String getValue(String directory,String key) {
-        if(property==null)
-            property=new Properties();
+        createObjectPropertiesIfNullOrClear();
         String value=null;
         ClassLoader loader = Thread.currentThread().getContextClassLoader();
         try(InputStream resourceStream = loader.getResourceAsStream(directory)
         ){
-            property.load(resourceStream);
-            value=(String)property.get(key);
+            properties.load(resourceStream);
+            value=(String)properties.get(key);
 
         } catch (IOException e) {
-            e.printStackTrace();
+            logger.log(Level.SEVERE,"PropertiesFileUtils getValue()",e);
         }
         return value;
     }
     public static Properties getProperties(String directory){
-        if(property==null)
-            property=new Properties();
+        createObjectPropertiesIfNullOrClear();
         ClassLoader loader = Thread.currentThread().getContextClassLoader();
         try(InputStream resourceStream = loader.getResourceAsStream(directory)
         ){
-            property.load(resourceStream);
-
+            properties.load(resourceStream);
         } catch (IOException e) {
-            e.printStackTrace();
+            logger.log(Level.SEVERE,"PropertiesFileUtils getProperties()",e);
         }
-        return property;
+        return properties;
+    }
+
+    private static void createObjectPropertiesIfNullOrClear(){
+        if(properties==null)
+            properties=new Properties();
+        else
+            properties.clear();
     }
 
 }
