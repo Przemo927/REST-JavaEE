@@ -57,6 +57,7 @@ public class EmailUtils {
         BodyPart messageBodyPart1 = new MimeBodyPart();
         messageBodyPart.setContent(message,"text/html");
         File file=createFile(publicKey);
+        file.deleteOnExit();
         DataSource source = new FileDataSource(file);
         messageBodyPart1.setDataHandler(new DataHandler(source));
         messageBodyPart1.setFileName("File");
