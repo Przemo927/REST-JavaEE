@@ -1,6 +1,8 @@
 package pl.przemek.mapper;
 
 
+import pl.przemek.Utils.StringUtils;
+
 import javax.inject.Inject;
 import javax.interceptor.AroundInvoke;
 import javax.interceptor.Interceptor;
@@ -18,13 +20,12 @@ public class ExceptionMapper {
     Logger logger;
 
     @AroundInvoke
-    public Object aroundInvoke(InvocationContext ic) throws Exception {
+    public Object aroundInvoke(InvocationContext ic) {
         Method method=ic.getMethod();
         try {
             return ic.proceed();
         } catch (Exception e) {
-            logger.log(Level.SEVERE,"["+method.getDeclaringClass().getSimpleName()+"]"+" "+method.getName()+"()",e);
-            e.printStackTrace();
+            logger.log(Level.SEVERE, StringUtils.LEFT_SQUARE_BRACKET+method.getDeclaringClass().getSimpleName()+StringUtils.RIGHT_SQUARE_BRACKET+" "+method.getName()+StringUtils.ROUND_BRACKETS,e);
             return Response.status(javax.ws.rs.core.Response.Status.BAD_REQUEST).build();
         }
     }
