@@ -7,7 +7,6 @@ import pl.przemek.repository.JpaUserRepository;
 import pl.przemek.security.PasswordSecurity;
 
 import javax.inject.Inject;
-import java.security.NoSuchAlgorithmException;
 import java.util.List;
 import java.util.Optional;
 import java.util.logging.Level;
@@ -30,21 +29,16 @@ public class UserService {
     }
 
     public void addUser(User user) {
-        try {
-            if(user!=null) {
-                user.setActive(true);
-                String password = user.getPassword();
-                String hashedPassword = PasswordSecurity.hashPassword(password);
-                user.setPassword(hashedPassword);
-                userRepo.add(user);
-                addRole(user);
-            }else {
-                logger.log(Level.WARNING,"[UserService] addUser() user is null");
-            }
-        }catch (NoSuchAlgorithmException e){
-            logger.log(Level.WARNING,"[UserService] addUser()",e);
+        if(user!=null) {
+            user.setActive(true);
+            String password = user.getPassword();
+            String hashedPassword = PasswordSecurity.hashPassword(password);
+            user.setPassword(hashedPassword);
+            userRepo.add(user);
+            addRole(user);
+        }else {
+            logger.log(Level.WARNING,"[UserService] addUser() user is null");
         }
-
     }
 
     void addRole(User user) {

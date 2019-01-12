@@ -31,12 +31,12 @@ public class EncryptContentService {
         this.logger=logger;
     }
 
-    public Optional<SignContent> endcryptContent(HttpServletRequest request, Object objectToEncrypt) throws NoSuchAlgorithmException, InvalidKeySpecException, InvalidKeyException, SignatureException, JsonProcessingException {
+    public Optional<SignContent> encryptContent(HttpServletRequest request, Object objectToEncrypt) throws NoSuchAlgorithmException, InvalidKeySpecException, InvalidKeyException, SignatureException, JsonProcessingException {
         SignContent signContent;
         User user=(User)request.getSession().getAttribute("user");
         List<String> listPrivateKeyString=keyService.getPrivateKeyAsStringByUsername(user.getUsername());
         if(listPrivateKeyString.isEmpty()) {
-            logger.log(Level.WARNING,"[EncryptContentService] endcryptContent() PrivateKey wasn't found");
+            logger.log(Level.WARNING,"[EncryptContentService] encryptContent() PrivateKey wasn't found");
             return Optional.empty();
         }
         else {
