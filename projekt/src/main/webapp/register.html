@@ -1,28 +1,35 @@
-<html ng-app="app">
+<html>
     <head>
     <title>Aplikacja - Registration</title>
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
-        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous"><script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" crossorigin="anonymous">
+        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" crossorigin="anonymous">
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
     </head>
     <script>
         function sendPostRequest(){
-            var email=$("input[name=email]").val();
-            var userName=$("input[name=username]").val();
-            var password=$("input[name=password]").val();
+            var email=$("input[name=email]");
+            var userName=$("input[name=username]");
+            var password=$("input[name=password]");
             //$.post(post( "api/register", { email: email, username: userName,password: password } ));
-            var user={ email: email, username: userName,password: password };
-            $.ajax({
-                type:'POST',
-                url:"api/register",
-                data:JSON.stringify(user),
-                contentType: "application/json",
-                success: function(i){
-                    console.log(i);
-                    $('#i').html(i);
-                }
-            });
+            if(email.val() !=="" && userName.val() !=="" && password.val() !==""){
+                var user={ email: email.val(), username: userName.val(),password: password.val() };
+                $.ajax({
+                    type:'POST',
+                    url:"api/register",
+                    data:JSON.stringify(user),
+                    contentType: "application/json",
+                    success: function(i){
+                        clearInputs(email,userName,password);
+                    }
+                });
+            }
+        }
+        function clearInputs(email,userName,password){
+            email.val('');
+            userName.val('');
+            password.val('');
         }
     </script>
   <body>
@@ -30,7 +37,7 @@
       
       <nav class="navbar navbar-inverse navbar-fixed-top">
     <div class="container">
-        <a href="/projekt/index.html#/" class="navbar-brand">Aplikacja</a>
+        <a href="/projekt" class="navbar-brand">Aplikacja</a>
  
         <button class="navbar-toggle" data-toggle="collapse" data-target=".navHeaderCollapse">
             <span class="glyphicon glyphicon-list"></span>
@@ -38,9 +45,9 @@
         
 
         <div class="collapse navbar-collapse navHeaderCollapse">
-        <div ng-controller="IndexController as indCtrl">
+        <div>
             <ul class="nav navbar-nav navbar-right">
-                <li><a href="/projekt/index.html#/login">Login</a></li>
+                <li><a href="/projekt">Login</a></li>
                 
             </ul>
             </div>
