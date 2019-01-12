@@ -8,7 +8,7 @@ import java.security.Key;
 
 public class JwtsRepository {
 
-    public Jws<Claims> checkToken(Key key, String token){
+    public static Jws<Claims> checkToken(Key key, String token){
         return Jwts.parser().setSigningKey(key).parseClaimsJws(token);
     }
 }
