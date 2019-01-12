@@ -1,19 +1,21 @@
 package pl.przemek.rest;
 
+import pl.przemek.rest.utils.ResponseUtils;
+
 import javax.inject.Inject;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;
 import javax.ws.rs.core.Context;
-import java.io.IOException;
+import javax.ws.rs.core.Response;
+import java.net.URI;
+import java.net.URISyntaxException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
 @Path("/logout")
 public class LogoutEndPoint {
-    private final static String HOME_PATH="/projekt";
 
     private Logger logger;
 
@@ -22,14 +24,16 @@ public class LogoutEndPoint {
         this.logger=logger;
     }
     public LogoutEndPoint(){}
+
     @GET
-    public void logout(@Context HttpServletRequest request,@Context HttpServletResponse response){
+    public Response logout(@Context HttpServletRequest request){
         try {
             request.getSession().invalidate();
             request.logout();
-            response.sendRedirect(HOME_PATH);
-        } catch (IOException | ServletException e) {
+            return Response.seeOther(new URI(ResponseUtils.getHomePath(request))).build();
+        } catch (ServletException | URISyntaxException e) {
             logger.log(Level.SEVERE,"[LoginEndPoint] logout()",e);
+            return Response.status(Response.Status.BAD_REQUEST).entity("Something gone wrong").build();
         }
     }
 }
