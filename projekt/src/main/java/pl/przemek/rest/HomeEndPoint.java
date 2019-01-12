@@ -1,6 +1,8 @@
 package pl.przemek.rest;
 
 import pl.przemek.mapper.ExceptionMapperAnnotation;
+import pl.przemek.model.RoleType;
+import pl.przemek.rest.utils.ResponseUtils;
 import pl.przemek.wrapper.ResponseMessageWrapper;
 
 import javax.inject.Inject;
@@ -15,8 +17,6 @@ import java.util.HashMap;
 @Path("/home")
 @ExceptionMapperAnnotation
 public class HomeEndPoint {
-	private final static String LOGIN_PATH = "/projekt";
-	private final static String LOGOUT_PATH= "/projekt/api/logout";
 
 	@Inject
 	private  HttpServletRequest request;
@@ -28,17 +28,17 @@ public class HomeEndPoint {
 			HashMap<String,Object> map=new HashMap<>();
 		if(request.getUserPrincipal() != null) {
 			map.put("name", "Logout");
-			map.put("path", LOGOUT_PATH);
+			map.put("path", ResponseUtils.getLogoutPath(request));
 			if (request.isUserInRole("admin")) {
-				map.put("role", "admin");
+				map.put("role", RoleType.ADMIN.getRoleType());
 			}
 			else{
-				map.put("role","user");
+				map.put("role",RoleType.USER.getRoleType());
 			}
 		}
 		else{
 			map.put("name","Login");
-			map.put("path",LOGIN_PATH);
+			map.put("path", ResponseUtils.getHomePath(request));
 		}
 		return Response.ok(ResponseMessageWrapper.wrapMessage(map)).build();
 	}
