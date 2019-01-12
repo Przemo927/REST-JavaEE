@@ -6,6 +6,7 @@ import pl.przemek.Message.MessageWrapper;
 import pl.przemek.mapper.ExceptionMapperAnnotation;
 import pl.przemek.model.SecurityKey;
 import pl.przemek.model.User;
+import pl.przemek.rest.utils.ResponseUtils;
 import pl.przemek.security.KeyDataStore;
 import pl.przemek.security.Utils.KeyUtils;
 import pl.przemek.service.SecurityKeyService;
@@ -62,7 +63,7 @@ public class RegisterEndPoint {
             KeyPair keyPair;
             keyPair = KeyUtils.generatePairOfKeys();
             String publicKeyAsString=KeyUtils.convertKeyToString(keyPair.getPublic());
-            MessageWrapper msg = wrapMessage(message,user,publicKeyAsString);
+            MessageWrapper msg = new MessageWrapper(message,user,publicKeyAsString);
             mailService.sendMessage(msg);
             keyStore.setPrivateKey(keyPair.getPrivate());
             setUpSessionForRegistration(user);
@@ -70,9 +71,7 @@ public class RegisterEndPoint {
             logger.log(Level.SEVERE,"[RegisterEndpoint] sendMessageToRegistration()",e);
         }
     }
-    MessageWrapper wrapMessage (String message,User user, String publicKey){
-        return new MessageWrapper(message,user,publicKey);
-    }
+
     void setUpSessionForRegistration(User user){
         HttpSession session=request.getSession(true);
         session.setMaxInactiveInterval(300);
@@ -86,7 +85,7 @@ public class RegisterEndPoint {
         if(user!=null) {
             userService.addUser(user);
             addPrivateKeyToDatabase(keyStore.getPrivateKey(), user.getUsername());
-            return Response.seeOther(URI.create("http://localhost:8080/projekt")).build();
+            return Response.seeOther(URI.create(ResponseUtils.getHomePath(request))).build();
         }else{
             logger.log(Level.SEVERE,"[RegisterEndpoint] addUser() user wasn't saved in session");
             return Response.status(Response.Status.BAD_REQUEST).entity("User wasn't added").build();
