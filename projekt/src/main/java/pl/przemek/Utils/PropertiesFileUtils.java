@@ -26,7 +26,7 @@ public class PropertiesFileUtils {
     }
 
     public static String getValue(String directory,String key) {
-        createObjectPropertiesIfNullOrClear();
+        createObjectProperties();
         String value=null;
         ClassLoader loader = Thread.currentThread().getContextClassLoader();
         try(InputStream resourceStream = loader.getResourceAsStream(directory)
@@ -40,7 +40,7 @@ public class PropertiesFileUtils {
         return value;
     }
     public static Properties getProperties(String directory){
-        createObjectPropertiesIfNullOrClear();
+        createObjectProperties();
         ClassLoader loader = Thread.currentThread().getContextClassLoader();
         try(InputStream resourceStream = loader.getResourceAsStream(directory)
         ){
@@ -51,11 +51,9 @@ public class PropertiesFileUtils {
         return properties;
     }
 
-    private static void createObjectPropertiesIfNullOrClear(){
+    private static void createObjectProperties(){
         if(properties==null)
             properties=new Properties();
-        else
-            properties.clear();
     }
 
 }
