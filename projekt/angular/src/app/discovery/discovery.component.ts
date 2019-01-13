@@ -51,8 +51,8 @@ export class DiscoveryComponent implements OnInit {
 
   addComment():void {
     this.commentService.addComment(this.comment,this.id).subscribe(response=>{
-      if(response!==null && response.InvalidFieldList!==undefined){
-        this.message=response.InvalidFieldList.comment;
+      if(response!==null && response.invalidFieldList!==undefined){
+        this.message=response.invalidFieldList.comment;
         this.messageRef.setWrong();
         this.messageRef.setValidationMessage(this.message);
       }else {
