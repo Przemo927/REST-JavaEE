@@ -1,10 +1,9 @@
-import { Component, OnInit, IterableDiffers, IterableDiffer, DoCheck } from '@angular/core';
-import { Event } from '../event';
+import {Component, DoCheck, IterableDiffer, IterableDiffers, OnInit} from '@angular/core';
+import {Event} from '../event';
 import * as L from 'leaflet';
-import { EventService } from '../event.service';
-import { DataService } from '../data.service';
-import { Observable } from "rxjs/Observable";
-import {BehaviorSubject} from "rxjs/BehaviorSubject";
+import {EventService} from '../event.service';
+import {DataService} from '../data.service';
+import {Observable} from "rxjs/Observable";
 
 @Component({
   selector: 'app-searchbyposition',
@@ -35,7 +34,8 @@ export class SearchbypositionComponent implements OnInit,DoCheck {
     this.dataService.addBehaviourSource(this.events);
     let distanceInput=document.getElementsByName("distance");
 
-    Observable.fromEvent(distanceInput,'keyup').subscribe(
+    Observable.fromEvent(distanceInput,'keyup').debounceTime(500)
+      .distinctUntilChanged().subscribe(
       ()=>{
         if(this.markers!==undefined && this.markers.length>0) {
           this.getEventsByPosition(this.distance);
@@ -49,7 +49,7 @@ export class SearchbypositionComponent implements OnInit,DoCheck {
   }
 
   static validateDistance(value:string):boolean{
-    let regExp=new RegExp("[1-9]{1,4}");
+    let regExp=new RegExp("^[1-9]{1}[0-9]{1,3}$");
     return regExp.test(value);
   }
   getEventsByPosition(distance:number){

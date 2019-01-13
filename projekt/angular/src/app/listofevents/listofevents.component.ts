@@ -1,5 +1,5 @@
 import {Component, OnInit} from "@angular/core";
-import {NavigationEnd, Router} from "@angular/router";
+import {Router} from "@angular/router";
 import {NameofcityService} from "../nameofcity.service";
 import {Event} from "../event";
 import {EventService} from "../event.service";
@@ -36,8 +36,7 @@ export class ListofeventsComponent implements OnInit {
         });
     }
     else if(this.router.url.indexOf('searchByPosition')!==-1){
-      this.dataService.currentData.debounceTime(1000).distinctUntilChanged().subscribe((events)=>this.events=events);
-      this.getEvents();
+      this.dataService.currentData.subscribe((events)=>this.events=events);
     }
     else{
       this.getEvents();
