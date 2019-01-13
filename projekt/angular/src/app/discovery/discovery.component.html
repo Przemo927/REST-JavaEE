@@ -16,25 +16,19 @@
   <br><h3>Comments:</h3>
   <ul class="list-unstyled" *ngIf="comments">
     <li *ngFor="let comment of comments">
-      <div style="box-shadow: 0px 0px 5px rgba(51, 51, 51, 0.7)">
-        <div class="col col-md-2 col-sm-3">
-          <p>{{comment.user.username}}</p>
-        </div>
-        <div class="row bs-callout bs-callout-default;position:relative">
-          <div style="width:760px">
-            <p>{{comment.comment}}</p>
-          </div>
-          <div style="display: flex;height: 20px;position: absolute;right: 10px">
-            <span (click)="addVote(VoTE_UP,comment.id)" class="glyphicon glyphicon-thumbs-up btn-xs btn-success"></span><p>{{comment.upVote}}</p>
-            <span (click)="addVote(VoTE_DOWN,comment.id)" class="glyphicon glyphicon-thumbs-down btn-xs btn-warning"></span><p>{{comment.downVote}}</p>
-          </div>
+      <div class="bs-callout bs-callout-default" style="box-shadow: 0px 0px 5px rgba(51, 51, 51, 0.7)">
+        <div style="display: inline;"><span style="font-weight: bold">{{comment.user.username}}</span></div>
+        <div style="display: inline"><span>{{comment.comment}}</span></div>
+        <div class="pull-right" style="display:inline;">
+          <span (click)="addVote(VoTE_UP,comment.id)" class="glyphicon glyphicon-thumbs-up btn-xs btn-success"></span><span>{{comment.upVote}}</span>
+          <span (click)="addVote(VoTE_DOWN,comment.id)" class="glyphicon glyphicon-thumbs-down btn-xs btn-warning"></span><span>{{comment.downVote}}</span>
         </div>
       </div>
     </li>
   </ul>
   <div *ngIf="comment">
     <form class="addForm">
-      <h2 class="form-signin-heading">Add new comment</h2>
+      <div style="font-size: 20px">Add new comment</div>
       <app-validatabletextarea name="comment" (changeEvent)="assignComment($event)" positionMessage="above" placeholder="Write comment" rows="5"></app-validatabletextarea>
       <button (click)="addComment()" style="width:100%" class="bigButtonClass" type="submit">Add</button>
     </form>
