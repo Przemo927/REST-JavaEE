@@ -13,7 +13,6 @@ import { DataService } from '../data.service';
 })
 export class SearcheventbycityComponent implements OnInit {
   private events:Event[];
-  private napis:string="";
 
   constructor(private eventService: EventService,private router: Router,private route: ActivatedRoute,private nameService:NameofcityService
     ,private dataService:DataService) { }
@@ -21,15 +20,9 @@ export class SearcheventbycityComponent implements OnInit {
   ngOnInit() {
     this.dataService.addBehaviourSource(this.events);
     let searchInput=<HTMLInputElement>document.getElementsByName("nameOfCity")[0];
-    console.log(searchInput);
     let input$=Observable.fromEvent(searchInput,'keyup');
     this.nameService.observable=input$;
 
-  }
-
-  public sendNameToComponent(nameOfCity:string){
-    this.router.navigate([{outlets: {primary: 'searchByCity', events: nameOfCity}}],
-      {relativeTo: this.route,skipLocationChange: true});
   }
 
 }
