@@ -11,6 +11,7 @@ import pl.przemek.security.KeyDataStore;
 import pl.przemek.security.Utils.KeyUtils;
 import pl.przemek.service.SecurityKeyService;
 import pl.przemek.service.UserService;
+import pl.przemek.wrapper.ResponseMessageWrapper;
 
 import javax.inject.Inject;
 import javax.servlet.http.HttpServletRequest;
@@ -88,7 +89,7 @@ public class RegisterEndPoint {
             return Response.seeOther(URI.create(ResponseUtils.getHomePath(request))).build();
         }else{
             logger.log(Level.SEVERE,"[RegisterEndpoint] addUser() user wasn't saved in session");
-            return Response.status(Response.Status.BAD_REQUEST).entity("User wasn't added").build();
+            return Response.status(Response.Status.BAD_REQUEST).entity(ResponseMessageWrapper.wrappMessage("User wasn't added")).build();
         }
     }
     void addPrivateKeyToDatabase(PrivateKey key, String username){

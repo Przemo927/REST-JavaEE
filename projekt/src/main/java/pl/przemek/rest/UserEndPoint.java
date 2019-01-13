@@ -58,7 +58,7 @@ public class UserEndPoint {
             return Response.ok("User was updated").build();
         }else {
             logger.log(Level.SEVERE,"[UserService] updateUser() user wasn't updated");
-            return Response.status(Response.Status.BAD_REQUEST).entity("User wasn't found").build();
+            return Response.status(Response.Status.BAD_REQUEST).entity(ResponseMessageWrapper.wrappMessage("User wasn't found")).build();
         }
     }
 

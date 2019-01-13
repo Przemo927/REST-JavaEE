@@ -1,6 +1,8 @@
 package pl.przemek.rest;
 
+import pl.przemek.Message.MessageWrapper;
 import pl.przemek.rest.utils.ResponseUtils;
+import pl.przemek.wrapper.ResponseMessageWrapper;
 
 import javax.inject.Inject;
 import javax.servlet.ServletException;
@@ -33,7 +35,7 @@ public class LogoutEndPoint {
             return Response.seeOther(new URI(ResponseUtils.getHomePath(request))).build();
         } catch (ServletException | URISyntaxException e) {
             logger.log(Level.SEVERE,"[LoginEndPoint] logout()",e);
-            return Response.status(Response.Status.BAD_REQUEST).entity("Something gone wrong").build();
+            return Response.status(Response.Status.BAD_REQUEST).entity(ResponseMessageWrapper.wrappMessage("Something gone wrong")).build();
         }
     }
 }

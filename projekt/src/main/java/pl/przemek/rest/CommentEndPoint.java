@@ -3,6 +3,7 @@ package pl.przemek.rest;
 import pl.przemek.mapper.ExceptionMapperAnnotation;
 import pl.przemek.model.Comment;
 import pl.przemek.model.User;
+import pl.przemek.rest.utils.ResponseUtils;
 import pl.przemek.service.CommentService;
 
 import javax.inject.Inject;
@@ -62,7 +63,7 @@ public class CommentEndPoint {
             if(user!=null) {
                 comment.setUser(user);
                 commentservice.addComment(comment, discoveryId);
-                return Response.created(URI.create(uriInfo.getAbsolutePath()+"/"+comment.getId())).build();
+                return Response.created(URI.create(uriInfo.getAbsolutePath()+ ResponseUtils.URL_SEPARATOR +comment.getId())).build();
             }else {
                 logger.log(Level.SEVERE,"[CommentEndPoint] addComment() user wasn't saved in session");
                 return Response.status(Response.Status.UNAUTHORIZED).build();
