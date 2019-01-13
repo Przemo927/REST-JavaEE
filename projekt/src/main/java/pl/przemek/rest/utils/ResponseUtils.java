@@ -14,6 +14,8 @@ public class ResponseUtils {
     private static CacheControl cacheControl;
     private static String homePath;
 
+    public final static String URL_SEPARATOR="/";
+
     public static CacheControl getCacheControl(int maxAge){
         if(cacheControl==null){
             cacheControl=new CacheControl();

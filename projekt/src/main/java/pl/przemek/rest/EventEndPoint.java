@@ -3,6 +3,7 @@ package pl.przemek.rest;
 import pl.przemek.mapper.ExceptionMapperAnnotation;
 import pl.przemek.model.Event;
 import pl.przemek.model.User;
+import pl.przemek.rest.utils.ResponseUtils;
 import pl.przemek.service.EventService;
 import pl.przemek.wrapper.ResponseMessageWrapper;
 
@@ -86,7 +87,7 @@ public class EventEndPoint {
         if(user!=null && event!=null) {
             event.setUser(user);
             eventservice.addEvent(event);
-            return Response.created(URI.create(uriInfo.getAbsolutePath()+"/"+event.getId())).build();
+            return Response.created(URI.create(uriInfo.getAbsolutePath()+ ResponseUtils.URL_SEPARATOR +event.getId())).build();
         }else {
             logger.log(Level.SEVERE, "[EventEndPoint] addEvent() event wasn't added user="+user+" event="+event);
             return Response.status(Response.Status.UNAUTHORIZED).entity(ResponseMessageWrapper.wrappMessage("Logged user wasn't found")).build();
