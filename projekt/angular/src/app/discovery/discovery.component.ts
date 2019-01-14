@@ -1,4 +1,4 @@
-import {Component, ContentChild, ElementRef, OnInit, Output, ViewChild} from "@angular/core";
+import {Component, OnInit, ViewChild} from "@angular/core";
 import {DiscoveryService} from "../discovery.service";
 import {CommentService} from "../comment.service";
 import {Discovery} from "../discovery";
@@ -6,6 +6,7 @@ import {ActivatedRoute, NavigationEnd, Router} from "@angular/router";
 import {Comment} from "../comment";
 import {ValidatabletextareaComponent} from "../validatabletextarea/validatabletextarea.component";
 import {UrlUtils} from "../UrlUtils";
+import {EndPoint} from "../endpoint.enum";
 
 @Component({
   selector: 'app-discovery',
@@ -62,11 +63,10 @@ export class DiscoveryComponent implements OnInit {
   }
 
   addVote(voteType,id){
-    let urlAddVote=UrlUtils.generateBasicUrl(window.location.protocol);
+    let urlAddVote=UrlUtils.generateBasicUrl(window.location)+EndPoint.voteComment;
     urlAddVote=UrlUtils.addParameterToUrl(urlAddVote,'vote',voteType);
     urlAddVote=UrlUtils.addParameterToUrl(urlAddVote,'commentId',id);
-    console.log(urlAddVote);
-    window.location.href='http://localhost:8080/projekt/api/votecom?vote='+voteType+'&commentId='+id;
+    window.location.href=urlAddVote;
     setTimeout(()=>
       this.getCommentsById(),500);
   }

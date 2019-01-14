@@ -1,4 +1,5 @@
 import {BaseUrl} from "./baseurl.enum";
+
 export class UrlUtils {
   public static addParameterToUrl(url:string,parameter:string,value:any):string{
     if(url.endsWith("/")){
@@ -26,7 +27,7 @@ export class UrlUtils {
     let regExp:RegExp=new RegExp(regexp);
     return regExp.test(url);
   }
-  public static generateBasicUrl(protocol:string):string{
-    return protocol+"//"+BaseUrl.development;
+  public static generateBasicUrl(location:any){
+    return location.protocol+BaseUrl.doubleUrlSeparator+location.host+location.pathname;
   }
 }

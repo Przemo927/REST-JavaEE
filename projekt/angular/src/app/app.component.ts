@@ -1,8 +1,8 @@
 import {Component, DoCheck, OnInit} from "@angular/core";
-import {NavigationEnd, NavigationStart, Router} from "@angular/router";
-import {BaseUrl} from "./baseurl.enum";
+import {NavigationEnd, Router} from "@angular/router";
 import {EndPoint} from "./endpoint.enum";
 import {ContentPdfService} from "./contentpdf.service";
+import {UrlUtils} from "./UrlUtils";
 
 @Component({
   selector: 'app-root',
@@ -25,7 +25,7 @@ export class AppComponent implements OnInit, DoCheck {
   }
 
   ngOnInit() {
-    this.urlLogout = window.location.protocol + BaseUrl.doubleUrlSeparator + BaseUrl.development + EndPoint.logout;
+    this.urlLogout = UrlUtils.generateBasicUrl(window.location) + EndPoint.logout;
     this.nav = document.getElementsByTagName("nav")[0];
     this.navHeight = this.nav.offsetHeight;
     this.initialCounter();

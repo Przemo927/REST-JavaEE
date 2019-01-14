@@ -5,6 +5,8 @@ import {Discovery} from "../discovery";
 import {CheckUserService} from "../check-user.service";
 import {Page} from "../page";
 import {DataService} from "../data.service";
+import {UrlUtils} from "../UrlUtils";
+import {EndPoint} from "../endpoint.enum";
 
 @Component({
   selector: 'app-discoveries',
@@ -49,7 +51,10 @@ export class DiscoveriesComponent implements OnInit, DoCheck {
   }
 
   addVote(voteType, id):void {
-    window.location.href = 'http://localhost:8080/projekt/api/vote?vote=' + voteType + '&discoveryId=' + id;
+    let urlAddVote=UrlUtils.generateBasicUrl(window.location)+EndPoint.voteDiscovery;
+    urlAddVote=UrlUtils.addParameterToUrl(urlAddVote,'vote',voteType);
+    urlAddVote=UrlUtils.addParameterToUrl(urlAddVote,'discoveryId',id);
+    window.location.href = urlAddVote;
     setTimeout(() =>
       this.getDiscoveries(), 500);
 

@@ -14,7 +14,7 @@ export class DiscoveryService {
   constructor(private http: HttpClient) { }
 
   private discovery: Discovery;
-  private discoveryUrl= window.location.protocol+BaseUrl.doubleUrlSeparator+BaseUrl.development+EndPoint.discoveries;
+  private discoveryUrl= UrlUtils.generateBasicUrl(window.location)+EndPoint.discoveries;
 
 getDiscoveries(): Observable<Discovery[]> {
   return this.http.get<Discovery[]>(this.discoveryUrl)
