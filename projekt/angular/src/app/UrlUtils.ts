@@ -28,6 +28,7 @@ export class UrlUtils {
     return regExp.test(url);
   }
   public static generateBasicUrl(location:any){
-    return location.protocol+BaseUrl.doubleUrlSeparator+location.host+location.pathname;
+    let basicUrl=location.protocol+BaseUrl.doubleUrlSeparator+location.host+location.pathname;
+    return basicUrl.replace('index.html','');
   }
 }
