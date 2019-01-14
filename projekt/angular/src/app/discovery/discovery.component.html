@@ -20,8 +20,8 @@
         <div style="display: inline;"><span style="font-weight: bold">{{comment.user.username}}</span></div>
         <div style="display: inline"><span>{{comment.comment}}</span></div>
         <div class="pull-right" style="display:inline;">
-          <span (click)="addVote(VoTE_UP,comment.id)" class="glyphicon glyphicon-thumbs-up btn-xs btn-success"></span><span>{{comment.upVote}}</span>
-          <span (click)="addVote(VoTE_DOWN,comment.id)" class="glyphicon glyphicon-thumbs-down btn-xs btn-warning"></span><span>{{comment.downVote}}</span>
+          <span (click)="addVote(VOTE_UP,comment.id)" class="glyphicon glyphicon-thumbs-up btn-xs btn-success"></span><span>{{comment.upVote}}</span>
+          <span (click)="addVote(VOTE_DOWN,comment.id)" class="glyphicon glyphicon-thumbs-down btn-xs btn-warning"></span><span>{{comment.downVote}}</span>
         </div>
       </div>
     </li>
