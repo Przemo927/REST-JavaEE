@@ -7,6 +7,7 @@ import {Comment} from "../comment";
 import {ValidatabletextareaComponent} from "../validatabletextarea/validatabletextarea.component";
 import {UrlUtils} from "../UrlUtils";
 import {EndPoint} from "../endpoint.enum";
+import {UrlRegex} from "../url-regex.enum";
 
 @Component({
   selector: 'app-discovery',
@@ -28,7 +29,7 @@ export class DiscoveryComponent implements OnInit {
   constructor(private discoveryService: DiscoveryService,private route: ActivatedRoute,
               private commentService: CommentService, private router:Router) {
     router.events.forEach((e) => {
-      if(e instanceof NavigationEnd){
+      if(e instanceof NavigationEnd && e.url.match(UrlRegex.discoveryWithIdUrl) !== null){
         this.id = +this.route.snapshot.paramMap.get('id');
         this.getDiscovery();
         this.getCommentsById();
@@ -37,9 +38,6 @@ export class DiscoveryComponent implements OnInit {
   }
 
   ngOnInit() {
-    this.id = +this.route.snapshot.paramMap.get('id');
-    this.getDiscovery();
-    this.getCommentsById();
   }
 
   getDiscovery(): void {
