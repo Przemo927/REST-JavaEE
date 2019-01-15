@@ -11,10 +11,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 import javax.validation.Valid;
 import javax.ws.rs.*;
-import javax.ws.rs.core.Context;
-import javax.ws.rs.core.MediaType;
-import javax.ws.rs.core.Response;
-import javax.ws.rs.core.UriInfo;
+import javax.ws.rs.core.*;
 import java.io.UnsupportedEncodingException;
 import java.net.URI;
 import java.util.List;
@@ -30,6 +27,8 @@ public class CommentEndPoint {
     private Logger logger;
     @Context
     UriInfo uriInfo;
+    @Context
+    Request requestRest;
 
     @Inject
     public CommentEndPoint(Logger logger,CommentService commentservice, HttpServletRequest request) {
@@ -49,7 +48,7 @@ public class CommentEndPoint {
             logger.log(Level.SEVERE,"[CommentEndPoint] getAllComment() comments weren't found");
             return Response.status(Response.Status.NO_CONTENT).build();
         }
-        return Response.ok(listOfComments).build();
+        return ResponseUtils.checkIfModifiedAndReturnResponse(listOfComments,requestRest).build();
     }
 
     @POST
@@ -83,7 +82,7 @@ public class CommentEndPoint {
             logger.log(Level.SEVERE,"[CommentEndPoint] getByDiscoveryId() comment wasn't found");
             return Response.status(Response.Status.NO_CONTENT).build();
         }
-        return Response.ok(listWithComment).build();
+        return ResponseUtils.checkIfModifiedAndReturnResponse(listWithComment,requestRest).build();
     }
 
 }

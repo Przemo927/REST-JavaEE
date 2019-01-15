@@ -10,10 +10,7 @@ import pl.przemek.wrapper.ResponseMessageWrapper;
 import javax.inject.Inject;
 import javax.servlet.http.HttpServletRequest;
 import javax.ws.rs.*;
-import javax.ws.rs.core.Context;
-import javax.ws.rs.core.MediaType;
-import javax.ws.rs.core.Response;
-import javax.ws.rs.core.UriInfo;
+import javax.ws.rs.core.*;
 import java.net.URI;
 import java.util.List;
 import java.util.Optional;
@@ -31,6 +28,9 @@ public class EventEndPoint {
     @Context
     UriInfo uriInfo;
 
+    @Context
+    Request requestRest;
+
     public EventEndPoint() {
     }
     @Inject
@@ -46,7 +46,7 @@ public class EventEndPoint {
     public Response getEvent(@PathParam("id") long id) {
         Optional<Event> eventOptional=eventservice.getEvent(id);
         return eventOptional.map(event -> {
-            return Response.ok(event).build();
+            return ResponseUtils.checkIfModifiedAndReturnResponse(event,requestRest).build();
         }).orElseGet(()->{
             logger.log(Level.SEVERE,"[EventEndPoint] getEvent() event wasn't found");
             return Response.status(Response.Status.NO_CONTENT).build();
@@ -65,7 +65,7 @@ public class EventEndPoint {
             logger.log(Level.SEVERE, "[EventEndPoint] getEvents() events wasn't found");
             return Response.status(Response.Status.NO_CONTENT).build();
         }
-        return Response.ok(listOfEvents).build();
+        return ResponseUtils.checkIfModifiedAndReturnResponse(listOfEvents,requestRest).build();
     }
 
     @GET
@@ -77,7 +77,7 @@ public class EventEndPoint {
             logger.log(Level.SEVERE, "[EventEndPoint] getEventsByPosition() events wasn't found");
             Response.status(Response.Status.NO_CONTENT).build();
         }
-        return Response.ok(listOfEventsGetByPosition).build();
+        return ResponseUtils.checkIfModifiedAndReturnResponse(listOfEventsGetByPosition,requestRest).build();
     }
 
     @POST
@@ -122,7 +122,7 @@ public class EventEndPoint {
             logger.log(Level.SEVERE, "[EventEndPoint] getCitiesFromAllEvents() cities weren't found");
             return Response.status(Response.Status.NO_CONTENT).build();
         }
-        return Response.ok(listOfCities).build();
+        return ResponseUtils.checkIfModifiedAndReturnResponse(listOfCities,requestRest).build();
     }
 
 }

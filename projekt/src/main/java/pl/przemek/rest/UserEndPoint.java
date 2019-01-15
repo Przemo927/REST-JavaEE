@@ -2,12 +2,15 @@ package pl.przemek.rest;
 
 import pl.przemek.mapper.ExceptionMapperAnnotation;
 import pl.przemek.model.User;
+import pl.przemek.rest.utils.ResponseUtils;
 import pl.przemek.service.UserService;
 import pl.przemek.wrapper.ResponseMessageWrapper;
 
 import javax.inject.Inject;
 import javax.ws.rs.*;
+import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
+import javax.ws.rs.core.Request;
 import javax.ws.rs.core.Response;
 import java.util.List;
 import java.util.Optional;
@@ -21,6 +24,9 @@ public class UserEndPoint {
 
     private UserService userservice;
     private Logger logger;
+
+    @Context
+    Request requestRest;
 
     @Inject
     public UserEndPoint(Logger logger,UserService userService){
@@ -43,7 +49,7 @@ public class UserEndPoint {
     public Response getUserById(@PathParam("id") Long id){
         Optional<User> userOptional=userservice.getUserById(id);
         return userOptional.map(user -> {
-            return Response.ok(user).build();
+            return ResponseUtils.checkIfModifiedAndReturnResponse(user,requestRest).build();
         }).orElseGet(()->{
             logger.log(Level.SEVERE,"[UserService] getUserById() user wasn't found");
             return Response.status(Response.Status.NO_CONTENT).build();
@@ -70,7 +76,7 @@ public class UserEndPoint {
             logger.log(Level.SEVERE,"[UserService] getAllUsers() users weren't found");
             return Response.status(Response.Status.NO_CONTENT).build();
         }
-       return Response.ok(listOfUsers).build();
+       return ResponseUtils.checkIfModifiedAndReturnResponse(listOfUsers,requestRest).build();
     }
 
 }

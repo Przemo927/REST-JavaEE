@@ -4,19 +4,16 @@ import org.json.simple.JSONObject;
 import pl.przemek.mapper.ExceptionMapperAnnotation;
 import pl.przemek.model.Discovery;
 import pl.przemek.model.User;
+import pl.przemek.rest.utils.ResponseUtils;
 import pl.przemek.service.DiscoveryService;
 import pl.przemek.wrapper.ResponseMessageWrapper;
 
-import javax.enterprise.context.RequestScoped;
 import javax.inject.Inject;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 import javax.validation.Valid;
 import javax.ws.rs.*;
-import javax.ws.rs.core.Context;
-import javax.ws.rs.core.MediaType;
-import javax.ws.rs.core.Response;
-import javax.ws.rs.core.UriInfo;
+import javax.ws.rs.core.*;
 import java.io.UnsupportedEncodingException;
 import java.math.BigInteger;
 import java.net.URI;
@@ -35,6 +32,8 @@ public class DiscoveryEndPoint {
 	private Logger logger;
 	@Context
 	UriInfo uriInfo;
+	@Context
+	Request requestRest;
 
 	@Inject
 	public DiscoveryEndPoint(Logger logger,DiscoveryService discoveryService, HttpServletRequest request){
@@ -63,7 +62,7 @@ public class DiscoveryEndPoint {
 			Response.status(Response.Status.BAD_REQUEST).build();
 		}
 
-		return Response.created(URI.create(uriInfo.getAbsolutePath()+"/"+discovery.getId())).build();
+		return Response.created(URI.create(uriInfo.getAbsolutePath()+ResponseUtils.URL_SEPARATOR+discovery.getId())).build();
 	}
 
 	@GET
@@ -72,7 +71,7 @@ public class DiscoveryEndPoint {
 	public Response getById(@PathParam("id") long id) {
 		Optional<Discovery> discoveryOptional=discoveryService.getById(id);
 		return discoveryOptional.map(discovery -> {
-			return Response.ok(discovery).build();
+			return ResponseUtils.checkIfModifiedAndReturnResponse(discovery,requestRest).build();
 		}).orElseGet(()->{
 			logger.log(Level.SEVERE,"[DiscoveryEndPoint] getById() discovery wasn't found");
 			return Response.status(Response.Status.NO_CONTENT).build();
@@ -90,7 +89,7 @@ public class DiscoveryEndPoint {
 	@GET
 	@Produces(MediaType.APPLICATION_JSON)
 	public Response getALL(@QueryParam("orderBy") String order,@QueryParam("beginWith") Integer begin,
-						   @QueryParam("quantity") Integer quantity) throws Exception {
+						   @QueryParam("quantity") Integer quantity) {
 		List<Discovery> allDiscoveries= Collections.emptyList();
 		if(begin!=null && !(begin<0) && quantity!=null && !(quantity<0)){
 			if("date".equals(order)){
@@ -103,7 +102,7 @@ public class DiscoveryEndPoint {
 			logger.log(Level.SEVERE,"[DiscoveryEndPoint] getALL() discovery wasn't found");
 			return Response.status(Response.Status.NO_CONTENT).build();
 		}
-		return Response.ok(allDiscoveries).build();
+		return ResponseUtils.checkIfModifiedAndReturnResponse(allDiscoveries,requestRest).build();
 	}
 
 	@PUT
@@ -123,7 +122,7 @@ public class DiscoveryEndPoint {
 	public Response getQuantityOfDiscoveries(){
 		BigInteger quantityOfDiscoveries=discoveryService.getQuantityOfDiscoveries();
 		JSONObject jsonObject=ResponseMessageWrapper.wrappMessage(String.valueOf(quantityOfDiscoveries));
-		return Response.ok(jsonObject).header("Access-Control-Allow-Origin","*").build();
+		return ResponseUtils.checkIfModifiedAndReturnResponse(jsonObject,requestRest).build();
 	}
 
 
