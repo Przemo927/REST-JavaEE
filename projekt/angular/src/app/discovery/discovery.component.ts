@@ -1,4 +1,4 @@
-import {Component, OnInit, ViewChild} from "@angular/core";
+import {Component, OnDestroy, OnInit, ViewChild} from "@angular/core";
 import {DiscoveryService} from "../discovery.service";
 import {CommentService} from "../comment.service";
 import {Discovery} from "../discovery";
@@ -8,13 +8,14 @@ import {ValidatabletextareaComponent} from "../validatabletextarea/validatablete
 import {UrlUtils} from "../UrlUtils";
 import {EndPoint} from "../endpoint.enum";
 import {UrlRegex} from "../url-regex.enum";
+import {Subscription} from "rxjs";
 
 @Component({
   selector: 'app-discovery',
   templateUrl: './discovery.component.html',
   styleUrls: ['./discovery.component.css'],
 })
-export class DiscoveryComponent implements OnInit {
+export class DiscoveryComponent implements OnInit, OnDestroy {
 
   @ViewChild(ValidatabletextareaComponent) messageRef: ValidatabletextareaComponent;
 
@@ -25,10 +26,11 @@ export class DiscoveryComponent implements OnInit {
   VOTE_DOWN='VOTE_DOWN';
   message:string='';
   id:number;
+  routerEvent:Subscription;
 
   constructor(private discoveryService: DiscoveryService,private route: ActivatedRoute,
               private commentService: CommentService, private router:Router) {
-    router.events.forEach((e) => {
+    this.routerEvent=router.events.subscribe((e) => {
       if(e instanceof NavigationEnd && e.url.match(UrlRegex.discoveryWithIdUrl) !== null){
         this.id = +this.route.snapshot.paramMap.get('id');
         this.getDiscovery();
@@ -71,6 +73,10 @@ export class DiscoveryComponent implements OnInit {
 
   assignComment(comment:string){
     this.comment.comment=comment;
+  }
+
+  ngOnDestroy(): void {
+    this.routerEvent.unsubscribe();
   }
 
 }
