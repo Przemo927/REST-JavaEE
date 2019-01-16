@@ -185,13 +185,11 @@
                             </execution>
                             <execution>
                                 <id>node build app</id>
-                                <phase>prepare-package</phase>
                                 <goals>
                                     <goal>npm</goal>
                                 </goals>
                                 <configuration>
                                     <arguments>run build</arguments>
-
                                 </configuration>
                             </execution>
                         </executions>
@@ -274,7 +272,6 @@
                         </execution>
                         <execution>
                             <id>node build app</id>
-                            <phase>prepare-package</phase>
                             <goals>
                                 <goal>npm</goal>
                             </goals>
