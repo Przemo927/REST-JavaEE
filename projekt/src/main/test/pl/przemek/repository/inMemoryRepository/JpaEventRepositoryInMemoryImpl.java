@@ -6,10 +6,7 @@ import pl.przemek.model.User;
 import pl.przemek.repository.JpaEventRepository;
 
 import java.sql.Timestamp;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Date;
-import java.util.List;
+import java.util.*;
 
 public class JpaEventRepositoryInMemoryImpl implements JpaEventRepository {
 
@@ -51,9 +48,8 @@ public class JpaEventRepositoryInMemoryImpl implements JpaEventRepository {
 
     @Override
     public Event get(Class<Event> clazz, long id) {
-        for(int i=0;i<listOfEvents.size();i++){
-            Event event=listOfEvents.get(i);
-            if(event.getId()==id)
+        for (Event event : listOfEvents) {
+            if (event.getId() == id)
                 return event;
         }
         return null;
@@ -84,7 +80,7 @@ public class JpaEventRepositoryInMemoryImpl implements JpaEventRepository {
             event.setNameOfCity("name"+i);
             event.setUser(new User());
             event.setId(i);
-            event.setEventPosition(Arrays.asList(new EventPosition()));
+            event.setEventPosition(Collections.singletonList(new EventPosition()));
             listOfEvents.add(event);
         }
     }

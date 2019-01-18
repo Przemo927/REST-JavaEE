@@ -60,7 +60,7 @@ public class JpaRoleRepositoryInMemoryImpl implements JpaRoleRepository {
     }
 
     public void deleteRoleByRoleName(String roleName){
-        Role role=null;
+        Role role;
         for(int i=0;i<listOfRoles.size();i++){
             role=listOfRoles.get(i);
             if(roleName!=null && roleName.equals(role.getRoleName()))

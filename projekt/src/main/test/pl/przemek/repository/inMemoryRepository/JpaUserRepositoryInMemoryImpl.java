@@ -3,7 +3,6 @@ package pl.przemek.repository.inMemoryRepository;
 import pl.przemek.model.User;
 import pl.przemek.repository.JpaUserRepository;
 
-import javax.jws.soap.SOAPBinding;
 import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.Date;
@@ -76,7 +75,7 @@ public class JpaUserRepositoryInMemoryImpl implements JpaUserRepository {
             if(name!=null && name.equals(user.getUsername()))
                 temporaryList.add(user);
         }
-        return listOfUsers;
+        return temporaryList;
     }
 
     @Override
@@ -106,6 +105,11 @@ public class JpaUserRepositoryInMemoryImpl implements JpaUserRepository {
             }
         }
         return false;
+    }
+
+    @Override
+    public int setInactiveIfLasLoginLAterThan365Days() {
+        return 0;
     }
 
     private void populateUserList(){

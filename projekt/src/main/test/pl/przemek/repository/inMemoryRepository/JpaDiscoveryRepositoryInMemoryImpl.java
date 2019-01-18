@@ -59,6 +59,16 @@ public class JpaDiscoveryRepositoryInMemoryImpl implements JpaDiscoveryRepositor
     }
 
     @Override
+    public List<Discovery> getWithLimitOrderByDate(int begin, int quantity) {
+        List<Discovery> temporaryList=listOfDiscoveries.subList(begin,quantity);
+        temporaryList.sort((o1, o2) -> {
+            return Long.compare(o2.getTimestamp().getTime(), o1.getTimestamp().getTime());
+
+        });
+        return temporaryList;
+    }
+
+    @Override
     public List<Discovery> getByName(String name) {
         List<Discovery> temporaryList=new ArrayList<>();
         listOfDiscoveries.forEach((discovery -> {
@@ -70,12 +80,8 @@ public class JpaDiscoveryRepositoryInMemoryImpl implements JpaDiscoveryRepositor
 
     @Override
     public Discovery get(Class<Discovery> clazz, long id) {
-        for(int i=0;i<listOfDiscoveries.size();i++){
-            Discovery discovery=listOfDiscoveries.get(i);
-            if(discovery==null){
-
-            }
-            else if(discovery.getId()==id)
+        for (Discovery discovery : listOfDiscoveries) {
+            if (discovery.getId() == id)
                 return discovery;
         }
         return null;
@@ -83,9 +89,8 @@ public class JpaDiscoveryRepositoryInMemoryImpl implements JpaDiscoveryRepositor
 
     @Override
     public boolean checkPresenceDiscveryByUrl(String url) {
-        List<Discovery> temporaryList=new ArrayList<>();
-        for(int i=0;i<listOfDiscoveries.size();i++){
-            if(listOfDiscoveries.get(i).getUrl().equals(url)) {
+        for (Discovery listOfDiscovery : listOfDiscoveries) {
+            if (listOfDiscovery.getUrl().equals(url)) {
                 return true;
             }
         }
@@ -112,7 +117,7 @@ public class JpaDiscoveryRepositoryInMemoryImpl implements JpaDiscoveryRepositor
             discovery.setDownVote(i+new Random().nextInt(5));
             discovery.setUpVote(i+new Random().nextInt(5));
             discovery.setUser(new User());
-            discovery.setTimestamp(new Timestamp(new Date().getTime()));
+            discovery.setTimestamp(new Timestamp(new Date().getTime()+new Random().nextInt(1000000000)*100));
             discovery.setDescription("description"+i);
             discovery.setName("name"+i);
             discovery.setUrl("https://www."+new Random().nextInt(25)+"a");

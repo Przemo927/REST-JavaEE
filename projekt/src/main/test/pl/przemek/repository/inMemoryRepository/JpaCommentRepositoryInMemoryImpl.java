@@ -10,7 +10,7 @@ import java.util.Random;
 
 public class JpaCommentRepositoryInMemoryImpl implements JpaCommentRepository {
 
-    List<Comment> listOfComments;
+    private List<Comment> listOfComments;
 
     public JpaCommentRepositoryInMemoryImpl(){
         listOfComments=new ArrayList<>();
@@ -24,6 +24,11 @@ public class JpaCommentRepositoryInMemoryImpl implements JpaCommentRepository {
     @Override
     public void remove(Comment comment) {
         listOfComments.remove(comment);
+    }
+
+    @Override
+    public void removeByDiscoveryId(long discoveryId) {
+
     }
 
     @Override
@@ -63,9 +68,9 @@ public class JpaCommentRepositoryInMemoryImpl implements JpaCommentRepository {
 
     @Override
     public Comment get(Class<Comment> clazz, long id) {
-        for(int i=0;i<listOfComments.size();i++){
-            if(listOfComments.get(i).getId()==id)
-                return listOfComments.get(i);
+        for (Comment listOfComment : listOfComments) {
+            if (listOfComment.getId() == id)
+                return listOfComment;
         }
         return null;
     }

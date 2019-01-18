@@ -13,7 +13,7 @@ import java.util.List;
 
 public class JpaVoteDicoveryRepositoryInMemoryImpl implements JpaVoteRepository<Vote> {
 
-    List<Vote> listOfVotes;
+    private List<Vote> listOfVotes;
 
     public JpaVoteDicoveryRepositoryInMemoryImpl(){
         listOfVotes=new ArrayList<>();
@@ -41,9 +41,8 @@ public class JpaVoteDicoveryRepositoryInMemoryImpl implements JpaVoteRepository<
 
     @Override
     public Vote get(Class<Vote> clazz, long id) {
-        for(int i=0;i<listOfVotes.size();i++){
-            Vote vote=listOfVotes.get(i);
-            if(vote.getId()==id)
+        for (Vote vote : listOfVotes) {
+            if (vote.getId() == id)
                 return vote;
         }
         return null;

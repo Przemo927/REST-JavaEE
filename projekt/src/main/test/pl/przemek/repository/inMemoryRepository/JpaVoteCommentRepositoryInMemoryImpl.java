@@ -27,7 +27,7 @@ public class JpaVoteCommentRepositoryInMemoryImpl implements JpaVoteRepository<V
 
     @Override
     public VoteComment update(VoteComment vote) {
-        VoteComment voteComment=null;
+        VoteComment voteComment;
         for(int i=0;i<listofVoteComments.size();i++){
             voteComment=listofVoteComments.get(i);
             if(voteComment.getId()==vote.getId())
@@ -38,7 +38,7 @@ public class JpaVoteCommentRepositoryInMemoryImpl implements JpaVoteRepository<V
 
     @Override
     public void remove(VoteComment vote) {
-        VoteComment voteComment=null;
+        VoteComment voteComment;
         for(int i=0;i<listofVoteComments.size();i++){
             voteComment=listofVoteComments.get(i);
             if(voteComment.getId()==vote.getId())
@@ -62,18 +62,19 @@ public class JpaVoteCommentRepositoryInMemoryImpl implements JpaVoteRepository<V
 
     @Override
     public List<VoteComment> getVoteByUserIdVotedElementId(long userId, long commentId) {
+        List<VoteComment> temporaryList=new ArrayList<>();
         for(VoteComment voteComment: listofVoteComments){
-            if(voteComment.getUser().getId()==userId && voteComment.getComment().getId()==commentId);
-                //return voteComment;
+            if(voteComment.getUser().getId()==userId && voteComment.getComment().getId()==commentId)
+                temporaryList.add(voteComment);
         }
-        return null;
+        return temporaryList;
     }
 
     @Override
     public void removeByVotedElementId(long commentId) {
         for(VoteComment voteComment:listofVoteComments){
             if(voteComment.getId()==commentId)
-                listofVoteComments.remove(commentId);
+                listofVoteComments.remove(voteComment);
         }
     }
     private void populateVoteCommentList(){
