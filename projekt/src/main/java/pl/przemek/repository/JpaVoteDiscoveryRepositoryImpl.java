@@ -4,6 +4,7 @@ import pl.przemek.model.Vote;
 
 import javax.annotation.security.RolesAllowed;
 import javax.ejb.Stateless;
+import javax.persistence.Query;
 import javax.persistence.TypedQuery;
 import java.util.List;
 
@@ -24,11 +25,9 @@ public class JpaVoteDiscoveryRepositoryImpl extends JpaRepository<Vote> implemen
 	@RolesAllowed({"admin","user"})
 	@Override
 	public void removeByVotedElementId(long discoveryId) {
-		TypedQuery<Vote> query= em.createQuery("SELECT p FROM Vote p WHERE p.discovery.id=:discoveryid", Vote.class);
+		Query query= em.createNativeQuery("DELETE FROM Vote WHERE discovery_id=:discoveryid");
 		query.setParameter("discoveryid",discoveryId);
-		List<Vote> votesToRemove=query.getResultList();
-		if(!votesToRemove.isEmpty())
-			votesToRemove.forEach(this::remove);
+		query.executeUpdate();
 	}
 
 }
