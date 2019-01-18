@@ -8,6 +8,7 @@ import java.util.List;
 public interface JpaCommentRepository {
     public void add(Comment commment);
     public void remove(Comment comment);
+    public void removeByDiscoveryId(long discoveryId);
     public Comment update(Comment comment);
     public List<Comment> getAll(String nameOfQuery, Class<Comment> clazz);
     public List<Comment> getByDiscoveryName(String name);

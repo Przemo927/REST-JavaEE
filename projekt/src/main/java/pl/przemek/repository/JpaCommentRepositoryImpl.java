@@ -5,13 +5,20 @@ import pl.przemek.model.Comment;
 
 import javax.annotation.security.RolesAllowed;
 import javax.ejb.Stateless;
-import javax.persistence.EntityManager;
-import javax.persistence.PersistenceContext;
+import javax.persistence.Query;
 import javax.persistence.TypedQuery;
 import java.util.List;
 
 @Stateless
 public class JpaCommentRepositoryImpl extends JpaRepository<Comment> implements JpaCommentRepository{
+
+    @RolesAllowed("admin")
+    @Override
+    public void removeByDiscoveryId(long discoveryId) {
+        Query query=em.createNativeQuery("DELETE from comment where discovery_id=:discoveryId");
+        query.setParameter("discoveryId",discoveryId);
+        query.executeUpdate();
+    }
 
     @RolesAllowed({"admin","user"})
     @Override
