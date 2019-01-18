@@ -2,6 +2,7 @@ package pl.przemek.service;
 
 import pl.przemek.model.Discovery;
 import pl.przemek.model.Vote;
+import pl.przemek.repository.JpaCommentRepository;
 import pl.przemek.repository.JpaDiscoveryRepository;
 import pl.przemek.repository.JpaVoteRepository;
 
@@ -16,13 +17,15 @@ public class DiscoveryService {
 
     private JpaDiscoveryRepository discRepo;
     private JpaVoteRepository<Vote> voteRepo;
+    private JpaCommentRepository commentRepo;
     private Logger logger;
 
     @Inject
-    public DiscoveryService(Logger logger,  JpaDiscoveryRepository discRepo, JpaVoteRepository<Vote> voteRepo){
+    public DiscoveryService(Logger logger,  JpaDiscoveryRepository discRepo, JpaVoteRepository<Vote> voteRepo,JpaCommentRepository commentRepo){
         this.logger=logger;
         this.discRepo=discRepo;
         this.voteRepo=voteRepo;
+        this.commentRepo=commentRepo;
     }
     public DiscoveryService(){
     }
@@ -84,7 +87,9 @@ public class DiscoveryService {
             logger.log(Level.SEVERE,"[DiscoveryService] removeDiscoveryById() Discovery wasn't found id="+id);
         }
         voteRepo.removeByVotedElementId(id);
+        commentRepo.removeByDiscoveryId(id);
         discRepo.remove(discovery);
+
     }
 
     public void updateDiscovery(Discovery discovery){
