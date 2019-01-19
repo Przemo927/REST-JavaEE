@@ -1,12 +1,15 @@
 package pl.przemek.Utils;
 
+import junitparams.JUnitParamsRunner;
 import org.junit.Test;
+import org.junit.runner.RunWith;
 
 import javax.validation.constraints.AssertTrue;
 
+import static junit.framework.TestCase.assertEquals;
 import static junit.framework.TestCase.assertTrue;
 
-
+@RunWith(JUnitParamsRunner.class)
 public class PropertiesFileUtilsTest {
 
     private String directoryOne="ValidationMessages.properties";
@@ -14,9 +17,9 @@ public class PropertiesFileUtilsTest {
 
     @Test
     public void shouldReturnValueFromLoadedPropertiesFile() throws Exception {
-        assertTrue("testtest".equals(PropertiesFileUtils.getValue(directoryOne,"pl.przemek.polish.signs")));
-        assertTrue("smtp.gmail.com".equals(PropertiesFileUtils.getValue(directoryOne,"mail.smtp.host")));
-        assertTrue("javax.net.ssl.SSLSocketFactory".equals(PropertiesFileUtils.getValue(directoryTwo,"mail.smtp.SocketFactory.class")));
+        assertEquals("przemek", PropertiesFileUtils.getValue(directoryOne, "pl.przemek.polish.signs"));
+        assertEquals("smtp.gmail.com", PropertiesFileUtils.getValue(directoryOne, "mail.smtp.host"));
+        assertEquals("javax.net.ssl.SSLSocketFactory", PropertiesFileUtils.getValue(directoryTwo, "mail.smtp.SocketFactory.class"));
     }
 
 }
