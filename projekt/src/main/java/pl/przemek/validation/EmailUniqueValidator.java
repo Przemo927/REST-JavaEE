@@ -12,8 +12,7 @@ public class EmailUniqueValidator implements ConstraintValidator<EmailUnique, St
 	JpaUserRepository userrepo;
 	@Override
 	public void initialize(EmailUnique arg0) {
-		// TODO Auto-generated method stub
-		
+
 	}
 
 	@Override

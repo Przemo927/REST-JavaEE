@@ -7,8 +7,7 @@ public class UsernameMatchingValidator implements ConstraintValidator<UsernameMa
 
 	@Override
 	public void initialize(UsernameMatching arg0) {
-		// TODO Auto-generated method stub
-		
+
 	}
 
 	@Override

@@ -12,8 +12,7 @@ public class UsernameUniqueValidator implements ConstraintValidator<UsernameUniq
 	JpaUserRepository userrepo;
 	@Override
 	public void initialize(UsernameUnique arg0) {
-		// TODO Auto-generated method stub
-		
+
 	}
 
 	@Override

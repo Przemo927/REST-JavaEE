@@ -12,8 +12,7 @@ public class URLUniqueValidator implements ConstraintValidator<URLUnique, String
 	JpaDiscoveryRepository discrepo;
 	@Override
 	public void initialize(URLUnique arg0) {
-		// TODO Auto-generated method stub
-		
+
 	}
 
 	@Override
