@@ -7,23 +7,24 @@ import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.ExpectedException;
 import org.junit.runner.RunWith;
+import pl.przemek.model.Comment;
 import pl.przemek.model.Discovery;
 import pl.przemek.model.Vote;
+import pl.przemek.repository.JpaCommentRepository;
 import pl.przemek.repository.JpaDiscoveryRepository;
 import pl.przemek.repository.JpaVoteRepository;
+import pl.przemek.repository.inMemoryRepository.JpaCommentRepositoryInMemoryImpl;
 import pl.przemek.repository.inMemoryRepository.JpaDiscoveryRepositoryInMemoryImpl;
-import pl.przemek.repository.inMemoryRepository.JpaVoteRepositoryInMemoryImpl;
+import pl.przemek.repository.inMemoryRepository.JpaVoteDicoveryRepositoryInMemoryImpl;
 
 import java.sql.Timestamp;
 import java.util.Arrays;
 import java.util.Comparator;
-import java.util.Date;
 import java.util.List;
+import java.util.logging.Logger;
 
 import static junitparams.JUnitParamsRunner.$;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
-import static org.mockito.AdditionalMatchers.not;
+import static org.junit.Assert.*;
 import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.ArgumentMatchers.eq;
@@ -36,15 +37,16 @@ public class DiscoveryServiceTest {
     private JpaDiscoveryRepository discRepo;
     private DiscoveryService discoveryService;
     private JpaVoteRepository voteRepo;
-    private Comparator<Discovery> comparator;
+    private JpaCommentRepository commentRepo;
+    private Logger logger=Logger.getLogger(this.getClass().getName());
 
     @Before
     public void setUp() throws Exception {
         discRepo=mock(JpaDiscoveryRepository.class);
         voteRepo=mock(JpaVoteRepository.class);
-        discoveryService=new DiscoveryService(discRepo,voteRepo);
-        comparator=new DiscoveryService.TimeComparator();
-
+        logger=mock(Logger.class);
+        commentRepo=mock(JpaCommentRepository.class);
+        discoveryService=new DiscoveryService(logger,discRepo,voteRepo,commentRepo);
     }
 
     @Rule
@@ -52,8 +54,9 @@ public class DiscoveryServiceTest {
 
     private void createDiscoveryServiceObjectWithInMemoryLayer(){
         discRepo=new JpaDiscoveryRepositoryInMemoryImpl();
-        voteRepo=new JpaVoteRepositoryInMemoryImpl();
-        discoveryService=new DiscoveryService(discRepo,voteRepo);
+        voteRepo=new JpaVoteDicoveryRepositoryInMemoryImpl();
+        commentRepo=new JpaCommentRepositoryInMemoryImpl();
+        discoveryService=new DiscoveryService(logger,discRepo,voteRepo,commentRepo);
     }
 
     @Test
@@ -63,7 +66,7 @@ public class DiscoveryServiceTest {
 
         discoveryService.addDiscovery(null);
 
-        assertTrue(discRepo.getAll("",Discovery.class).size()==amountOfDiscoveriesBeforeAdd);
+        assertEquals(discRepo.getAll("", Discovery.class).size(), amountOfDiscoveriesBeforeAdd);
     }
     @Test
     public void shouldAddDiscoveryWhenIsNotNull(){
@@ -76,12 +79,12 @@ public class DiscoveryServiceTest {
         discoveryService.addDiscovery(discovery);
         Discovery addedDiscovery=discRepo.get(Discovery.class,id);
 
-        assertTrue(discRepo.getAll("",Discovery.class).size()==amountOfDiscoveryBeforeAdd+1);
-        assertTrue(addedDiscovery!=null);
-        assertTrue(addedDiscovery==discovery);
-        assertTrue(addedDiscovery.getUpVote()==0);
-        assertTrue(addedDiscovery.getDownVote()==0);
-        assertTrue(addedDiscovery.getTimestamp()!=null);
+        assertEquals(discRepo.getAll("", Discovery.class).size(), amountOfDiscoveryBeforeAdd + 1);
+        assertNotNull(addedDiscovery);
+        assertSame(addedDiscovery, discovery);
+        assertEquals(0, addedDiscovery.getUpVote());
+        assertEquals(0, addedDiscovery.getDownVote());
+        assertNotNull(addedDiscovery.getTimestamp());
     }
     @Test
     public void shouldExecuteMethodAddOfDiscoveryRepository() throws Exception {
@@ -101,19 +104,6 @@ public class DiscoveryServiceTest {
         verify(discRepo,never()).add(isA(Discovery.class));
     }
 
-    public Object[] beginAndQuantity(){
-        return $(new Integer[]{1,2},new Integer[]{11,22},new Integer[]{0,12345});
-    }
-
-    @Test
-    @Parameters(method="beginAndQuantity")
-    public void shouldUseTheSameValues(int begin, int quantity){
-        discoveryService.getWithLimit(begin,quantity);
-        verify(discRepo,times(1)).getWithLimit(begin,quantity);
-        verify(discRepo,never()).getWithLimit(quantity,begin);
-        verify(discRepo,never()).getWithLimit(0,0);
-    }
-
     @Test
     public void shouldExecuteGetWithLimitOfDiscoveryRepository() throws Exception {
         createDiscoveryServiceObjectWithInMemoryLayer();
@@ -121,25 +111,13 @@ public class DiscoveryServiceTest {
         int begin=listOfAllDiscoveries.size()-8;
         int quantity=5;
 
-        assertTrue(listOfAllDiscoveries.subList(begin,quantity).equals(discoveryService.getWithLimit(begin,quantity)));
+        assertEquals(listOfAllDiscoveries.subList(begin, quantity), discoveryService.getWithLimit(begin, quantity));
     }
 
     @Test
     public void shouldExecuteGetMethodOfDiscoveryRepository() throws Exception {
         discoveryService.getById(1);
         verify(discRepo,times(1)).get(eq(Discovery.class),anyLong());
-    }
-
-    public Object[] name(){
-        return $("Przemek","01010","null");
-    }
-    @Test
-    @Parameters(method="name")
-    public void shouldUseTheSameName(String name){
-        discoveryService.getByName(name);
-        verify(discRepo,times(1)).getByName(name);
-        verify(discRepo,never()).getByName(not(eq(name)));
-        verify(discRepo,never()).getByName(null);
     }
 
     @Test
@@ -172,17 +150,6 @@ public class DiscoveryServiceTest {
         assertEquals(discovery,discoveryService.getByName(name).get(0));
     }
 
-    public Object[] discoveryId(){
-        return $(1,1000,123456,987654321);
-    }
-    @Test
-    @Parameters(method = "discoveryId")
-    public void shouldUseTheSameLong(long id) throws Exception {
-        discoveryService.getById(id);
-        verify(discRepo,times(1)).get(Discovery.class,id);
-        verify(discRepo,never()).get(eq(Discovery.class),not(eq(id)));
-    }
-
     public Object[] validNamesOfComparators() {
         return $("time", "popular");
     }
@@ -195,7 +162,7 @@ public class DiscoveryServiceTest {
     }
 
     public Object[] invalidNamesOfComparators() {
-        return $( "date","comparator","Time","Popular","TIME","POPULAR",null);
+        return $( "date","comparator","Time","Popular","TIME","POPULAR");
     }
     @Test
     @Parameters(method ="invalidNamesOfComparators")
@@ -236,7 +203,7 @@ public class DiscoveryServiceTest {
 
         assertTrue(!(listOrderdByTimeCompartor.equals(listWithValidOrder)));
         listOrderdByTimeCompartor.sort(new DiscoveryService.TimeComparator());
-        assertTrue(listOrderdByTimeCompartor.equals(listWithValidOrder));
+        assertEquals(listOrderdByTimeCompartor, listWithValidOrder);
 
 
     }
@@ -257,7 +224,7 @@ public class DiscoveryServiceTest {
 
         assertTrue(!(listOrderedByPopularComparator.equals(listWithVelidOrder)));
         listOrderedByPopularComparator.sort(new DiscoveryService.PopularComparator());
-        assertTrue(listOrderedByPopularComparator.equals(listWithVelidOrder));
+        assertEquals(listOrderedByPopularComparator, listWithVelidOrder);
 
     }
 
@@ -269,35 +236,31 @@ public class DiscoveryServiceTest {
         discovery.setId(1234);
         discRepo.add(discovery);
         int amountOfdiscoveriesBeforeRemove=discRepo.getAll("",Discovery.class).size();
+
         Vote vote= new Vote();
         vote.setId(4321);
         vote.setDiscovery(discovery);
         voteRepo.add(vote);
         int amountOfVotesBeforeRemove=voteRepo.getAll("",Vote.class).size();
 
+        Comment comment=new Comment();
+        comment.setDiscovery(discovery);
+        comment.setId(5678);
+        commentRepo.add(comment);
+        int amountOfCommentsBeforeRemove=commentRepo.getAll(anyString(),Comment.class).size();
+
         assertEquals(discovery,discRepo.get(Discovery.class,1234));
         assertEquals(vote,voteRepo.get(Vote.class,4321));
+        assertEquals(comment,commentRepo.get(Comment.class,5678));
 
         discoveryService.removeDiscoveryById(1234);
 
-        assertEquals(amountOfdiscoveriesBeforeRemove-1,discRepo.getAll("",Discovery.class).size());
-        assertEquals(null,discRepo.get(Discovery.class,1234));
-        assertEquals(amountOfVotesBeforeRemove-1,voteRepo.getAll("",Vote.class).size());
-        assertEquals(null,voteRepo.get(Vote.class,4321));
+        assertEquals(amountOfdiscoveriesBeforeRemove-1,discRepo.getAll(anyString(),Discovery.class).size());
+        assertNull(discRepo.get(Discovery.class, 1234));
+        assertEquals(amountOfVotesBeforeRemove-1,voteRepo.getAll(anyString(),Vote.class).size());
+        assertNull(voteRepo.get(Vote.class, 4321));
+        assertEquals(amountOfCommentsBeforeRemove-1,commentRepo.getAll(anyString(),Comment.class).size());
+        assertNull(commentRepo.get(Comment.class,5678));
 
     }
-
-    public Object[] discoveryIdRemove(){
-        return $(12345,1,0,987654321);
-    }
-
-    @Test
-    @Parameters(method = "discoveryIdRemove")
-    public void methodsShouldUseTheSameValueOfId(long id) throws Exception {
-        discoveryService.removeDiscoveryById(id);
-
-        verify(discRepo,times(1)).get(Discovery.class,id);
-        verify(voteRepo,times(1)).removeByDiscoveryId(id);
-    }
-
 }

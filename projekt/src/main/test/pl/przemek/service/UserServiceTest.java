@@ -15,10 +15,10 @@ import pl.przemek.repository.inMemoryRepository.JpaRoleRepositoryInMemoryImpl;
 import pl.przemek.repository.inMemoryRepository.JpaUserRepositoryInMemoryImpl;
 
 import java.util.*;
+import java.util.logging.Logger;
 
 import static junitparams.JUnitParamsRunner.$;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.*;
 import static org.mockito.AdditionalMatchers.not;
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.*;
@@ -28,6 +28,7 @@ public class UserServiceTest {
     private JpaUserRepository userRepo;
     private JpaRoleRepository rolRepo;
     private UserService userService;
+    private Logger logger;
 
     @Rule
     public ExpectedException thrown=ExpectedException.none();
@@ -36,7 +37,8 @@ public class UserServiceTest {
     public void setUp(){
         userRepo=mock(JpaUserRepository.class);
         rolRepo=mock(JpaRoleRepository.class);
-        userService=new UserService(userRepo,rolRepo);
+        logger=mock(Logger.class);
+        userService=new UserService(logger,userRepo,rolRepo);
 
     }
     @Test
@@ -49,12 +51,12 @@ public class UserServiceTest {
         user.setPassword(password);
         user.setId(id);
 
-        assertTrue(userRepo.get(User.class,id)==null);
+        assertNull(userRepo.get(User.class, id));
 
         userService.addUser(user);
 
         assertEquals(userRepo.getAll("",User.class).size(),amountOfusers+1);
-        assertTrue(userRepo.get(User.class,id)!=null);
+        assertNotNull(userRepo.get(User.class, id));
         assertEquals(userRepo.get(User.class,id).getId(),id);
     }
     @Test
@@ -104,10 +106,10 @@ public class UserServiceTest {
         User user=new User();
         user.setId(id);
 
-        assertEquals(null,userService.getUserById(id));
+        assertEquals(Optional.empty(),userService.getUserById(id));
         userRepo.add(user);
 
-        assertEquals(user,userService.getUserById(id));
+        assertEquals(Optional.of(user),userService.getUserById(id));
     }
     @Test
     public void shouldNotRemoveUserIfDidNotSave(){
@@ -115,7 +117,7 @@ public class UserServiceTest {
         User user=new User();
         user.setId(1234);
         int amountOfUsers=userRepo.getAll("",User.class).size();
-        assertEquals(null,userService.getUserById(1234));
+        assertEquals(Optional.empty(),userService.getUserById(1234));
 
         userService.removeByUserId(1234);
 
@@ -134,19 +136,18 @@ public class UserServiceTest {
         userService.removeByUserId(id);
 
         assertEquals(amountOfUsers-1,userRepo.getAll("",User.class).size());
-        assertEquals(null,userRepo.get(User.class,id));
+        assertNull(userRepo.get(User.class, id));
     }
     private void createUserServiceObjectWithInMemoryLayer(){
         userRepo=new JpaUserRepositoryInMemoryImpl();
         rolRepo=new JpaRoleRepositoryInMemoryImpl();
-        userService=new UserService(userRepo,rolRepo);
+        userService=new UserService(logger,userRepo,rolRepo);
     }
 
 
     @Test
     public void shouldNotExecuteMethodUpdateOfRoleRepositoryWhenListOfRolesIsEmpty() throws Exception {
         User user=mock(User.class);
-        Role role=mock(Role.class);
         List<Role> roleList=new ArrayList<>();
 
         when(rolRepo.getRoles(anyString())).thenReturn(roleList);
@@ -157,7 +158,6 @@ public class UserServiceTest {
     @Test
     public void shouldExecuteMethodUpdateOfRoleRepositoryWhenListOfRolesIsNotEmpty() throws Exception {
         User user=mock(User.class);
-        Role role=mock(Role.class);
         List<Role> roleList=new ArrayList<>();
         roleList.add(new Role());
 
@@ -219,21 +219,5 @@ public class UserServiceTest {
         userService.getAllUsers();
         verify(userRepo).getAll(anyString(),eq(User.class));
     }
-
-    /*public Object[] stringsBeforeAndAfterMd5Hashing(){
-        return $(new String[] {"","d41d8cd98f00b204e9800998ecf8427e"},
-                new String[] {"a","cc175b9c0f1b6a831c399e269772661"},
-                new String[] {"abc","900150983cd24fb0d6963f7d28e17f72"},
-                new String[] {"message digest","f96b697d7cb7938d525a2f31aaf161d0"},
-                new String[] {"abcdefghijklmnopqrstuvwxyz","c3fcd3d76192e4007dfb496cca67e13b"},
-                new String[] {"ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789","d174ab98d277d9f5a5611c2c9f419d9f"},
-                new String[] {"12345678901234567890123456789012345678901234567890123456789012345678901234567890","57edf4a22be3c955ac49da2e2107b67a"});
-    }
-    @Test
-    @Parameters(method = "stringsBeforeAndAfterMd5Hashing")
-    public void shouldEqualsStringAfterHashingAndResultOfEncryptPasswordMethodWithStringBeforeHashing(String beforeHashing,String afterHashing){
-        assertEquals(afterHashing,userService.encryptPassword(beforeHashing));
-    }*/
-
 
 }

@@ -7,6 +7,8 @@ import org.junit.rules.ExpectedException;
 import pl.przemek.model.EventPosition;
 import pl.przemek.repository.JpaEventPositionRepository;
 
+import java.util.logging.Logger;
+
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
 
@@ -14,6 +16,7 @@ import static org.mockito.Mockito.verify;
 public class EventPositionServiceTest {
     private EventPositionService eventPositionService;
     private JpaEventPositionRepository eventPosRepository;
+    private Logger logger;
 
     @Rule
     public ExpectedException thrown=ExpectedException.none();
@@ -21,7 +24,8 @@ public class EventPositionServiceTest {
     @Before
     public void setUp() throws Exception {
         eventPosRepository=mock(JpaEventPositionRepository.class);
-        eventPositionService=new EventPositionService(eventPosRepository);
+        logger=mock(Logger.class);
+        eventPositionService=new EventPositionService(logger,eventPosRepository);
 
     }
 
