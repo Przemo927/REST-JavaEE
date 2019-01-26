@@ -64,8 +64,8 @@ public class LoginFilter implements ContainerRequestFilter {
         else if(userPrincipal != null && session!=null && session.getAttribute("user") == null) {
             username = userPrincipal.getName();
             List<User> listUserByUsername = userrep.getUserByUsername(username);
-            updateLastLogin(username,userrep);
             if(!listUserByUsername.isEmpty()) {
+                updateLastLogin(username,userrep);
                 User userByUsername=listUserByUsername.get(0);
                 try {
                     LogoutIfInActiveStatus(userByUsername, request);
