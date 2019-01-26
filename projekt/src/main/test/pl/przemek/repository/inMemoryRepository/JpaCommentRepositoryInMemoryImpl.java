@@ -1,10 +1,12 @@
 package pl.przemek.repository.inMemoryRepository;
 
 import pl.przemek.model.Comment;
+import pl.przemek.model.Discovery;
 import pl.przemek.model.User;
 import pl.przemek.repository.JpaCommentRepository;
 
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
 import java.util.Random;
 
@@ -28,7 +30,13 @@ public class JpaCommentRepositoryInMemoryImpl implements JpaCommentRepository {
 
     @Override
     public void removeByDiscoveryId(long discoveryId) {
-
+        Comment comment;
+        for(int i=0;i<listOfComments.size();i++){
+            comment=listOfComments.get(i);
+            if(comment.getDiscovery().getId()==discoveryId){
+                listOfComments.remove(comment);
+            }
+        }
     }
 
     @Override
@@ -82,6 +90,7 @@ public class JpaCommentRepositoryInMemoryImpl implements JpaCommentRepository {
             comment.setDownVote(i+ new Random().nextInt(5));
             comment.setUpVote(i+ new Random().nextInt(5));
             comment.setComment("comment"+i);
+            comment.setDiscovery(new Discovery());
             comment.setUser(new User());
             listOfComments.add(comment);
         }

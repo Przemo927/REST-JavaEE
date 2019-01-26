@@ -1,5 +1,6 @@
 package pl.przemek.model;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import pl.przemek.validation.ForbiddenWord;
 
 import javax.persistence.*;
@@ -28,6 +29,7 @@ public class Comment implements Serializable {
     @JoinColumn(name = "user_id")
     private User user;
 
+    @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
     @ManyToOne
     @JoinColumn(name = "discovery_id")
     private Discovery discovery;

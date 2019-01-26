@@ -34,7 +34,6 @@ export class DiscoveryComponent implements OnInit, OnDestroy {
       if(e instanceof NavigationEnd && e.url.match(UrlRegex.discoveryWithIdUrl) !== null){
         this.id = +this.route.snapshot.paramMap.get('id');
         this.getDiscovery();
-        this.getCommentsById();
       }
     });
   }
@@ -43,21 +42,21 @@ export class DiscoveryComponent implements OnInit, OnDestroy {
   }
 
   getDiscovery(): void {
-    this.discoveryService.getDiscovery(this.id).subscribe(discovery=>this.discovery=discovery);
-  }
-
-  getCommentsById(): void {
-    this.commentService.getCommentsById(this.id).subscribe(comments=> this.comments=comments);
+    this.discoveryService.getDiscovery(this.id).subscribe(discovery=>{
+      this.discovery=discovery;
+      this.comments=discovery.comments;
+    });
   }
 
   addComment():void {
-    this.commentService.addComment(this.comment,this.id).subscribe(response=>{
+    this.comment.discovery=this.discovery;
+    this.commentService.addComment(this.comment).subscribe(response=>{
       if(response!==null && response.invalidFieldList!==undefined){
         this.message=response.invalidFieldList.comment;
         this.messageRef.setWrong();
         this.messageRef.setValidationMessage(this.message);
       }else {
-        this.getCommentsById();
+        this.getDiscovery();
       }
     });
   }
@@ -68,7 +67,7 @@ export class DiscoveryComponent implements OnInit, OnDestroy {
     urlAddVote=UrlUtils.addParameterToUrl(urlAddVote,'commentId',id);
     window.location.href=urlAddVote;
     setTimeout(()=>
-      this.getCommentsById(),500);
+      this.getDiscovery(),500);
   }
 
   assignComment(comment:string){

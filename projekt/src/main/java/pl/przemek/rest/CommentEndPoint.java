@@ -53,15 +53,14 @@ public class CommentEndPoint {
 
     @POST
     @Consumes(MediaType.APPLICATION_JSON)
-    @Path("/{id}")
-    public Response addComment(@Valid Comment comment, @PathParam("id") long discoveryId) {
+    public Response addComment(@Valid Comment comment) {
         try {
             request.setCharacterEncoding("UTF-8");
             HttpSession session = request.getSession(false);
             User user = (User) session.getAttribute("user");
             if(user!=null) {
                 comment.setUser(user);
-                commentservice.addComment(comment, discoveryId);
+                commentservice.addComment(comment);
                 return Response.created(URI.create(uriInfo.getAbsolutePath()+ ResponseUtils.URL_SEPARATOR +comment.getId())).build();
             }else {
                 logger.log(Level.SEVERE,"[CommentEndPoint] addComment() user wasn't saved in session");

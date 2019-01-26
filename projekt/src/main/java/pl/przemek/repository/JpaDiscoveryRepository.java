@@ -19,4 +19,5 @@ public interface JpaDiscoveryRepository {
     public Discovery get(Class<Discovery> clazz,long id);
     public boolean checkPresenceDiscveryByUrl(String url);
     public BigInteger getQuantityOfDiscoveries();
+    public List<Discovery> getDiscoveryWithComments(long id);
 }

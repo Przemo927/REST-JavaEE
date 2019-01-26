@@ -24,15 +24,13 @@ public class CommentService {
         this.discRepo=discRepo;
     }
 
-    public void addComment(Comment comment, long discoveryId){
-        Discovery discovery = discRepo.get(Discovery.class, discoveryId);
+    public void addComment(Comment comment){
         if (comment == null)
             logger.log(Level.WARNING, "[CommentService] addComment() comment is null");
-        else if (discovery == null)
-            logger.log(Level.WARNING, "[CommentService] addComment() discovery is null");
         else {
-            comment.setDiscovery(discovery);
-            commentRepo.add(comment);
+            Discovery discovery=comment.getDiscovery();
+            discovery.getComments().add(comment);
+            discRepo.update(discovery);
         }
     }
     public List<Comment> getAllComment(){
