@@ -29,8 +29,8 @@ export class CommentService {
   }
 
 
-   addComment (comment: Comment,id:number): Observable<any> {
-  return this.http.post<any>(this.commentUrl+'/'+id,comment).pipe(
+   addComment (comment: Comment): Observable<any> {
+  return this.http.post<any>(this.commentUrl,comment).pipe(
     tap(comment => console.log('Comment added')),
     catchError(ErrorHandler.handleError<any>('addComment'))
   );

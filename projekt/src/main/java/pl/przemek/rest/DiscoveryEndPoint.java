@@ -102,6 +102,8 @@ public class DiscoveryEndPoint {
 			logger.log(Level.SEVERE,"[DiscoveryEndPoint] getALL() discovery wasn't found");
 			return Response.status(Response.Status.NO_CONTENT).build();
 		}
+		for(Discovery discovery:allDiscoveries)
+			discovery.setComments(null);
 		return ResponseUtils.checkIfModifiedAndReturnResponse(allDiscoveries,requestRest).build();
 	}
 

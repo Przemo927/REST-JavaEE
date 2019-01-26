@@ -57,11 +57,11 @@ public class DiscoveryService {
         }
     }
     public Optional<Discovery> getById(long id){
-        Discovery discovery=discRepo.get(Discovery.class,id);
-        if(discovery==null){
+        List<Discovery> discoveryList=discRepo.getDiscoveryWithComments(id);
+        if(discoveryList.isEmpty()){
             logger.log(Level.SEVERE,"[DiscoveryService] getById() Discovery wasn't found");
         }
-        return Optional.ofNullable(discovery);
+        return Optional.ofNullable(discoveryList.get(0));
     }
 
     public List<Discovery> getAll(String order){
@@ -85,6 +85,7 @@ public class DiscoveryService {
         Discovery discovery=discRepo.get(Discovery.class,id);
         if(discovery==null){
             logger.log(Level.SEVERE,"[DiscoveryService] removeDiscoveryById() Discovery wasn't found id="+id);
+            return;
         }
         voteRepo.removeByVotedElementId(id);
         commentRepo.removeByDiscoveryId(id);
@@ -98,6 +99,9 @@ public class DiscoveryService {
         }else {
             discRepo.update(discovery);
         }
+    }
+    public List<Discovery> getDiscoveryWithComments(long id){
+        return discRepo.getDiscoveryWithComments(id);
     }
 
     public static class PopularComparator implements Comparator<Discovery>{

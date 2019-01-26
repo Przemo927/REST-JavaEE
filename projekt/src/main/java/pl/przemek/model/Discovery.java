@@ -1,5 +1,7 @@
 package pl.przemek.model;
 
+import com.fasterxml.jackson.annotation.JsonInclude;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import org.hibernate.validator.constraints.URL;
 import pl.przemek.validation.ForbiddenWord;
 import pl.przemek.validation.URLUnique;
@@ -9,18 +11,22 @@ import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 import java.io.Serializable;
 import java.sql.Timestamp;
+import java.util.List;
+import java.util.Objects;
 
 @Entity
 @NamedQueries({
     @NamedQuery(name = "Discovery.findAll", query = "SELECT p FROM Discovery p"),
-    @NamedQuery(name = "Discovery.search", query = "SELECT p FROM Discovery p WHERE p.name=:name")})
+    @NamedQuery(name = "Discovery.search", query = "SELECT p FROM Discovery p WHERE p.name=:name"),
+    @NamedQuery(name = "Discovery.getDiscoveryWithComments", query = "SELECT p FROM Discovery p JOIN FETCH p.comments WHERE p.id=:discovery_id")
+})
 @NamedNativeQueries({
         @NamedNativeQuery(name = "Discovery.findAllWithLimit",query = "SELECT * FROM discovery limit :begin,:quantity",resultClass = Discovery.class),
         @NamedNativeQuery(name="Discovery.findAllWithLimitOrderByDate",query = "SELECT * FROM discovery ORDER BY timestamp limit :begin,:quantity",resultClass = Discovery.class)
 })
 public class Discovery implements Serializable {
 	private static final long serialVersionUID = 1L;
-	
+
 	@Id
 	@GeneratedValue(strategy=GenerationType.IDENTITY)
 	@Column(name = "discovery_id",nullable = false, unique = true)
@@ -42,9 +48,14 @@ public class Discovery implements Serializable {
     private String url;
 	@Column(nullable = false)
     private Timestamp timestamp;
+    @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
     @ManyToOne
     @JoinColumn(name = "user_id")
     private User user;
+
+    @JsonInclude(JsonInclude.Include.NON_NULL)
+    @OneToMany(fetch = FetchType.LAZY,cascade = CascadeType.ALL)
+    private List<Comment> comments;
 
     @NotNull
     @Column(nullable = false)
@@ -52,9 +63,10 @@ public class Discovery implements Serializable {
     @NotNull
     @Column(nullable = false)
     private int downVote;
-     
-    public Discovery(){}
-     
+
+    public Discovery(){
+    }
+
     public Discovery(Discovery discovery) {
         this.id = discovery.id;
         this.name = discovery.name;
@@ -65,7 +77,7 @@ public class Discovery implements Serializable {
         this.upVote = discovery.upVote;
         this.downVote = discovery.downVote;
     }
-     
+
     public long getId() {
         return id;
     }
@@ -114,70 +126,39 @@ public class Discovery implements Serializable {
     public void setDownVote(int downVote) {
         this.downVote = downVote;
     }
- 
+    public List<Comment> getComments() {
+        return comments;
+    }
+
+    public void setComments(List<Comment> comments) {
+        this.comments = comments;
+    }
+
     @Override
     public String toString() {
         return "Discovery [id=" + id + ", name=" + name + ", description=" + description + ", url="
                 + url + ", timestamp=" + timestamp + ", user=" + user + ", upVote=" + upVote
                 + ", downVote=" + downVote + "]";
     }
-     
+
     @Override
-    public int hashCode() {
-        final int prime = 31;
-        int result = 1;
-        result = prime * result + ((description == null) ? 0 : description.hashCode());
-        result = prime * result + downVote;
-        result = prime * result + (int) (id ^ (id >>> 32));
-        result = prime * result + ((name == null) ? 0 : name.hashCode());
-        result = prime * result + ((timestamp == null) ? 0 : timestamp.hashCode());
-        result = prime * result + upVote;
-        result = prime * result + ((url == null) ? 0 : url.hashCode());
-        result = prime * result + ((user == null) ? 0 : user.hashCode());
-        return result;
-    }
- 
-    @Override
-    public boolean equals(Object obj) {
-        if (this == obj)
-            return true;
-        if (obj == null)
-            return false;
-        if (getClass() != obj.getClass())
-            return false;
-        Discovery other = (Discovery) obj;
-        if (description == null) {
-            if (other.description != null)
-                return false;
-        } else if (!description.equals(other.description))
-            return false;
-        if (downVote != other.downVote)
-            return false;
-        if (id != other.id)
-            return false;
-        if (name == null) {
-            if (other.name != null)
-                return false;
-        } else if (!name.equals(other.name))
-            return false;
-        if (timestamp == null) {
-            if (other.timestamp != null)
-                return false;
-        } else if (!timestamp.equals(other.timestamp))
-            return false;
-        if (upVote != other.upVote)
-            return false;
-        if (url == null) {
-            if (other.url != null)
-                return false;
-        } else if (!url.equals(other.url))
-            return false;
-        if (user == null) {
-            if (other.user != null)
-                return false;
-        } else if (!user.equals(other.user))
-            return false;
-        return true;
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof Discovery)) return false;
+        Discovery discovery = (Discovery) o;
+        return id == discovery.id &&
+                upVote == discovery.upVote &&
+                downVote == discovery.downVote &&
+                Objects.equals(name, discovery.name) &&
+                Objects.equals(description, discovery.description) &&
+                Objects.equals(url, discovery.url) &&
+                Objects.equals(timestamp, discovery.timestamp) &&
+                Objects.equals(user, discovery.user) &&
+                Objects.equals(comments, discovery.comments);
     }
 
+    @Override
+    public int hashCode() {
+        return Objects.hash(id, name, description, url, timestamp, user, comments, upVote, downVote);
+    }
 }

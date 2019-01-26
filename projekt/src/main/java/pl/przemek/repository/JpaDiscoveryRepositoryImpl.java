@@ -57,7 +57,6 @@ public class JpaDiscoveryRepositoryImpl extends JpaRepository<Discovery> impleme
 	@RolesAllowed({"admin","user"})
     @Override
 	public List<Discovery> getByName(String name) throws NullPointerException{
-		Discovery discovery=null;
 		TypedQuery<Discovery> disc = em.createNamedQuery("Discovery.search", Discovery.class);
 		disc.setParameter("name", name);
 		return disc.getResultList();
@@ -75,6 +74,14 @@ public class JpaDiscoveryRepositoryImpl extends JpaRepository<Discovery> impleme
 	public BigInteger getQuantityOfDiscoveries() {
 		Query query=em.createNativeQuery(QUANTITY_OF_DISCOVERIES);
 		return (BigInteger)query.getSingleResult();
+	}
+
+	@RolesAllowed({"admin","user"})
+	@Override
+	public List<Discovery> getDiscoveryWithComments(long id) {
+		TypedQuery<Discovery> query=em.createNamedQuery("Discovery.getDiscoveryWithComments",Discovery.class);
+		query.setParameter("discovery_id",id);
+		return query.getResultList();
 	}
 
 }
