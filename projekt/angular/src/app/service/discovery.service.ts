@@ -2,7 +2,7 @@ import {Injectable} from "@angular/core";
 import {HttpClient} from "@angular/common/http";
 import {Observable} from "rxjs/Observable";
 import {catchError, tap} from "rxjs/operators";
-import {Discovery} from "../discovery";
+import {Discovery} from "../model/discovery";
 import {ErrorHandler} from "../errorhandler";
 import {BaseUrl} from "../enum/baseurl.enum";
 import {EndPoint} from "../enum/endpoint.enum";

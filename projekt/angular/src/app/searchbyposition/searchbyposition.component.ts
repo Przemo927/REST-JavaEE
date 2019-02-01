@@ -1,5 +1,5 @@
 import {Component, DoCheck, IterableDiffer, IterableDiffers, OnInit} from '@angular/core';
-import {Event} from '../event';
+import {Event} from '../model/event';
 import * as L from 'leaflet';
 import {EventService} from '../service/event.service';
 import {DataService} from '../service/data.service';

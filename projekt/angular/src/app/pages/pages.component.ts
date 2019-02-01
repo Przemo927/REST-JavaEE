@@ -1,5 +1,5 @@
 import {Component, OnInit, DoCheck} from "@angular/core";
-import {Page} from "../page";
+import {Page} from "../model/page";
 import  { PageService } from "../service/page.service";
 import { DataService } from '../service/data.service';
 import {DiscoveryPageService} from "../service/discoverypage.service";

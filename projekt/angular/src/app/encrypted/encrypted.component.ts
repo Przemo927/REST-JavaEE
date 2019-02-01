@@ -1,9 +1,9 @@
 import { Component, OnInit } from '@angular/core';
 import {EncryptedService} from "../service/encrypted.service";
-import {Discovery} from "../discovery";
+import {Discovery} from "../model/discovery";
 import {DataService} from "../service/data.service";
 import {KeyService} from "../service/key.service";
-import {SignContent} from "../signcontent";
+import {SignContent} from "../model/signcontent";
 
 @Component({
   selector: 'app-encrypted',

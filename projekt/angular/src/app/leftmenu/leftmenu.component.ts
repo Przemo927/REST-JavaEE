@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { Discovery } from '../discovery';
+import { Discovery } from '../model/discovery';
 import {DiscoveryService} from "../service/discovery.service";
 
 @Component({

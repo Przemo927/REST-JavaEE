@@ -3,7 +3,7 @@ import { HttpClient,HttpHeaders } from '@angular/common/http';
 import { Observable } from 'rxjs/Observable';
 import { catchError, tap } from 'rxjs/operators';
 import { of } from 'rxjs/observable/of';
-import { Event } from '../event';
+import { Event } from '../model/event';
 import {ErrorHandler} from "../errorhandler";
 import {UrlUtils} from "../UrlUtils";
 import {EndPoint} from "../enum/endpoint.enum";

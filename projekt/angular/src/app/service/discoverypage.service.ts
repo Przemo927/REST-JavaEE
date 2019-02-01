@@ -1,5 +1,5 @@
 import {Injectable} from "@angular/core";
-import {Discovery} from "../discovery";
+import {Discovery} from "../model/discovery";
 import {HttpClient} from "@angular/common/http";
 import {PageService} from "./page.service";
 

@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { Observable } from "rxjs/Observable";
 import { EventService } from '../service/event.service';
-import{ Event } from '../event';
+import{ Event } from '../model/event';
 import { ActivatedRoute,Router } from '@angular/router';
 import { NameofcityService } from '../service/nameofcity.service';
 import { DataService } from '../service/data.service';

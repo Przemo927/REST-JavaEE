@@ -1,8 +1,8 @@
 import {AfterViewInit, Component, OnInit} from '@angular/core';
 import * as L from 'leaflet';
 import { EventService } from '../service/event.service';
-import { Event } from '../event';
-import {EventPosition } from '../eventposition';
+import { Event } from '../model/event';
+import {EventPosition } from '../model/eventposition';
 
 @Component({
   selector: 'app-addevent',

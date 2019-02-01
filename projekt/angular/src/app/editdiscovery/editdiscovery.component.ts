@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { DiscoveryService } from '../service/discovery.service';
-import { Discovery } from '../discovery';
+import { Discovery } from '../model/discovery';
 import { ActivatedRoute } from '@angular/router';
 import { Location } from '@angular/common';
 

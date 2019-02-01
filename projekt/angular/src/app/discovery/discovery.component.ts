@@ -1,9 +1,9 @@
 import {Component, OnDestroy, OnInit, ViewChild} from "@angular/core";
 import {DiscoveryService} from "../service/discovery.service";
 import {CommentService} from "../service/comment.service";
-import {Discovery} from "../discovery";
+import {Discovery} from "../model/discovery";
 import {ActivatedRoute, NavigationEnd, Router} from "@angular/router";
-import {Comment} from "../comment";
+import {Comment} from "../model/comment";
 import {ValidatabletextareaComponent} from "../validatabletextarea/validatabletextarea.component";
 import {UrlUtils} from "../UrlUtils";
 import {EndPoint} from "../enum/endpoint.enum";

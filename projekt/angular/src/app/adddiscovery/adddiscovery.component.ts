@@ -1,6 +1,6 @@
 import {Component, OnInit, ViewChild} from '@angular/core';
 import { DiscoveryService } from '../service/discovery.service';
-import { Discovery } from '../discovery';
+import { Discovery } from '../model/discovery';
 import * as url from "url";
 import {ValidatabletextareaComponent} from "../validatabletextarea/validatabletextarea.component";
 import {ValidatableinputComponent} from "../validatableinput/validatableinput.component";
