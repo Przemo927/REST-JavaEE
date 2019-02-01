@@ -1,7 +1,7 @@
 import {Component, DoCheck, IterableDiffers} from "@angular/core";
-import {DiscoveryService} from "../discovery.service";
+import {DiscoveryService} from "../service/discovery.service";
 import {CheckUserService} from "../check-user.service";
-import {DataService} from "../data.service";
+import {DataService} from "../service/data.service";
 import {DiscoveriesComponent} from "./discoveries.component";
 import {KeyService} from "../key.service";
 

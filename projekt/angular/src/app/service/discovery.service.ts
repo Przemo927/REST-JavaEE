@@ -2,11 +2,11 @@ import {Injectable} from "@angular/core";
 import {HttpClient} from "@angular/common/http";
 import {Observable} from "rxjs/Observable";
 import {catchError, tap} from "rxjs/operators";
-import {Discovery} from "./discovery";
-import {ErrorHandler} from "./errorhandler";
-import {BaseUrl} from "./baseurl.enum";
-import {EndPoint} from "./endpoint.enum";
-import {UrlUtils} from "./UrlUtils";
+import {Discovery} from "../discovery";
+import {ErrorHandler} from "../errorhandler";
+import {BaseUrl} from "../baseurl.enum";
+import {EndPoint} from "../endpoint.enum";
+import {UrlUtils} from "../UrlUtils";
 
 @Injectable()
 export class DiscoveryService {

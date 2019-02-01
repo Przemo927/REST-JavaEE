@@ -1,6 +1,6 @@
 import {Component, OnDestroy, OnInit, ViewChild} from "@angular/core";
-import {DiscoveryService} from "../discovery.service";
-import {CommentService} from "../comment.service";
+import {DiscoveryService} from "../service/discovery.service";
+import {CommentService} from "../service/comment.service";
 import {Discovery} from "../discovery";
 import {ActivatedRoute, NavigationEnd, Router} from "@angular/router";
 import {Comment} from "../comment";

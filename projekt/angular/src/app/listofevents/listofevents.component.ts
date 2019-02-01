@@ -2,10 +2,10 @@ import {Component, OnInit} from "@angular/core";
 import {Router} from "@angular/router";
 import {NameofcityService} from "../nameofcity.service";
 import {Event} from "../event";
-import {EventService} from "../event.service";
+import {EventService} from "../service/event.service";
 import * as L from "leaflet";
 import {EventPosition} from "../eventposition";
-import {DataService} from "../data.service";
+import {DataService} from "../service/data.service";
 import "rxjs/add/operator/map";
 
 

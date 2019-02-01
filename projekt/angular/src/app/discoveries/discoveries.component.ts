@@ -1,10 +1,10 @@
 ///<reference path="../check-user.service.ts"/>
 import {Component, DoCheck, IterableDiffer, IterableDiffers, OnInit} from "@angular/core";
-import {DiscoveryService} from "../discovery.service";
+import {DiscoveryService} from "../service/discovery.service";
 import {Discovery} from "../discovery";
 import {CheckUserService} from "../check-user.service";
 import {Page} from "../page";
-import {DataService} from "../data.service";
+import {DataService} from "../service/data.service";
 import {UrlUtils} from "../UrlUtils";
 import {EndPoint} from "../endpoint.enum";
 

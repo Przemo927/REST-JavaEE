@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import {DraggableService} from "../draggable.service";
+import {DraggableService} from "../service/draggable.service";
 import {DraggableElement} from "../draggableelement";
 
 @Component({

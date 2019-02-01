@@ -1,5 +1,5 @@
 import {Injectable} from "@angular/core";
-import {DraggableElement} from "./draggableelement";
+import {DraggableElement} from "../draggableelement";
 
 @Injectable()
 export class DraggableService {

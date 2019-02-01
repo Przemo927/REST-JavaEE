@@ -1,6 +1,6 @@
 import {AfterViewInit, Component, OnInit} from '@angular/core';
 import * as L from 'leaflet';
-import { EventService } from '../event.service';
+import { EventService } from '../service/event.service';
 import { Event } from '../event';
 import {EventPosition } from '../eventposition';
 

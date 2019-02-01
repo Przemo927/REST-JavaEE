@@ -1,11 +1,11 @@
 import {Injectable} from "@angular/core";
-import {Page} from "./page";
+import {Page} from "../page";
 import {Observable} from "rxjs/Rx";
 import {HttpClient} from "@angular/common/http";
 import {catchError, tap} from "rxjs/operators";
-import {ErrorHandler} from "./errorhandler";
-import {UrlUtils} from "./UrlUtils";
-import {BaseUrl} from "./baseurl.enum";
+import {ErrorHandler} from "../errorhandler";
+import {UrlUtils} from "../UrlUtils";
+import {BaseUrl} from "../baseurl.enum";
 
 @Injectable()
 export class PageService <T> {

@@ -1,8 +1,8 @@
 import {Component, DoCheck, IterableDiffer, IterableDiffers, OnInit} from '@angular/core';
 import {Event} from '../event';
 import * as L from 'leaflet';
-import {EventService} from '../event.service';
-import {DataService} from '../data.service';
+import {EventService} from '../service/event.service';
+import {DataService} from '../service/data.service';
 import {Observable} from "rxjs/Observable";
 
 @Component({

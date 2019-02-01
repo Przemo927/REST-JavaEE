@@ -3,15 +3,17 @@ import { HttpClient,HttpHeaders } from '@angular/common/http';
 import { Observable } from 'rxjs/Observable';
 import { catchError, tap } from 'rxjs/operators';
 import { of } from 'rxjs/observable/of';
-import { Event } from './event';
-import {ErrorHandler} from "./errorhandler";
+import { Event } from '../event';
+import {ErrorHandler} from "../errorhandler";
+import {UrlUtils} from "../UrlUtils";
+import {EndPoint} from "../endpoint.enum";
 
 @Injectable()
 export class EventService {
 
   constructor(private http: HttpClient) { }
 
- private eventUrl='http://localhost:8080/projekt/api/event';
+ private eventUrl=UrlUtils.generateBasicUrl(window.location)+EndPoint.events;
 
 getEvents(): Observable<Event[]> {
 return this.http.get<Event[]>(this.eventUrl)

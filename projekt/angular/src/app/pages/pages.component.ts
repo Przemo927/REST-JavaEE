@@ -1,8 +1,8 @@
 import {Component, OnInit, DoCheck} from "@angular/core";
 import {Page} from "../page";
-import  { PageService } from "../page.service";
-import { DataService } from '../data.service';
-import {DiscoveryPageService} from "../discoverypage.service";
+import  { PageService } from "../service/page.service";
+import { DataService } from '../service/data.service';
+import {DiscoveryPageService} from "../service/discoverypage.service";
 import {Router} from "@angular/router";
 import { HttpClient } from '@angular/common/http';
 

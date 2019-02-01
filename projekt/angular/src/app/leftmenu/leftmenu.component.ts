@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { Discovery } from '../discovery';
-import {DiscoveryService} from "../discovery.service";
+import {DiscoveryService} from "../service/discovery.service";
 
 @Component({
   selector: 'app-leftmenu',

@@ -1,10 +1,10 @@
 import { Injectable } from '@angular/core';
 import { HttpClient,HttpHeaders } from '@angular/common/http';
-import { User } from './User';
+import { User } from '../user';
 import { Observable } from 'rxjs/Observable';
 import { catchError, tap } from 'rxjs/operators';
 import { of } from 'rxjs/observable/of';
-import {ErrorHandler} from "./errorhandler";
+import {ErrorHandler} from "../errorhandler";
 
 @Injectable()
 export class UserService {

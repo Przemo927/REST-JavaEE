@@ -1,7 +1,7 @@
 import {Injectable} from "@angular/core";
 import {HttpClient} from "@angular/common/http";
 import {catchError, tap} from "rxjs/operators";
-import {ErrorHandler} from "./errorhandler";
+import {ErrorHandler} from "../errorhandler";
 
 @Injectable()
 export class VoteService {
