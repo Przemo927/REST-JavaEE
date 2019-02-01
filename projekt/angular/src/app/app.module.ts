@@ -27,27 +27,27 @@ import {LeafletModule} from "@asymmetrik/ngx-leaflet";
 import {BootstrapSwitchModule} from "angular2-bootstrap-switch";
 import {BrowserAnimationsModule} from "@angular/platform-browser/animations";
 import {EventpositionService} from "./service/eventposition.service";
-import {CheckUserService} from "./check-user.service";
+import {CheckUserService} from "./service/check-user.service";
 import {DiscoveryPageService} from "./service/discoverypage.service";
 import {PageService} from "./service/page.service";
 import {SearcheventbycityComponent} from "./searcheventbycity/searcheventbycity.component";
 import {ListofeventsComponent} from "./listofevents/listofevents.component";
-import {NameofcityService} from "./nameofcity.service";
+import {NameofcityService} from "./service/nameofcity.service";
 import {SearchbypositionComponent} from "./searchbyposition/searchbyposition.component";
 import {DataService} from "./service/data.service";
 import {PagesComponent} from "./pages/pages.component";
 import {ValidatabletextareaComponent} from "./validatabletextarea/validatabletextarea.component";
-import {EncryptedService} from "./encrypted.service";
+import {EncryptedService} from "./service/encrypted.service";
 import {DiscoveriesEncryptedComponent} from "./discoveries/discoveriesencrypted.component";
 import {EncryptedComponent} from "./encrypted/encrypted.component";
-import {KeyService} from "./key.service";
+import {KeyService} from "./service/key.service";
 import {ValidatableinputComponent} from "./validatableinput/validatableinput.component";
 import {CalendarModule} from "primeng/calendar";
 import {LeftmenuComponent} from "./leftmenu/leftmenu.component";
 import {ProfileComponent} from "./profile/profile.component";
 import {HeaderComponent} from "./header/header.component";
 import {PdfmoduleComponent} from "./pdfmodule/pdfmodule.component";
-import {ContentPdfService} from "./contentpdf.service";
+import {ContentPdfService} from "./service/contentpdf.service";
 
 @NgModule({
   declarations: [

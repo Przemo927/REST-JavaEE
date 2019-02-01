@@ -3,7 +3,7 @@ import { Observable } from "rxjs/Observable";
 import { EventService } from '../service/event.service';
 import{ Event } from '../event';
 import { ActivatedRoute,Router } from '@angular/router';
-import { NameofcityService } from '../nameofcity.service';
+import { NameofcityService } from '../service/nameofcity.service';
 import { DataService } from '../service/data.service';
 
 @Component({

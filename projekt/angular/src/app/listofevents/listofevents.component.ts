@@ -1,6 +1,6 @@
 import {Component, OnInit} from "@angular/core";
 import {Router} from "@angular/router";
-import {NameofcityService} from "../nameofcity.service";
+import {NameofcityService} from "../service/nameofcity.service";
 import {Event} from "../event";
 import {EventService} from "../service/event.service";
 import * as L from "leaflet";

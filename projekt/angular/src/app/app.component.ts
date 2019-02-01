@@ -1,7 +1,7 @@
 import {Component, DoCheck, OnInit} from "@angular/core";
 import {NavigationEnd, Router} from "@angular/router";
 import {EndPoint} from "./enum/endpoint.enum";
-import {ContentPdfService} from "./contentpdf.service";
+import {ContentPdfService} from "./service/contentpdf.service";
 import {UrlUtils} from "./UrlUtils";
 
 @Component({

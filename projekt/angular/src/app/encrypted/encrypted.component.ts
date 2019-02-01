@@ -1,8 +1,8 @@
 import { Component, OnInit } from '@angular/core';
-import {EncryptedService} from "../encrypted.service";
+import {EncryptedService} from "../service/encrypted.service";
 import {Discovery} from "../discovery";
 import {DataService} from "../service/data.service";
-import {KeyService} from "../key.service";
+import {KeyService} from "../service/key.service";
 import {SignContent} from "../signcontent";
 
 @Component({

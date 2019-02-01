@@ -1,9 +1,9 @@
 import {Component, DoCheck, IterableDiffers} from "@angular/core";
 import {DiscoveryService} from "../service/discovery.service";
-import {CheckUserService} from "../check-user.service";
+import {CheckUserService} from "../service/check-user.service";
 import {DataService} from "../service/data.service";
 import {DiscoveriesComponent} from "./discoveries.component";
-import {KeyService} from "../key.service";
+import {KeyService} from "../service/key.service";
 
 @Component({
   selector: 'app-encrypted-discoveries',

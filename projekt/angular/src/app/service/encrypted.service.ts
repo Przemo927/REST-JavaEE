@@ -1,6 +1,6 @@
 import {Injectable} from "@angular/core";
-import {Discovery} from "./discovery";
-import {SignContent} from "./signcontent";
+import {Discovery} from "../discovery";
+import {SignContent} from "../signcontent";
 
 @Injectable()
 export class EncryptedService {

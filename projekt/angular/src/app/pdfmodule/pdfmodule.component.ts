@@ -1,5 +1,5 @@
 import {Component, OnInit} from "@angular/core";
-import {ContentPdfService} from "../contentpdf.service";
+import {ContentPdfService} from "../service/contentpdf.service";
 import {DraggableService} from "../service/draggable.service";
 
 @Component({

@@ -1,8 +1,8 @@
-///<reference path="../check-user.service.ts"/>
+///<reference path="../service/check-user.service.ts"/>
 import {Component, DoCheck, IterableDiffer, IterableDiffers, OnInit} from "@angular/core";
 import {DiscoveryService} from "../service/discovery.service";
 import {Discovery} from "../discovery";
-import {CheckUserService} from "../check-user.service";
+import {CheckUserService} from "../service/check-user.service";
 import {Page} from "../page";
 import {DataService} from "../service/data.service";
 import {UrlUtils} from "../UrlUtils";
