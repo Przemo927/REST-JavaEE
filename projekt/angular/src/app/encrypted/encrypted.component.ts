@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import {EncryptedService} from "../encrypted.service";
 import {Discovery} from "../discovery";
-import {DataService} from "../data.service";
+import {DataService} from "../service/data.service";
 import {KeyService} from "../key.service";
 import {SignContent} from "../signcontent";
 

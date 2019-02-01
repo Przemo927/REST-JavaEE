@@ -5,7 +5,7 @@ import {HttpClient} from "@angular/common/http";
 import {catchError, tap} from "rxjs/operators";
 import {ErrorHandler} from "../errorhandler";
 import {UrlUtils} from "../UrlUtils";
-import {BaseUrl} from "../baseurl.enum";
+import {BaseUrl} from "../enum/baseurl.enum";
 
 @Injectable()
 export class PageService <T> {

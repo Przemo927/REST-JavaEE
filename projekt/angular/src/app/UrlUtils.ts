@@ -1,4 +1,4 @@
-import {BaseUrl} from "./baseurl.enum";
+import {BaseUrl} from "./enum/baseurl.enum";
 
 export class UrlUtils {
   public static addParameterToUrl(url:string,parameter:string,value:any):string{

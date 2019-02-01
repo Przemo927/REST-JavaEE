@@ -4,8 +4,8 @@ import {Observable} from "rxjs/Observable";
 import {catchError, tap} from "rxjs/operators";
 import {Discovery} from "../discovery";
 import {ErrorHandler} from "../errorhandler";
-import {BaseUrl} from "../baseurl.enum";
-import {EndPoint} from "../endpoint.enum";
+import {BaseUrl} from "../enum/baseurl.enum";
+import {EndPoint} from "../enum/endpoint.enum";
 import {UrlUtils} from "../UrlUtils";
 
 @Injectable()

@@ -6,7 +6,7 @@ import { of } from 'rxjs/observable/of';
 import { Event } from '../event';
 import {ErrorHandler} from "../errorhandler";
 import {UrlUtils} from "../UrlUtils";
-import {EndPoint} from "../endpoint.enum";
+import {EndPoint} from "../enum/endpoint.enum";
 
 @Injectable()
 export class EventService {

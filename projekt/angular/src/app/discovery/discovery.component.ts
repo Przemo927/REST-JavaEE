@@ -6,8 +6,8 @@ import {ActivatedRoute, NavigationEnd, Router} from "@angular/router";
 import {Comment} from "../comment";
 import {ValidatabletextareaComponent} from "../validatabletextarea/validatabletextarea.component";
 import {UrlUtils} from "../UrlUtils";
-import {EndPoint} from "../endpoint.enum";
-import {UrlRegex} from "../url-regex.enum";
+import {EndPoint} from "../enum/endpoint.enum";
+import {UrlRegex} from "../enum/url-regex.enum";
 import {Subscription} from "rxjs";
 
 @Component({

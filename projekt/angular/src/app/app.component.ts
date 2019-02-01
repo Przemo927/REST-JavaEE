@@ -1,6 +1,6 @@
 import {Component, DoCheck, OnInit} from "@angular/core";
 import {NavigationEnd, Router} from "@angular/router";
-import {EndPoint} from "./endpoint.enum";
+import {EndPoint} from "./enum/endpoint.enum";
 import {ContentPdfService} from "./contentpdf.service";
 import {UrlUtils} from "./UrlUtils";
 

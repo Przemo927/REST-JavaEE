@@ -6,7 +6,7 @@ import {CheckUserService} from "../check-user.service";
 import {Page} from "../page";
 import {DataService} from "../service/data.service";
 import {UrlUtils} from "../UrlUtils";
-import {EndPoint} from "../endpoint.enum";
+import {EndPoint} from "../enum/endpoint.enum";
 
 @Component({
   selector: 'app-discoveries',
