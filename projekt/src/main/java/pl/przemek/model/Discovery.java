@@ -18,7 +18,7 @@ import java.util.Objects;
 @NamedQueries({
     @NamedQuery(name = "Discovery.findAll", query = "SELECT p FROM Discovery p"),
     @NamedQuery(name = "Discovery.search", query = "SELECT p FROM Discovery p WHERE p.name=:name"),
-    @NamedQuery(name = "Discovery.getDiscoveryWithComments", query = "SELECT p FROM Discovery p JOIN FETCH p.comments WHERE p.id=:discovery_id")
+    @NamedQuery(name = "Discovery.getDiscoveryWithComments", query = "SELECT p FROM Discovery p LEFT JOIN FETCH p.comments WHERE p.id=:discovery_id")
 })
 @NamedNativeQueries({
         @NamedNativeQuery(name = "Discovery.findAllWithLimit",query = "SELECT * FROM discovery limit :begin,:quantity",resultClass = Discovery.class),
