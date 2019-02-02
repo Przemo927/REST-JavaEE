@@ -35,7 +35,7 @@ public class UserEndPoint {
     }
     public UserEndPoint(){}
 
-    @Path("/{id}")
+    @Path("/{id : \\d+}")
     @Consumes(MediaType.APPLICATION_JSON)
     @DELETE
     public Response removeByUserName(@PathParam("id") long id) {
@@ -44,7 +44,7 @@ public class UserEndPoint {
     }
 
     @GET
-    @Path("/{id}")
+    @Path("/{id : \\d+}")
     @Produces(MediaType.APPLICATION_JSON)
     public Response getUserById(@PathParam("id") Long id){
         Optional<User> userOptional=userservice.getUserById(id);

@@ -39,13 +39,13 @@ public class VoteEndPoint {
 
 		if(loggedUser!=null){
 			VoteType votetype=VoteType.valueOf(vote);
-			Long userId=loggedUser.getId();
+			long userId=loggedUser.getId();
 			voteService.updateVote(userId,discoveryId,votetype);
 		}
 	}
 	@GET
 	@Produces(MediaType.APPLICATION_JSON)
-	@Path("/{id}")
+	@Path("/{id : \\d+}")
 	public Response get(@PathParam("id") long id){
 		Optional<Vote> voteOptional=voteService.getById(id);
 		return voteOptional.map(vote -> {
@@ -57,8 +57,8 @@ public class VoteEndPoint {
 	}
 	@GET
 	@Produces(MediaType.APPLICATION_JSON)
-	@Path("/{id}/{id1}")
-	public Response getVoteByUserIdDiscoveryId(@PathParam("id") long userId, @PathParam("id1") long discoveryId){
+	@Path("/{userId : \\d+}/{discoveryId : \\d+}")
+	public Response getVoteByUserIdDiscoveryId(@PathParam("userId") long userId, @PathParam("discoveryId") long discoveryId){
 		List<Vote> voteList=voteService.getByUserIdDiscoveryId(userId,discoveryId);
 		if(voteList.isEmpty()) {
 			logger.log(Level.SEVERE,"[VoteEndPoint] getVoteByUserIdDiscoveryId() vote wasn't found");

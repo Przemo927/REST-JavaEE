@@ -74,7 +74,7 @@ public class CommentEndPoint {
 
     @GET
     @Produces(MediaType.APPLICATION_JSON)
-    @Path("/{id}")
+    @Path("/{id : \\d+}")
     public Response getByDiscoveryId(@PathParam("id") long id) {
         List<Comment> listWithComment=commentservice.getByDiscoveryId(id);
         if(listWithComment.isEmpty()) {

@@ -66,7 +66,7 @@ public class DiscoveryEndPoint {
 	}
 
 	@GET
-	@Path("/{id}")
+	@Path("/{id : \\d+}")
 	@Produces(MediaType.APPLICATION_JSON)
 	public Response getById(@PathParam("id") long id) {
 		Optional<Discovery> discoveryOptional=discoveryService.getById(id);
@@ -79,7 +79,7 @@ public class DiscoveryEndPoint {
 	}
 
     @DELETE
-    @Path("/{id}")
+    @Path("/{id : \\d+}")
     public Response removeById(@PathParam("id") long id) {
         discoveryService.removeDiscoveryById(id);
 		return Response.ok("Discovery was removed").build();

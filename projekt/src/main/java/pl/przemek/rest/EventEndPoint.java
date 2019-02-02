@@ -40,7 +40,7 @@ public class EventEndPoint {
         this.request=request;
     }
 
-    @Path("/{id}")
+    @Path("/{id : \\d+}")
     @GET
     @Produces(MediaType.APPLICATION_JSON)
     public Response getEvent(@PathParam("id") long id) {
@@ -106,7 +106,7 @@ public class EventEndPoint {
     }
 
     @DELETE
-    @Path("/{id}")
+    @Path("/{id : \\d+}")
     @Consumes(MediaType.APPLICATION_JSON)
     public Response removeEvent(@PathParam("id") long id){
         eventservice.removeEventById(id);
