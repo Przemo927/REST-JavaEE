@@ -1,12 +1,11 @@
-import { Injectable } from '@angular/core';
-import { HttpClient,HttpHeaders } from '@angular/common/http';
-import { Observable } from 'rxjs/Observable';
-import { catchError, tap } from 'rxjs/operators';
-import { of } from 'rxjs/observable/of';
-import { Event } from '../model/event';
+import {Injectable} from '@angular/core';
+import {HttpClient} from '@angular/common/http';
+import {Observable} from 'rxjs/Observable';
+import {catchError, tap} from 'rxjs/operators';
+import {Event} from '../model/event';
 import {ErrorHandler} from "../errorhandler";
-import {UrlUtils} from "../UrlUtils";
 import {EndPoint} from "../enum/endpoint.enum";
+import {UrlUtils} from "../UrlUtils";
 
 @Injectable()
 export class EventService {
@@ -17,10 +16,8 @@ export class EventService {
 
 getEvents(): Observable<Event[]> {
 return this.http.get<Event[]>(this.eventUrl)
-.pipe(tap(function(events){
-            for(let event of events){
-              event.timestamp=new Date(event.timestamp);
-            }
+.pipe(tap((events)=>{
+            this.convertFromTimeStampToDate(events);
             }),
       catchError(ErrorHandler.handleError<Event[]>('getEvents',[]))
     );
@@ -35,10 +32,8 @@ addEvent(event: Event): Observable<Event> {
 
 getEventsByNameOfCity(nameOfCity:string):Observable<Event[]> {
     return this.http.get<Event[]>(this.eventUrl+'?city='+nameOfCity)
-     .pipe(tap(function(events){
-            for(let event of events){
-              event.timestamp=new Date(event.timestamp);
-            }
+     .pipe(tap((events)=>{
+            this.convertFromTimeStampToDate(events);
             }),
     catchError(ErrorHandler.handleError<Event[]>('getEventsByCity',[]))
   );
@@ -46,13 +41,19 @@ getEventsByNameOfCity(nameOfCity:string):Observable<Event[]> {
 
 getEventsByPosition(latitude:number,longtitude:number,distance:number):Observable<Event[]>{
     return this.http.get<Event[]>(this.eventUrl+'/position?x='+latitude+'&y='+longtitude+'&distance='+distance)
-    .pipe(tap(function(events){
-            for(let event of events){
-              event.timestamp=new Date(event.timestamp);
-            }
+    .pipe(tap((events)=>{
+            this.convertFromTimeStampToDate(events);
             }),
     catchError(ErrorHandler.handleError<Event[]>('getEventsByPosition',[]))
     );
+}
+
+private convertFromTimeStampToDate(events:Event[]){
+  if(events!==null) {
+    for (let event of events) {
+      event.timestamp = new Date(event.timestamp);
+    }
+  }
 }
 
 }
