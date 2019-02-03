@@ -9,12 +9,9 @@ import {BaseUrl} from "../enum/baseurl.enum";
 
 @Injectable()
 export class PageService <T> {
-  actualPage: Page= null;
-  preparedPages: Page[];
   private url: string;
 
-  constructor(public http: HttpClient, url: string) {
-    this.url = url;
+  constructor(public http: HttpClient) {
   }
 
   setUrl(url:string){
@@ -22,20 +19,17 @@ export class PageService <T> {
   }
 
   preparePages(quantityOnOnePage: number, quantityOfAllElements: number): Page[] {
-    let pages = 0;
+    let pages:number;
     if ((quantityOfAllElements % quantityOnOnePage) === 0) {
       pages = quantityOfAllElements / quantityOnOnePage;
     }else {
       pages = Math.floor(quantityOfAllElements / quantityOnOnePage) + 1;
     }
-    this.preparedPages = Array(pages).fill(0).map((x, i) => new Page(i + 1, i * quantityOnOnePage, quantityOnOnePage));
-
-    return this.preparedPages;
+    return Array(pages).fill(0).map((x, i) => new Page(i + 1, i * quantityOnOnePage, quantityOnOnePage));
   }
-  getElementsForActualPage<T>(numberOfActualPage: number): Observable<T[]> {
-    if (this.actualPage == null || (this.actualPage != null && this.actualPage.numberPage !== numberOfActualPage)) {
-      this.giveActualPage(numberOfActualPage);
-      return this.getElementsWithLimit<T>(this.actualPage.firstIndex, this.actualPage.quantity);
+  getElementsForActualPage<T>(actualPage: Page): Observable<T[]> {
+    if (actualPage != null) {
+      return this.getElementsWithLimit<T>(actualPage.firstIndex, actualPage.quantity);
     }else {
       return Observable.empty<T[]>();
 
@@ -55,28 +49,8 @@ export class PageService <T> {
         catchError(ErrorHandler.handleError<any>('getElementsWithLimit', []))
       );
   }
-  chooseFirstPage<T>(): Observable<T[]> {
-    this.giveActualPage(1);
-    return this.getElementsWithLimit<T>(this.actualPage.firstIndex, this.actualPage.quantity);
-  }
-
-  increaseLimit<T>(): Observable<T[]> {
-    if (this.actualPage != null && this.actualPage.numberPage < this.preparedPages.length) {
-      this.giveNextPage();
-      return this.getElementsWithLimit<T>(this.actualPage.firstIndex, this.actualPage.quantity);
-    }else {
-      return Observable.empty<T[]>();
-    }
-  }
-
-  decreaseLimit<T>(): Observable<T[]> {
-    if (this.actualPage != null && this.actualPage.numberPage > 1) {
-      this.givePreviousPage();
-      console.log(this.actualPage.firstIndex, this.actualPage.quantity);
-      return this.getElementsWithLimit<T>(this.actualPage.firstIndex, this.actualPage.quantity);
-    }else {
-      return Observable.empty<T[]>();
-    }
+  chooseFirstPage<T>(firstPage:Page): Observable<T[]> {
+    return this.getElementsWithLimit<T>(firstPage.firstIndex, firstPage.quantity);
   }
 
   getQuantityOfAllElements(): Observable<any> {
@@ -84,16 +58,5 @@ export class PageService <T> {
       .pipe(tap((e) => console.log('fetched quantity of elements')),
         catchError(ErrorHandler.handleError<any>('getQuantityOfAllElements'))
       );
-  }
-  private givePreviousPage(): void {
-    this.actualPage = this.preparedPages[this.actualPage.numberPage - 2];
-  }
-
-  private giveNextPage(): void {
-    this.actualPage = this.preparedPages[this.actualPage.numberPage];
-  }
-
-  private giveActualPage(numberOfActualPage: number): void {
-    this.actualPage = this.preparedPages[numberOfActualPage - 1];
   }
 }

@@ -19,14 +19,7 @@ import {PdfmoduleComponent} from "./pdfmodule/pdfmodule.component";
 
 const routes: Routes = [
   { path: 'users', component: UsersComponent },
-  { path: '', component: DiscoveriesComponent,
-    children:[
-      {
-        path: '',
-        component: PagesComponent
-      }
-    ]
-  },
+  { path: '', component: DiscoveriesComponent},
   { path: 'editdiscovery/:id', component: EditdiscoveryComponent },
   { path: 'discovery/:id', component: DiscoveryComponent },
   { path: 'adddiscovery', component: AdddiscoveryComponent },

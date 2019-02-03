@@ -24,8 +24,6 @@ export class DiscoveriesComponent implements OnInit, DoCheck {
   private adminRole= false;
   private VOTE_UP= 'VOTE_UP';
   private VOTE_DOWN= 'VOTE_DOWN';
-  private preparedPages: Page[];
-  private currentPage: any;
   private iterableDiffer: IterableDiffer<any>;
   private htmlCollectionAsArray:Array<HTMLElement>;
   private firstIndexOfHidden=1;
