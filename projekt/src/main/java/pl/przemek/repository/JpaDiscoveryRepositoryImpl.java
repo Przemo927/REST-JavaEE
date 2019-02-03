@@ -16,6 +16,7 @@ public class JpaDiscoveryRepositoryImpl extends JpaRepository<Discovery> impleme
 
 	private final static String PRESENCE_DISCOVERY_BY_URL="SELECT 1 FROM Discovery WHERE url=:url";
 	private final static String QUANTITY_OF_DISCOVERIES="SELECT count(*) FROM discovery";
+	private final static String QUANTITY_ALL_DISCVERIES="SELECT p FROM Discovery p LEFT JOIN FETCH p.user";
 
 	@RolesAllowed({"admin","user"})
 	@Override
@@ -38,7 +39,7 @@ public class JpaDiscoveryRepositoryImpl extends JpaRepository<Discovery> impleme
 	@RolesAllowed({"admin","user"})
 	@Override
 	public List<Discovery> getAllInOneQuery() {
-		TypedQuery<Discovery> getAllInOneQuery= em.createQuery("SELECT p FROM Discovery p LEFT JOIN FETCH p.user",Discovery.class);
+		TypedQuery<Discovery> getAllInOneQuery= em.createQuery(QUANTITY_ALL_DISCVERIES,Discovery.class);
 		return getAllInOneQuery.getResultList();
 	}
 
