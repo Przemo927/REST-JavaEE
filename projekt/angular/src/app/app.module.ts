@@ -28,7 +28,6 @@ import {BootstrapSwitchModule} from "angular2-bootstrap-switch";
 import {BrowserAnimationsModule} from "@angular/platform-browser/animations";
 import {EventpositionService} from "./service/eventposition.service";
 import {CheckUserService} from "./service/check-user.service";
-import {DiscoveryPageService} from "./service/discoverypage.service";
 import {PageService} from "./service/page.service";
 import {SearcheventbycityComponent} from "./searcheventbycity/searcheventbycity.component";
 import {ListofeventsComponent} from "./listofevents/listofevents.component";
@@ -89,7 +88,7 @@ import {ContentPdfService} from "./service/contentpdf.service";
     BrowserAnimationsModule,
     CalendarModule
   ],
-  providers: [DiscoveryService, UserService, CommentService, EventService, EventpositionService, CheckUserService, DiscoveryPageService, PageService, NameofcityService, DataService, EncryptedService, KeyService, ContentPdfService],
+  providers: [DiscoveryService, UserService, CommentService, EventService, EventpositionService, CheckUserService, PageService, NameofcityService, DataService, EncryptedService, KeyService, ContentPdfService],
   bootstrap: [AppComponent]
 })
 export class AppModule { }
