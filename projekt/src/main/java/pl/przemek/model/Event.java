@@ -14,6 +14,9 @@ import java.util.List;
         @NamedQuery(name="Event.findByCity",query = "Select p From Event p WHERE p.nameOfCity Like :city"),
         @NamedQuery(name="Event.selectAllCities",query = "Select p.nameOfCity From Event p")
 })
+@NamedNativeQueries({
+        @NamedNativeQuery(name = "Event.findAllWithLimit", query = "SELECT * FROM event limit :begin,:quantity",resultClass = Event.class)
+})
 public class Event implements Serializable {
 
     @Id

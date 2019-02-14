@@ -4,14 +4,16 @@ import pl.przemek.model.Event;
 
 import javax.annotation.security.RolesAllowed;
 import javax.ejb.Stateless;
-import javax.persistence.EntityManager;
-import javax.persistence.PersistenceContext;
+import javax.persistence.Query;
 import javax.persistence.TypedQuery;
+import java.math.BigInteger;
 import java.util.Comparator;
 import java.util.List;
 
 @Stateless
 public class JpaEventRepositoryImpl extends JpaRepository<Event> implements JpaEventRepository {
+
+    private final static String QUANTITY_OF_EVENTS="SELECT count(*) FROM event";
 
     @RolesAllowed({"admin","user"})
     @Override
@@ -38,5 +40,19 @@ public class JpaEventRepositoryImpl extends JpaRepository<Event> implements JpaE
         List<String> listOfCities=getCitiesFromAllEvents.getResultList();
         listOfCities.sort(Comparator.naturalOrder());
         return listOfCities;
+    }
+    @RolesAllowed({"admin","user"})
+    @Override
+    public BigInteger getQuantityOfEvents() {
+        Query query=em.createNativeQuery(QUANTITY_OF_EVENTS);
+        return (BigInteger)query.getSingleResult();
+    }
+
+    @Override
+    public List<Event> getWithLimit(int begin, int quantity) {
+        TypedQuery<Event> query=em.createNamedQuery("Event.findAllWithLimit",Event.class);
+        query.setParameter("begin",begin);
+        query.setParameter("quantity",quantity);
+        return query.getResultList();
     }
 }

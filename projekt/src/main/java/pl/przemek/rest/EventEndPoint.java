@@ -1,5 +1,6 @@
 package pl.przemek.rest;
 
+import org.json.simple.JSONObject;
 import pl.przemek.mapper.ExceptionMapperAnnotation;
 import pl.przemek.model.Event;
 import pl.przemek.model.User;
@@ -11,6 +12,7 @@ import javax.inject.Inject;
 import javax.servlet.http.HttpServletRequest;
 import javax.ws.rs.*;
 import javax.ws.rs.core.*;
+import java.math.BigInteger;
 import java.net.URI;
 import java.util.List;
 import java.util.Optional;
@@ -55,9 +57,12 @@ public class EventEndPoint {
 
     @GET
     @Produces(MediaType.APPLICATION_JSON)
-    public Response getEvents(@QueryParam("city") @DefaultValue("allCities") String city ) {
+    public Response getEvents(@QueryParam("city") @DefaultValue("allCities") String city, @QueryParam("beginWith") Integer begin,
+                              @QueryParam("quantity") Integer quantity ) {
         List<Event> listOfEvents;
-        if("allCities".equals(city)){
+        if(begin !=null && quantity !=null){
+            listOfEvents=eventservice.getEventsWithLimit(begin,quantity);
+        }else if("allCities".equals(city)){
             listOfEvents=eventservice.getAllEvents();
         }else
             listOfEvents=eventservice.getEventsByCity(city);
@@ -123,6 +128,14 @@ public class EventEndPoint {
             return Response.status(Response.Status.NO_CONTENT).build();
         }
         return ResponseUtils.checkIfModifiedAndReturnResponse(listOfCities,requestRest).build();
+    }
+    @GET
+    @Path("quantity")
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response getQuantityOfEvents(){
+        BigInteger quantityOfDiscoveries=eventservice.getQuantityOfDiscoveries();
+        JSONObject jsonObject=ResponseMessageWrapper.wrappMessage(String.valueOf(quantityOfDiscoveries));
+        return ResponseUtils.checkIfModifiedAndReturnResponse(jsonObject,requestRest).build();
     }
 
 }

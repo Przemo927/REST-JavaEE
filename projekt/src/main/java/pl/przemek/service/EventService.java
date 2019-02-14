@@ -6,6 +6,7 @@ import pl.przemek.model.EventPosition;
 import pl.przemek.repository.JpaEventRepository;
 
 import javax.inject.Inject;
+import java.math.BigInteger;
 import java.util.List;
 import java.util.Optional;
 import java.util.logging.Level;
@@ -91,5 +92,13 @@ public class EventService {
 
     public List<String> getCitiesFromAllEvents(){
         return eventRepo.getCitiesFromAllEvents();
+    }
+
+    public BigInteger getQuantityOfDiscoveries(){
+        return eventRepo.getQuantityOfEvents();
+    }
+
+    public List<Event> getEventsWithLimit(int begin, int quantity){
+        return eventRepo.getWithLimit(begin,quantity);
     }
 }
