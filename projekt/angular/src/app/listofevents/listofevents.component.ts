@@ -1,4 +1,4 @@
-import {Component, OnInit} from "@angular/core";
+import {Component, DoCheck, IterableDiffer, IterableDiffers, OnDestroy, OnInit} from "@angular/core";
 import {Router} from "@angular/router";
 import {NameofcityService} from "../service/nameofcity.service";
 import {Event} from "../model/event";
@@ -14,33 +14,67 @@ import "rxjs/add/operator/map";
   templateUrl: './listofevents.component.html',
   styleUrls: ['./listofevents.component.css']
 })
-export class ListofeventsComponent implements OnInit {
+export class ListofeventsComponent implements OnInit,DoCheck, OnDestroy {
 
-  private events:Event[]=[];
+  private events:Event[];
+  private isSerachByPositionUrl:boolean;
+  private paginationVisibility:boolean;
+  private isSearchByCityUrl:boolean;
+  private isAllEventsUrl:boolean;
   private monthNames = ["January", "February", "March", "April", "May", "June","July", "August", "September", "October", "November", "December"];
+  private iterableDiffer: IterableDiffer<any>;
+  private autoGenerate:string;
 
 
-  constructor(private nameService:NameofcityService, private eventService:EventService,private router:Router,private dataService:DataService) {
+  constructor(private nameService:NameofcityService, private eventService:EventService,private router:Router,private dataService:DataService, private iterableDiffers:IterableDiffers) {
+    this.iterableDiffer=iterableDiffers.find([]).create(null);
+  }
+  ngDoCheck() {
+    if(this.dataService.currentData!==undefined && !this.isSearchByCityUrl && !this.isSerachByPositionUrl) {
+      this.dataService.currentData.subscribe((events) => {
+        this.convertFromTimeStampToDate(events);
+        this.events = events;
+      });
+    }
+  }
+
+  private convertFromTimeStampToDate(events:Event[]){
+    if(events!==null && events!==undefined) {
+      for (let event of events) {
+        event.timestamp = new Date(event.timestamp);
+      }
+    }
   }
 
   ngOnInit() {
+    this.dataService.addBehaviourSource([]);
+    this.isSerachByPositionUrl=this.router.url.indexOf('searchByPosition')!==-1;
+    this.isSearchByCityUrl=this.router.url.indexOf('searchByCity')!==-1;
+    this.isAllEventsUrl=this.router.url.indexOf('listOfAllEvents')!==-1;
     this.setListOfEventsDepndsOfUrl();
   }
 
   private setListOfEventsDepndsOfUrl(){
-    if(this.router.url.indexOf('searchByCity')!==-1 && this.nameService.observable!=null){
-      this.nameService.observable.map((event)=>event=event.target.value).debounceTime(500)
+    if(this.isSearchByCityUrl && this.nameService.observable!=null){
+      this.paginationVisibility=false;
+      this.nameService.observable.map((event)=> {
+        return event.target.value;
+      }).debounceTime(500)
         .distinctUntilChanged()
         .subscribe((value) => {
           this.getEventByName(value);
         });
     }
-    else if(this.router.url.indexOf('searchByPosition')!==-1){
-      this.dataService.currentData.subscribe((events)=>this.events=events);
+    else if(this.isSerachByPositionUrl){
+      this.paginationVisibility=false;
     }
-    else{
-      this.getEvents();
+    else if(this.isAllEventsUrl){
+      this.paginationVisibility=true;
+      this.autoGenerate='true';
     }
+  }
+  ngOnDestroy(){
+    this.dataService.changeData(null);
   }
   private getEventByName(nameOfCity:string){
     this.eventService.getEventsByNameOfCity(nameOfCity).subscribe((events) => {

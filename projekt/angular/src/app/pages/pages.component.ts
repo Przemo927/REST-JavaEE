@@ -16,6 +16,7 @@ import {EndPoint} from "../enum/endpoint.enum";
 export class PagesComponent implements OnInit {
 
   @Input() typeOfElemnts:string;
+  @Input() autoGenerate:string;
   private allPreparedPages: Page[];
   private index=1;
   private preparedPagesToShowOnScreen:Page[];
@@ -30,7 +31,12 @@ export class PagesComponent implements OnInit {
     if(this.typeOfElemnts=="discovery"){
       this.pageService.setUrl(UrlUtils.generateBasicUrl(window.location)+EndPoint.discoveries);
     }
-    this.givePreparedPagesDependsOfElementsOnOnePage(5);
+    else if(this.typeOfElemnts=="event"){
+      this.pageService.setUrl(UrlUtils.generateBasicUrl(window.location)+EndPoint.events);
+    }
+    if(this.autoGenerate === "true") {
+      this.givePreparedPagesDependsOfElementsOnOnePage(5);
+    }
   }
 
   givePreparedPagesDependsOfElementsOnOnePage(quantityElementsOnOnePage: number):void {

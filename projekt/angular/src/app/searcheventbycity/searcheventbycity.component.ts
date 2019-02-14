@@ -12,17 +12,13 @@ import { DataService } from '../service/data.service';
   styleUrls: ['./searcheventbycity.component.css']
 })
 export class SearcheventbycityComponent implements OnInit {
-  private events:Event[];
 
-  constructor(private eventService: EventService,private router: Router,private route: ActivatedRoute,private nameService:NameofcityService
-    ,private dataService:DataService) { }
+  constructor(private nameService:NameofcityService) { }
 
   ngOnInit() {
-    this.dataService.addBehaviourSource(this.events);
     let searchInput=<HTMLInputElement>document.getElementsByName("nameOfCity")[0];
     let input$=Observable.fromEvent(searchInput,'keyup');
     this.nameService.observable=input$;
-
   }
 
 }

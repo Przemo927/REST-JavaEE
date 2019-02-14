@@ -31,7 +31,6 @@ export class SearchbypositionComponent implements OnInit,DoCheck {
     }
   }
   ngOnInit() {
-    this.dataService.addBehaviourSource(this.events);
     let distanceInput=document.getElementsByName("distance");
 
     Observable.fromEvent(distanceInput,'keyup').debounceTime(500)
