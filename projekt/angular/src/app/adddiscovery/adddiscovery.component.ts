@@ -1,10 +1,8 @@
 import {Component, OnInit, ViewChild} from '@angular/core';
-import { DiscoveryService } from '../service/discovery.service';
-import { Discovery } from '../model/discovery';
-import * as url from "url";
+import {DiscoveryService} from '../service/discovery.service';
+import {Discovery} from '../model/discovery';
 import {ValidatabletextareaComponent} from "../validatabletextarea/validatabletextarea.component";
 import {ValidatableinputComponent} from "../validatableinput/validatableinput.component";
-import {Observable} from "rxjs/Observable";
 
 @Component({
   selector: 'app-adddiscovery',
