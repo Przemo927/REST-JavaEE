@@ -1,9 +1,7 @@
-///<reference path="../service/check-user.service.ts"/>
-import {Component, DoCheck, IterableDiffer, IterableDiffers, OnInit} from "@angular/core";
+import {Component, DoCheck, IterableDiffer, IterableDiffers, OnDestroy, OnInit} from "@angular/core";
 import {DiscoveryService} from "../service/discovery.service";
 import {Discovery} from "../model/discovery";
 import {CheckUserService} from "../service/check-user.service";
-import {Page} from "../model/page";
 import {DataService} from "../service/data.service";
 import {UrlUtils} from "../UrlUtils";
 import {EndPoint} from "../enum/endpoint.enum";
@@ -13,7 +11,7 @@ import {EndPoint} from "../enum/endpoint.enum";
   templateUrl: './discoveries.component.html',
   styleUrls: ['./discoveries.component.css']
 })
-export class DiscoveriesComponent implements OnInit, DoCheck {
+export class DiscoveriesComponent implements OnInit, DoCheck, OnDestroy {
 
   constructor(private discoveryService: DiscoveryService, private checkUserService: CheckUserService, private iterableDiffers:IterableDiffers,
               public dataService:DataService) {
@@ -25,8 +23,6 @@ export class DiscoveriesComponent implements OnInit, DoCheck {
   private VOTE_UP= 'VOTE_UP';
   private VOTE_DOWN= 'VOTE_DOWN';
   private iterableDiffer: IterableDiffer<any>;
-  private htmlCollectionAsArray:Array<HTMLElement>;
-  private firstIndexOfHidden=1;
 
   ngDoCheck() {
     if(this.dataService.currentData!==undefined) {
@@ -39,8 +35,10 @@ export class DiscoveriesComponent implements OnInit, DoCheck {
         if (information['role'] === 'admin') {
           this.adminRole = true;
         }
-
       });
+  }
+  ngOnDestroy(){
+    this.dataService.changeData(null);
   }
 
   getDiscoveries(): void {
@@ -56,13 +54,6 @@ export class DiscoveriesComponent implements OnInit, DoCheck {
     setTimeout(() =>
       this.getDiscoveries(), 500);
 
-  }
-
-  showFiveElements(numberOfFirstElement:number){
-    for(let element of this.htmlCollectionAsArray.slice(numberOfFirstElement-1,numberOfFirstElement+5)){
-      element.style.display="";
-    }
-    this.firstIndexOfHidden+=5;
   }
 
 }
