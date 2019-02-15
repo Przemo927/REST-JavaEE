@@ -34,6 +34,7 @@ public class JpaEventRepositoryImpl extends JpaRepository<Event> implements JpaE
         return getEventByCity.getResultList();
     }
 
+    @RolesAllowed({"admin","user"})
     @Override
     public List<String> getCitiesFromAllEvents() {
         TypedQuery<String> getCitiesFromAllEvents=em.createNamedQuery("Event.selectAllCities",String.class);
@@ -48,6 +49,7 @@ public class JpaEventRepositoryImpl extends JpaRepository<Event> implements JpaE
         return (BigInteger)query.getSingleResult();
     }
 
+    @RolesAllowed({"admin","user"})
     @Override
     public List<Event> getWithLimit(int begin, int quantity) {
         TypedQuery<Event> query=em.createNamedQuery("Event.findAllWithLimit",Event.class);
