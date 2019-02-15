@@ -14,6 +14,7 @@ import pl.przemek.repository.JpaDiscoveryRepository;
 import pl.przemek.repository.inMemoryRepository.JpaCommentRepositoryInMemoryImpl;
 import pl.przemek.repository.inMemoryRepository.JpaDiscoveryRepositoryInMemoryImpl;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Logger;
 
@@ -46,46 +47,9 @@ public class CommentServiceTest {
         discRepo=new JpaDiscoveryRepositoryInMemoryImpl();
         commentService=new CommentService(logger,commentRepo,discRepo);
     }
-    @Test
-    public void shouldAddCommentWithParentDiscovery() throws Exception {
-        createObjectOfCommentServiceWithInMemoryLayer();
-        Comment comment=new Comment();
-        int amountOfDiscoveriesBeforeAdd=Integer.valueOf(String.valueOf(discRepo.getQuantityOfDiscoveries()));
-        Discovery discovery=new Discovery();
-        discovery.setId(123);
-
-        discRepo.add(discovery);
-
-        commentService.addComment(comment,123);
-        assertNotNull(comment.getDiscovery());
-        assertEquals(123, comment.getDiscovery().getId());
-        assertEquals(commentRepo.getAll("", Comment.class).size(), amountOfDiscoveriesBeforeAdd + 1);
-        assertTrue(commentRepo.getAll("",Comment.class).contains(comment));
-    }
 
     public Object[] commentDiscovery(){
         return $(new Object[]{new Comment(),1234},new Object[]{null,4321},new Object[]{null,1234});
-    }
-    @Test
-    @Parameters(method = "commentDiscovery")
-    public void shouldNotAddCommentAndLogItWhenCommentIsNullOrAndDiscoveryDidNotFind(Comment comment,long discoveryId) throws Exception {
-        createObjectOfCommentServiceWithInMemoryLayer();
-        ((JpaDiscoveryRepositoryInMemoryImpl)discRepo).setListOfDiscoveries(removeDiscoveryById(1234,discRepo.getAll("",Discovery.class)));
-        Discovery disc=new Discovery();
-        disc.setId(4321);
-        discRepo.add(disc);
-
-        int amountOfComents=commentRepo.getAll(null,null).size();
-        commentService.addComment(comment,discoveryId);
-        assertEquals(commentRepo.getAll("", Comment.class).size(), amountOfComents);
-    }
-    private List<Discovery> removeDiscoveryById(long id, List<Discovery> list){
-        for(int i=0;i<list.size();i++){
-            Discovery disc=list.get(i);
-            if(disc.getId()==id)
-                list.remove(disc);
-        }
-        return list;
     }
 
     @Test

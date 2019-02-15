@@ -72,7 +72,9 @@ public class JpaVoteCommentRepositoryInMemoryImpl implements JpaVoteRepository<V
 
     @Override
     public void removeByVotedElementId(long commentId) {
-        for(VoteComment voteComment:listofVoteComments){
+        VoteComment voteComment;
+        for(int i=0;i<listofVoteComments.size();i++){
+            voteComment=listofVoteComments.get(i);
             if(voteComment.getId()==commentId)
                 listofVoteComments.remove(voteComment);
         }

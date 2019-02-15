@@ -5,6 +5,7 @@ import pl.przemek.model.EventPosition;
 import pl.przemek.model.User;
 import pl.przemek.repository.JpaEventRepository;
 
+import java.math.BigInteger;
 import java.sql.Timestamp;
 import java.util.*;
 
@@ -73,6 +74,17 @@ public class JpaEventRepositoryInMemoryImpl implements JpaEventRepository {
         });
         return temporaryList;
     }
+
+    @Override
+    public BigInteger getQuantityOfEvents() {
+        return null;
+    }
+
+    @Override
+    public List<Event> getWithLimit(int begin, int quantity) {
+        return null;
+    }
+
     private void populateListOfEvents(){
         for(int i=0;i<10;i++){
             Event event=new Event();

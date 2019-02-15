@@ -102,6 +102,11 @@ public class JpaDiscoveryRepositoryInMemoryImpl implements JpaDiscoveryRepositor
         return BigInteger.valueOf(listOfDiscoveries.size());
     }
 
+    @Override
+    public List<Discovery> getDiscoveryWithComments(long id) {
+        return null;
+    }
+
     public List<Discovery> getListOfDiscoveries() {
         return listOfDiscoveries;
     }

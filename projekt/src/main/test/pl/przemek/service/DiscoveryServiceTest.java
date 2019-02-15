@@ -115,24 +115,9 @@ public class DiscoveryServiceTest {
     }
 
     @Test
-    public void shouldExecuteGetMethodOfDiscoveryRepository() throws Exception {
-        discoveryService.getById(1);
-        verify(discRepo,times(1)).get(eq(Discovery.class),anyLong());
-    }
-
-    @Test
     public void shouldDoNotExecuteGetByNameIfNameIsNull(){
         discoveryService.getByName(null);
         verify(discRepo,never()).getByName(null);
-        verify(discRepo,never()).getByName(anyString());
-    }
-
-    @Test
-    public void shouldDoNotExecuteGetByNameIfNameIsEmptyWord() throws Exception {
-        String name="";
-        discoveryService.getByName(name);
-        verify(discRepo,never()).getByName(null);
-        verify(discRepo,never()).getByName(name);
         verify(discRepo,never()).getByName(anyString());
     }
 
@@ -247,7 +232,7 @@ public class DiscoveryServiceTest {
         comment.setDiscovery(discovery);
         comment.setId(5678);
         commentRepo.add(comment);
-        int amountOfCommentsBeforeRemove=commentRepo.getAll(anyString(),Comment.class).size();
+        int amountOfCommentsBeforeRemove=commentRepo.getAll("",Comment.class).size();
 
         assertEquals(discovery,discRepo.get(Discovery.class,1234));
         assertEquals(vote,voteRepo.get(Vote.class,4321));
@@ -255,11 +240,11 @@ public class DiscoveryServiceTest {
 
         discoveryService.removeDiscoveryById(1234);
 
-        assertEquals(amountOfdiscoveriesBeforeRemove-1,discRepo.getAll(anyString(),Discovery.class).size());
+        assertEquals(amountOfdiscoveriesBeforeRemove-1,discRepo.getAll("",Discovery.class).size());
         assertNull(discRepo.get(Discovery.class, 1234));
-        assertEquals(amountOfVotesBeforeRemove-1,voteRepo.getAll(anyString(),Vote.class).size());
+        assertEquals(amountOfVotesBeforeRemove-1,voteRepo.getAll("",Vote.class).size());
         assertNull(voteRepo.get(Vote.class, 4321));
-        assertEquals(amountOfCommentsBeforeRemove-1,commentRepo.getAll(anyString(),Comment.class).size());
+        assertEquals(amountOfCommentsBeforeRemove-1,commentRepo.getAll("",Comment.class).size());
         assertNull(commentRepo.get(Comment.class,5678));
 
     }

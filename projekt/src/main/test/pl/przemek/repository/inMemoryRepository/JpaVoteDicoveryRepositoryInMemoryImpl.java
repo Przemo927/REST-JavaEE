@@ -65,8 +65,9 @@ public class JpaVoteDicoveryRepositoryInMemoryImpl implements JpaVoteRepository<
 
     @Override
     public void removeByVotedElementId(long discoveryId) {
+        Vote vote;
         for(int i=0;i<listOfVotes.size();i++) {
-            Vote vote = listOfVotes.get(i);
+            vote = listOfVotes.get(i);
             if(vote.getDiscovery().getId()==discoveryId)
                 listOfVotes.remove(vote);
         }
