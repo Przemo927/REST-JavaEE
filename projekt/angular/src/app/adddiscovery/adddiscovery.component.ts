@@ -26,7 +26,11 @@ export class AdddiscoveryComponent implements OnInit {
     this.discoveryService.addDiscovery(discovery).subscribe((res) => {
       if (res!==undefined && res.invalidFieldList != null){
           this.checkInvalidFieldList(res.invalidFieldList);
-    }
+      }else{
+        this.nameComponent.setWrong();
+        this.urlComponent.setWrong();
+        this.descriptionComponent.setWrong();
+      }
   });
 
 }
